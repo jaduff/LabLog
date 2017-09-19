@@ -1,7 +1,7 @@
 using System;
 namespace LabLog.Models
 {
-    public class Computer
+    public class ComputerModel
     {
         public string SerialNumber {get; set;}
         public string Room {get; set;}

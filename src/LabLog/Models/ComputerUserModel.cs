@@ -2,7 +2,7 @@ using System;
 
 namespace LabLog
 {
-    class ComputerUser
+    class ComputerUserModel
     {
         public int ID {get; set;}
         public DateTime UserTime {get; set;}

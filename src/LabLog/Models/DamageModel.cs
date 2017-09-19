@@ -1,7 +1,7 @@
 using System;
 namespace LabLog.Models
 {
-    class Damage
+    class DamageModel
     {
         public int DamageID {get; set;}
         public string SerialNumber {get; set;}
