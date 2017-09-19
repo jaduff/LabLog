@@ -8,12 +8,21 @@ namespace LabLog.Domain.Entities
     {
         private readonly Action<ILabEvent> _eventHandler;
 
-        public Room(Action<ILabEvent> eventHandler)
+        private Room(Action<ILabEvent> eventHandler)
         {
             _eventHandler = eventHandler;
         }
 
+        public static Room Create(Action<ILabEvent> eventHandler)
+        {
+            var room = new Room(eventHandler);
+            room.Id = Guid.NewGuid();
+            room._eventHandler(new RoomCreatedEvent(room.Id));
+            return room;
+        }
+
         public List<Computer> Computers { get; } = new List<Computer>();
+        public Guid Id { get; set; }
 
         public void AddComputer(Computer computer)
         {

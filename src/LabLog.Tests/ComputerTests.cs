@@ -4,7 +4,7 @@ using Xunit;
 
 namespace LabLog.Tests
 {
-    public class RoomTests
+    public class ComputerTests
     {
         [Fact]
         public async Task RoomCanAddComputer()
