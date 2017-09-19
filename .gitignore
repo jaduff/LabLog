@@ -75,3 +75,10 @@ _[Ss]cripts
 *.dot[Cc]over
 
 lib/
+.vs/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
