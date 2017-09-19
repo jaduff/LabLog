@@ -1,6 +1,6 @@
 using System;
 
-namespace ClassLogger.Domain
+namespace LabLog.Domain.Events
 {
     public interface ILabEvent
     {

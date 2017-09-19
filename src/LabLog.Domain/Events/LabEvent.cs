@@ -1,10 +1,10 @@
 using System;
 
-namespace ClassLogger.Domain
+namespace LabLog.Domain.Events
 {
     public abstract class LabEvent : ILabEvent
     {
-        public LabEvent()
+        protected LabEvent()
         {
             EventId = Guid.NewGuid();
             Timestamp = DateTimeOffset.UtcNow;
