@@ -1,4 +1,4 @@
-namespace ClassLogger.Domain
+namespace LabLog.Domain.Entities
 {
     public class Computer
     {

@@ -1,10 +1,10 @@
 using System;
 
-namespace ClassLogger.Domain
+namespace LabLog.Domain.Events
 {
     public interface ILabEvent
     {
-        Guid EventId { get; set; }
+        Guid RoomId { get; set; }
         DateTimeOffset Timestamp { get; set; }
         string EventType { get; }
     }

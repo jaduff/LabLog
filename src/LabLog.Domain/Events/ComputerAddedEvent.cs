@@ -1,4 +1,4 @@
-namespace ClassLogger.Domain
+namespace LabLog.Domain.Events
 {
     public class ComputerAddedEvent : LabEvent
     {
