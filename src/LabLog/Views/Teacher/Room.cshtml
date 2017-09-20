@@ -1,9 +1,29 @@
-﻿@{
+﻿@model ComputerModel
+@{
     ViewData["Title"] = "List of Rooms";
 }
+@Model ComputerModel;
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 10px;
+    }
+    th {
+        text-align: center;
+    }
+    tr {
+        text-align: center;
+    }
+</style>
 
+<h1>Room @ViewData["RoomName"]</h1>
 
-<p>This page is the room page.</p>
-<p>It will contain a diagram of the room layout, indicating which computer is which. The teacher will be able to allocate students to computers in this page.
-    They will also be able to note damage to machines.
-</p>
+<img src="~/images/example_room.svg" height="500px"/>
+
+<table>
+    <tr><th>Computer</th><th>User</th><th>Action</th></tr>
+    @foreach (var computer in ViewData["Computers"] as List<ComputerModel>)
+    {
+        <tr><td>@computer.ComputerNumber</td><td></td><td>Add Edit Delete</td></tr>
+    }
+</table>
