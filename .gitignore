@@ -76,6 +76,7 @@ _[Ss]cripts
 
 lib/
 .vs/
+.vscode/
 
 # .NET Core
 project.lock.json
