@@ -9,7 +9,8 @@ namespace LabLog
         public List<ComputerModel> Computers {get; set;}
 
         public void createComputers(int computerCount) {
-            for (int i =0; i==computerCount; i++){
+            Computers = new List<ComputerModel>();
+            for (int i =0; i<computerCount; i++){
                ComputerModel computer = new ComputerModel();
                computer.ComputerNumber = i+1;
                Computers.Add(computer);
