@@ -85,3 +85,4 @@ artifacts/
 **/Properties/launchSettings.json
 .idea/
 .vscode/
+node_modules/
