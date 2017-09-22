@@ -1,4 +1,5 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 namespace LabLog.Models
 {
     public class ComputerModel

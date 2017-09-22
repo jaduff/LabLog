@@ -3,7 +3,7 @@ using LabLog.Models;
 using System.Collections.Generic;
 namespace LabLog
 {
-    class RoomModel
+    public class RoomModel
     {
         public string Name {get; set;}
         public List<ComputerModel> Computers {get; set;}

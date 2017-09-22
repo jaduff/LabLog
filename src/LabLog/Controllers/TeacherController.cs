@@ -19,12 +19,24 @@ namespace LabLog.Controllers
         {
             ViewData["Message"] = "Room Page.";
 
-            RoomModel room = new RoomModel();
-            room.Name = id;
-            room.createComputers(20);
+            using (var db = new RoomModelContext())
+            {
+                RoomModel room = new RoomModel();
+                room.Name = id;
+                room.createComputers(20);
 
-            ViewData["RoomName"] = id;
-            ViewData["Computers"] = room.Computers;
+                foreach (ComputerModel computer in room.Computers) {
+                    db.Add(computer);
+                }
+                
+                var count = db.SaveChanges();
+                Console.WriteLine("{0} records saved to database", count);
+
+                ViewData["RoomName"] = id;
+                ViewData["Computers"] = room.Computers;
+            }
+
+
 
             return View();
         }
