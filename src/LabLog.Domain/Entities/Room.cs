@@ -34,7 +34,7 @@ namespace LabLog.Domain.Entities
                 }
                 _name = value;
                 var @event = new LabEvent<RoomNameChangedEvent>(Id,
-                    new RoomNameChangedEvent(Name)
+                    new RoomNameChangedEvent(_name)
                 );
                 _eventHandler(@event);
             }
