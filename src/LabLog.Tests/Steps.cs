@@ -79,13 +79,14 @@ namespace LabLog.Tests
         public static void EventHasRoomName(this IThen<RoomContext> then)
         {
             //This needs to be modified to test for the Room Name in the event body. How?
-            //Assert.Equal(then.Context.Room.Name, then.Context.ReceivedEvents[0].EventBody.);
+            //ILabEvent eventBody = then.Context.ReceivedEvents[1].EventBody;
+            Assert.Equal(then.Context.Room.Name, then.Context.ReceivedEvents[1].EventBody);
         }
 
         public static void RoomModifiedEventRaised(this IThen<RoomContext> then)
         {
-            Assert.Equal(1, then.Context.ReceivedEvents.Count);
-            Assert.Equal("RoomModified", then.Context.ReceivedEvents.First().EventType);
+            Assert.Equal(2, then.Context.ReceivedEvents.Count);
+            Assert.Equal("RoomModified", then.Context.ReceivedEvents[1].EventType);
             Assert.Equal(typeof(LabEvent<RoomCreatedEvent>), then.Context.ReceivedEvents.First().GetType());
         }
     }
