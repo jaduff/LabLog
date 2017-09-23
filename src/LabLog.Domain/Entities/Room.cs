@@ -33,8 +33,8 @@ namespace LabLog.Domain.Entities
                     return;
                 }
                 _name = Name;
-                var @event = new LabEvent<RoomModifiedEvent>(Id,
-                    new RoomModifiedEvent(Name)
+                var @event = new LabEvent<RoomNameChangedEvent>(Id,
+                    new RoomNameChangedEvent(Name)
                 );
                 _eventHandler(@event);
             }

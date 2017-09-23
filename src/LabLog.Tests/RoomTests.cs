@@ -25,7 +25,7 @@ namespace LabLog.Tests
             await CTest<RoomContext>
                 .Given(a => a.Room())
                 .When(i => i.NameARoom())
-                .Then(t => t.RoomModifiedEventRaised())
+                .Then(t => t.RoomNameChangedEventRaised())
                 .And(t => t.EventHasRoomName())
                 .ExecuteAsync();
         }
