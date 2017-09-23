@@ -30,7 +30,6 @@ namespace LabLog.Controllers
                 }
                 
                 var count = db.SaveChanges();
-                Console.WriteLine("{0} records saved to database", count);
 
                 ViewData["RoomName"] = id;
                 ViewData["Computers"] = room.Computers;

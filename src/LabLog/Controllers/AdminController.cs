@@ -10,8 +10,13 @@ namespace LabLog.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string id)
+
         {
+            using (var db = new RoomModelContext())
+            {
+                List<RoomModel> rooms = db.Rooms;
+            }
             return View();
         }
         public IActionResult Room()
