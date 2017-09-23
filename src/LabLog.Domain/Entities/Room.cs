@@ -17,7 +17,7 @@ namespace LabLog.Domain.Entities
         {
             var room = new Room(eventHandler);
             room.Id = Guid.NewGuid();
-            room._eventHandler(new RoomCreatedEvent(room.Id));
+            room._eventHandler(new LabEvent<RoomCreatedEvent>(room.Id, new RoomCreatedEvent()));
             return room;
         }
 
@@ -31,7 +31,10 @@ namespace LabLog.Domain.Entities
                 return;
             }
 
-            var @event = new ComputerAddedEvent();
+            //var @event = new ComputerAddedEvent();
+            var @event = new LabEvent<ComputerAddedEvent>(
+                Guid.NewGuid(), 
+                new ComputerAddedEvent(computer.ComputerId.ToString()));
             _eventHandler(@event);
         }
 

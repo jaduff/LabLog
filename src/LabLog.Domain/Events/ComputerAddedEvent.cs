@@ -1,7 +1,20 @@
+using System;
+
 namespace LabLog.Domain.Events
 {
-    public class ComputerAddedEvent : LabEvent
+    public class ComputerAddedEvent : IEventBody
     {
-        public override string EventType => "ComputerAdded";
+        public ComputerAddedEvent(string computerName)
+        {
+            ComputerName = computerName;
+        }
+
+        [Obsolete("This constructor is for serialization only. Do not use in code.")]
+        public ComputerAddedEvent()
+        {
+            
+        }
+        public string EventType => "ComputerAdded";
+        public string ComputerName{get;set;}
     }
 }
