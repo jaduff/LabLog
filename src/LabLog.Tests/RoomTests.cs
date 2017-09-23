@@ -18,5 +18,16 @@ namespace LabLog.Tests
                 .And(t => t.EventHasRoomId())
                 .ExecuteAsync();
         }
+
+        [Fact]
+        public async Task RoomCanBeNamed()
+        {
+            await CTest<RoomContext>
+                .Given(a => a.Room())
+                .When(i => i.NameARoom())
+                .Then(t => t.RoomNameChangedEventRaised())
+                .And(t => t.EventHasRoomName())
+                .ExecuteAsync();
+        }
     }
 }

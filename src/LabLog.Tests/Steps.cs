@@ -4,6 +4,7 @@ using CheetahTesting;
 using LabLog.Domain.Entities;
 using LabLog.Domain.Events;
 using Xunit;
+using Newtonsoft.Json;
 
 namespace LabLog.Tests
 {
@@ -71,6 +72,21 @@ namespace LabLog.Tests
         public static void EventHasRoomId(this IThen<RoomContext> then)
         {
             Assert.Equal(then.Context.Room.Id, then.Context.ReceivedEvents[0].RoomId);
+        }
+        public static void NameARoom(this IWhen<RoomContext> when)
+        {
+            when.Context.Room.Name = "TD";
+        }
+        public static void EventHasRoomName(this IThen<RoomContext> then)
+        {
+            Assert.Equal(then.Context.Room.Name, JsonConvert.DeserializeObject<RoomNameChangedEvent>(then.Context.ReceivedEvents[1].EventBody).RoomName);
+        }
+
+        public static void RoomNameChangedEventRaised(this IThen<RoomContext> then)
+        {
+            Assert.Equal(2, then.Context.ReceivedEvents.Count);
+            Assert.Equal("RoomNameChanged", then.Context.ReceivedEvents[1].EventType);
+            Assert.Equal(typeof(LabEvent<RoomCreatedEvent>), then.Context.ReceivedEvents.First().GetType());
         }
     }
 }
