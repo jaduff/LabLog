@@ -2,12 +2,8 @@
 
 namespace LabLog.Domain.Events
 {
-    public class RoomCreatedEvent : LabEvent
+    public class RoomCreatedEvent : IEventBody
     {
-        public RoomCreatedEvent(Guid roomId)
-        {
-            RoomId = roomId;
-        }
-        public override string EventType => "RoomCreated";
+        public string EventType => "RoomCreated";
     }
 }

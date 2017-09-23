@@ -1,7 +1,7 @@
 namespace LabLog.Domain.Events
 {
-    public class ComputerAddedEvent : LabEvent
+    public class ComputerAddedEvent : IEventBody
     {
-        public override string EventType => "ComputerAdded";
+        public string EventType => "ComputerAdded";
     }
 }

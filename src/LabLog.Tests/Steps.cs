@@ -21,7 +21,8 @@ namespace LabLog.Tests
 
         public static void ComputerAddedEvent(this IGiven<RoomContext> given)
         {
-            given.Context.PendingEvents.Add(new ComputerAddedEvent());
+            given.Context.PendingEvents.Add(new LabEvent<ComputerAddedEvent>(Guid.NewGuid(),
+                new ComputerAddedEvent()));
         }
 
         public static void AddAComputer(this IWhen<RoomContext> when, int computerId)
@@ -57,14 +58,14 @@ namespace LabLog.Tests
         {
             Assert.Equal(2, then.Context.ReceivedEvents.Count);
             Assert.Equal("ComputerAdded", then.Context.ReceivedEvents[1].EventType);
-            Assert.Equal(typeof(ComputerAddedEvent), then.Context.ReceivedEvents[1].GetType());
+            Assert.Equal(typeof(LabEvent<ComputerAddedEvent>), then.Context.ReceivedEvents[1].GetType());
         }
 
         public static void RoomCreatedEventRaised(this IThen<RoomContext> then)
         {
             Assert.Equal(1, then.Context.ReceivedEvents.Count);
             Assert.Equal("RoomCreated", then.Context.ReceivedEvents.First().EventType);
-            Assert.Equal(typeof(RoomCreatedEvent), then.Context.ReceivedEvents.First().GetType());
+            Assert.Equal(typeof(LabEvent<RoomCreatedEvent>), then.Context.ReceivedEvents.First().GetType());
         }
 
         public static void EventHasRoomId(this IThen<RoomContext> then)

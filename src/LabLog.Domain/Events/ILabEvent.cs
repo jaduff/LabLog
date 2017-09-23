@@ -6,6 +6,7 @@ namespace LabLog.Domain.Events
     {
         Guid RoomId { get; set; }
         DateTimeOffset Timestamp { get; set; }
-        string EventType { get; }
+        string EventType { get; set;}
+        string EventBody{get;set;}
     }
 }
