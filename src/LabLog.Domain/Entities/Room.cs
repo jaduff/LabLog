@@ -23,6 +23,22 @@ namespace LabLog.Domain.Entities
 
         public List<Computer> Computers { get; } = new List<Computer>();
         public Guid Id { get; set; }
+        public String _name;
+        public String Name {
+            get { return _name; }
+            set
+            {
+                if (_eventHandler == null)
+                {
+                    return;
+                }
+                _name = Name;
+                var @event = new LabEvent<RoomModifiedEvent>(Id,
+                    new RoomModifiedEvent(Name)
+                );
+                _eventHandler(@event);
+            }
+        }
 
         public void AddComputer(Computer computer)
         {
