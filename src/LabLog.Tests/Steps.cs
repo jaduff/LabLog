@@ -22,7 +22,7 @@ namespace LabLog.Tests
         public static void ComputerAddedEvent(this IGiven<RoomContext> given)
         {
             given.Context.PendingEvents.Add(new LabEvent<ComputerAddedEvent>(Guid.NewGuid(),
-                new ComputerAddedEvent()));
+                new ComputerAddedEvent("123")));
         }
 
         public static void AddAComputer(this IWhen<RoomContext> when, int computerId)

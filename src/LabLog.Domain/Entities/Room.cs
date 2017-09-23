@@ -32,7 +32,9 @@ namespace LabLog.Domain.Entities
             }
 
             //var @event = new ComputerAddedEvent();
-            var @event = new LabEvent<ComputerAddedEvent>(Guid.NewGuid(), new ComputerAddedEvent());
+            var @event = new LabEvent<ComputerAddedEvent>(
+                Guid.NewGuid(), 
+                new ComputerAddedEvent(computer.ComputerId.ToString()));
             _eventHandler(@event);
         }
 
