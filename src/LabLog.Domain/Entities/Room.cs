@@ -23,7 +23,7 @@ namespace LabLog.Domain.Entities
 
         public List<Computer> Computers { get; } = new List<Computer>();
         public Guid Id { get; set; }
-        public String _name;
+        private String _name;
         public String Name {
             get { return _name; }
             set
@@ -32,7 +32,7 @@ namespace LabLog.Domain.Entities
                 {
                     return;
                 }
-                _name = Name;
+                _name = value;
                 var @event = new LabEvent<RoomNameChangedEvent>(Id,
                     new RoomNameChangedEvent(Name)
                 );
