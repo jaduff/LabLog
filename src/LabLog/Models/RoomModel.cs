@@ -1,10 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using LabLog.Models;
 using System.Collections.Generic;
 namespace LabLog
 {
     public class RoomModel
     {
+        [Required]
+        [Display(Name = "Room Identifier")]
         public string Name {get; set;}
         public List<ComputerModel> Computers {get; set;}
 

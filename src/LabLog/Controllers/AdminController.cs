@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
 
+
+
 namespace LabLog.Controllers
 {
     public class AdminController : Controller
@@ -15,12 +17,37 @@ namespace LabLog.Controllers
         {
             using (var db = new RoomModelContext())
             {
-                List<RoomModel> rooms = db.Rooms;
+                    ViewData["Rooms"] = db.Rooms.ToList();
             }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(RoomModel room)
+        {
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine(room.Name + " added to database");
+                using (var db = new RoomModelContext())
+                {
+                    db.Add(room);
+                    db.SaveChanges();
+                }
+                //return RedirectToAction("IndexSuccess", new { message = msg});
+            }
+            return View();   
+        }
+
+        public IActionResult AddRoom()
+        {
             return View();
         }
         public IActionResult Room()
         {
+            using (var db = new RoomModelContext())
+            {
+            }
             return View();
         }
 

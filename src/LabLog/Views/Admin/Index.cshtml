@@ -1,9 +1,20 @@
-﻿@{
+﻿@model RoomModel
+@{
     ViewData["Title"] = "Admin";
 }
 
 <h1>Admin</h1>
 <h2>Rooms</h2>
+<ul>
+@foreach (var room in ViewData["Rooms"] as List<RoomModel>)
+{
+    <li>
+        @room.Name
+    </li>
+}
+
+</ul>
+
 
 
 <h2>New Room</h2>
