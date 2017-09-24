@@ -10,7 +10,11 @@ namespace LabLog.Domain.Entities
 
         private Room(Action<ILabEvent> eventHandler)
         {
-            _eventHandler = eventHandler;
+            _eventHandler = e =>
+            {
+                Version++;
+                eventHandler(e);
+            };
         }
 
         public static Room Create(Action<ILabEvent> eventHandler)
@@ -40,6 +44,8 @@ namespace LabLog.Domain.Entities
             }
         }
 
+        public int Version { get; private set; }
+
         public void AddComputer(Computer computer)
         {
             if (_eventHandler == null)
@@ -47,16 +53,23 @@ namespace LabLog.Domain.Entities
                 return;
             }
 
-            //var @event = new ComputerAddedEvent();
             var @event = new LabEvent<ComputerAddedEvent>(
                 Guid.NewGuid(), 
-                new ComputerAddedEvent(computer.ComputerId.ToString()));
+                new ComputerAddedEvent(computer.ComputerId, computer.ComputerName));
             _eventHandler(@event);
+        }
+
+        private void Apply(LabEvent<ComputerAddedEvent> e)
+        {
+            var body = e.EventBodyObject;
+
+            Computers.Add(new Computer(body.ComputerId,
+                body.ComputerName));
         }
 
         public void Replay(ILabEvent labEvent)
         {
-            Computers.Add(new Computer(0));
+            Apply((LabEvent<ComputerAddedEvent>) labEvent);
         }
     }
 }

@@ -6,7 +6,7 @@ using LabLog.Domain.Events;
 using Xunit;
 using Newtonsoft.Json;
 
-namespace LabLog.Tests
+namespace LabLog.Tests.Steps
 {
     public static class Steps
     {
@@ -20,15 +20,18 @@ namespace LabLog.Tests
             return e => context.ReceivedEvents.Add(e);
         }
 
-        public static void ComputerAddedEvent(this IGiven<RoomContext> given)
+        public static void ComputerAddedEvent(this IGiven<RoomContext> given,
+            int computerId, string computerName)
         {
             given.Context.PendingEvents.Add(new LabEvent<ComputerAddedEvent>(Guid.NewGuid(),
-                new ComputerAddedEvent("123")));
+                new ComputerAddedEvent(computerId, computerName)));
         }
 
-        public static void AddAComputer(this IWhen<RoomContext> when, int computerId)
+        public static void AddAComputer(this IWhen<RoomContext> when, 
+            int computerId, 
+            string computerName)
         {
-            when.Context.Room.AddComputer(new Computer(computerId));
+            when.Context.Room.AddComputer(new Computer(computerId, computerName));
         }
 
         public static void ReplayEvents(this IWhen<RoomContext> when)
@@ -55,11 +58,17 @@ namespace LabLog.Tests
             Assert.NotEqual(default(Guid), then.Context.Room.Id);
         }
 
-        public static void ComputerAddedEventRaised(this IThen<RoomContext> then, int computerId)
+        public static void ComputerAddedEventRaised(this IThen<RoomContext> then, 
+            int computerId,
+            string computerName)
         {
             Assert.Equal(2, then.Context.ReceivedEvents.Count);
-            Assert.Equal("ComputerAdded", then.Context.ReceivedEvents[1].EventType);
-            Assert.Equal(typeof(LabEvent<ComputerAddedEvent>), then.Context.ReceivedEvents[1].GetType());
+            var @event = then.Context.ReceivedEvents[1];
+            Assert.Equal("ComputerAdded", @event.EventType);
+            Assert.Equal(typeof(LabEvent<ComputerAddedEvent>), @event.GetType());
+            ComputerAddedEvent body = ((LabEvent<ComputerAddedEvent>)@event).EventBodyObject;
+            Assert.Equal(computerId, body.ComputerId);
+            Assert.Equal(computerName, body.ComputerName);
         }
 
         public static void RoomCreatedEventRaised(this IThen<RoomContext> then)
@@ -87,6 +96,11 @@ namespace LabLog.Tests
             Assert.Equal(2, then.Context.ReceivedEvents.Count);
             Assert.Equal("RoomNameChanged", then.Context.ReceivedEvents[1].EventType);
             Assert.Equal(typeof(LabEvent<RoomCreatedEvent>), then.Context.ReceivedEvents.First().GetType());
+        }
+
+        public static void VersionIs(this IThen<RoomContext> then, int version)
+        {
+            Assert.Equal(version, then.Context.Room.Version);
         }
     }
 }

@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 
 namespace LabLog.Domain.Events
 {
     public class ComputerAddedEvent : IEventBody
     {
-        public ComputerAddedEvent(string computerName)
+        public ComputerAddedEvent(int computerId, 
+            string computerName)
         {
             ComputerName = computerName;
+            ComputerId = computerId;
         }
 
         [Obsolete("This constructor is for serialization only. Do not use in code.")]
@@ -16,5 +19,6 @@ namespace LabLog.Domain.Events
         }
         public string EventType => "ComputerAdded";
         public string ComputerName{get;set;}
+        public int ComputerId { get; set; }
     }
 }
