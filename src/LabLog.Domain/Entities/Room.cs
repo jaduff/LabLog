@@ -10,18 +10,16 @@ namespace LabLog.Domain.Entities
 
         private Room(Action<ILabEvent> eventHandler)
         {
-            _eventHandler = e =>
-            {
-                Version++;
-                eventHandler(e);
-            };
+            _eventHandler = eventHandler;
         }
 
         public static Room Create(Action<ILabEvent> eventHandler)
         {
             var room = new Room(eventHandler);
             room.Id = Guid.NewGuid();
-            room._eventHandler(new LabEvent<RoomCreatedEvent>(room.Id, new RoomCreatedEvent()));
+            room._eventHandler(new LabEvent<RoomCreatedEvent>(room.Id, 
+                ++room.Version,
+                new RoomCreatedEvent()));
             return room;
         }
 
@@ -38,6 +36,7 @@ namespace LabLog.Domain.Entities
                 }
                 _name = value;
                 var @event = new LabEvent<RoomNameChangedEvent>(Id,
+                    ++Version,
                     new RoomNameChangedEvent(_name)
                 );
                 _eventHandler(@event);
@@ -54,7 +53,8 @@ namespace LabLog.Domain.Entities
             }
 
             var @event = new LabEvent<ComputerAddedEvent>(
-                Guid.NewGuid(), 
+                Guid.NewGuid(),
+                ++Version,
                 new ComputerAddedEvent(computer.ComputerId, computer.ComputerName));
             _eventHandler(@event);
         }

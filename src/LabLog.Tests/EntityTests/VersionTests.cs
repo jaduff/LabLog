@@ -24,6 +24,7 @@ namespace LabLog.Tests.EntityTests
                 .Given(a => a.Room())
                 .When(i => i.AddAComputer(1, "Computer One"))
                 .Then(t => t.VersionIs(2))
+                .And(t => t.EventHasVersion(0, 1))
                 .ExecuteAsync();
         }
 
@@ -35,6 +36,9 @@ namespace LabLog.Tests.EntityTests
                 .When(i => i.AddAComputer(1, "Computer One"))
                 .And(i => i.NameARoom())
                 .Then(t => t.VersionIs(3))
+                .And(t => t.EventHasVersion(0, 1))
+                .And(t => t.EventHasVersion(1, 2))
+                .And(t => t.EventHasVersion(2, 3))
                 .ExecuteAsync();
         }
     }

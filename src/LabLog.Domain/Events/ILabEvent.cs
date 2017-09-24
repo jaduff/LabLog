@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LabLog.Domain.Events
 {
@@ -8,5 +9,6 @@ namespace LabLog.Domain.Events
         DateTimeOffset Timestamp { get; set; }
         string EventType { get; set;}
         string EventBody{get;set;}
+        int Version { get; set; }
     }
 }

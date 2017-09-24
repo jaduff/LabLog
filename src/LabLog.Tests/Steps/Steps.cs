@@ -24,6 +24,7 @@ namespace LabLog.Tests.Steps
             int computerId, string computerName)
         {
             given.Context.PendingEvents.Add(new LabEvent<ComputerAddedEvent>(Guid.NewGuid(),
+                1,
                 new ComputerAddedEvent(computerId, computerName)));
         }
 
@@ -101,6 +102,13 @@ namespace LabLog.Tests.Steps
         public static void VersionIs(this IThen<RoomContext> then, int version)
         {
             Assert.Equal(version, then.Context.Room.Version);
+        }
+
+        public static void EventHasVersion(this IThen<RoomContext> then, 
+            int eventIndex, 
+            int version)
+        {
+            Assert.Equal(version, then.Context.ReceivedEvents[eventIndex].Version);
         }
     }
 }
