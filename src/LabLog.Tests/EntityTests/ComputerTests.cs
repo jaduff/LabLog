@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
 using CheetahTesting;
+using LabLog.Tests.Steps;
 using Xunit;
 
-namespace LabLog.Tests
+namespace LabLog.Tests.EntityTests
 {
     public class ComputerTests
     {
@@ -11,8 +12,8 @@ namespace LabLog.Tests
         {
             await CTest<RoomContext>
                 .Given(a => a.Room())
-                .When(i => i.AddAComputer(6))
-                .Then(t => t.ComputerAddedEventRaised(6))
+                .When(i => i.AddAComputer(6, "Computer Six"))
+                .Then(t => t.ComputerAddedEventRaised(6, "Computer Six"))
                 .ExecuteAsync();
         }
     }

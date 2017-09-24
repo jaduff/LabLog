@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using CheetahTesting;
+using LabLog.Tests.Steps;
 using Xunit;
 
-namespace LabLog.Tests
+namespace LabLog.Tests.EntityTests
 {
     public class RoomTests
     {

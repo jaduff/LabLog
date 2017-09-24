@@ -4,7 +4,6 @@ using LabLog.Domain.Entities;
 
 namespace LabLog.Tests
 {
-    using Room = LabLog.Domain.Entities.Room;
     public class RoomContext
     {
         public Room Room { get; set; }
