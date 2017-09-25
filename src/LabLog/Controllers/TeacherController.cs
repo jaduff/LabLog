@@ -15,6 +15,18 @@ namespace LabLog.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Index(UserModel user)
+        {
+            return RedirectToAction("RoomList", "Teacher");
+            //return View();
+        }
+
+        public IActionResult RoomList()
+        {
+            return View();
+        }
+
         public IActionResult Room(string id)
         {
             ViewData["Message"] = "Room Page.";
