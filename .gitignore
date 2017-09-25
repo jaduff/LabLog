@@ -88,3 +88,6 @@ artifacts/
 .idea/
 .vscode/
 node_modules/
+
+# MacOS junk
+.DS_Store
