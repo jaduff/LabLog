@@ -10,5 +10,7 @@ namespace LabLog.Domain.Events
         string EventType { get; set;}
         string EventBody{get;set;}
         int Version { get; set; }
+        T GetEventBody<T>();
+        void SetEventBody<T>(T eventBody);
     }
 }
