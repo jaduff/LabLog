@@ -6,6 +6,8 @@
 
 <h1>Add Room</h1>
 <form asp-controller="Admin" asp-action="Index" method="post">
-    Room Identifier:  <input asp-for="Name" /> <br />
-    <button type="submit">Add Room</button>
+    <div class="formgroup">
+        <input asp-for="Name" class="form-control" placeholder="Room Name" />
+        <button type="submit">Add Room</button>
+    </div>
 </form>

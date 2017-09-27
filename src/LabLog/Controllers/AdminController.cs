@@ -15,9 +15,9 @@ namespace LabLog.Controllers
         public IActionResult Index(string id)
 
         {
-            using (var db = new RoomModelContext())
+            using (var db = new EventModelContext())
             {
-                    ViewData["Rooms"] = db.Rooms.ToList();
+                    //ViewData["Rooms"] = db.Rooms.ToList();
             }
             return View();
         }
@@ -29,11 +29,6 @@ namespace LabLog.Controllers
             if (ModelState.IsValid)
             {
                 Console.WriteLine(room.Name + " added to database");
-                using (var db = new RoomModelContext())
-                {
-                    db.Add(room);
-                    db.SaveChanges();
-                }
                 //return RedirectToAction("IndexSuccess", new { message = msg});
             }
             return View();   
@@ -45,9 +40,6 @@ namespace LabLog.Controllers
         }
         public IActionResult Room()
         {
-            using (var db = new RoomModelContext())
-            {
-            }
             return View();
         }
 
