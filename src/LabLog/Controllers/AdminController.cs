@@ -36,7 +36,16 @@ namespace LabLog.Controllers
 
         public IActionResult AddRoom()
         {
-            return View();
+            int count;
+            var room = LabLog.Domain.Entities.Room.Create(e => {
+                using (var db = new EventModelContext())
+                {
+                    db.Add(e);
+                    count = db.SaveChanges();
+                        //ViewData["Rooms"] = db.Rooms.ToList();
+                }
+            });
+            return RedirectToAction("Index", "Admin");
         }
         public IActionResult Room()
         {
