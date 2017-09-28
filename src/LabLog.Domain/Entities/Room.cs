@@ -13,6 +13,11 @@ namespace LabLog.Domain.Entities
             _eventHandler = eventHandler;
         }
 
+        public Room()
+        {
+
+        }
+
         public static Room Create(Action<ILabEvent> eventHandler)
         {
             var room = new Room(eventHandler);
