@@ -13,6 +13,12 @@ namespace LabLog.Controllers
     public class AdminController : Controller
     {
 
+        private EventModelContext _db;
+        public AdminController(EventModelContext db)
+        {
+            _db = db;
+        }
+
         public IActionResult Index()
         {
             ViewData["Rooms"]="";
@@ -30,11 +36,8 @@ namespace LabLog.Controllers
             //}
             int count;
             var room = LabLog.Domain.Entities.Room.Create(e => {
-                using (var db = new EventModelContext())
-                {
-                    db.Add(e);
-                    count = db.SaveChanges();
-                }
+                _db.Add(e);
+                count = _db.SaveChanges();
             });
             ViewData["Rooms"]="";
             return View();
