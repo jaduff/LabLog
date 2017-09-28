@@ -12,40 +12,37 @@ namespace LabLog.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult Index(string id)
 
+        public IActionResult Index()
         {
-            using (var db = new EventModelContext())
-            {
-                    //ViewData["Rooms"] = db.Rooms.ToList();
-            }
+            ViewData["Rooms"]="";
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(RoomModel room)
+        public IActionResult Index(Room formroom)
         {
-            if (ModelState.IsValid)
-            {
-                Console.WriteLine(room.Name + " added to database");
-                //return RedirectToAction("IndexSuccess", new { message = msg});
-            }
-            return View();   
-        }
-
-        public IActionResult AddRoom()
-        {
+            //if (ModelState.IsValid)
+            //{
+                // Use this so attempt to add to database only occurs when model is valid.
+            //}
             int count;
             var room = LabLog.Domain.Entities.Room.Create(e => {
                 using (var db = new EventModelContext())
                 {
                     db.Add(e);
                     count = db.SaveChanges();
-                        //ViewData["Rooms"] = db.Rooms.ToList();
                 }
             });
-            return RedirectToAction("Index", "Admin");
+            ViewData["Rooms"]="";
+            return View();
+        }
+
+        public IActionResult AddRoom()
+        {
+            return View();
         }
         public IActionResult Room()
         {
