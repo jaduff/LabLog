@@ -17,8 +17,9 @@ namespace LabLog.Domain.Events
         {
             
         }
-        public string EventType => "ComputerAdded";
+        public string EventType => EventTypeString;
         public string ComputerName{get;set;}
         public int ComputerId { get; set; }
+        public const string EventTypeString ="ComputerAdded";
     }
 }

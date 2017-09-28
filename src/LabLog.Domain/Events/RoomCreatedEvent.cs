@@ -4,6 +4,7 @@ namespace LabLog.Domain.Events
 {
     public class RoomCreatedEvent : IEventBody
     {
-        public string EventType => "RoomCreated";
+        public string EventType => EventTypeString;
+        public const string EventTypeString = "RoomCreated";
     }
 }

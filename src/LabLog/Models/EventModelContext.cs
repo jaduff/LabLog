@@ -6,10 +6,7 @@ namespace LabLog
 {
     public class EventModelContext : DbContext
     {
-        //public DbSet<RoomModel> Rooms { get; set; }
-        //public DbSet<ComputerModel> Computers { get; set; }
-        public DbSet<RoomCreatedEvent> RoomCreatedEvent {get; set;}
-
+        public DbSet<LabEvent> LabEvents { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=./LabLog.db");
@@ -18,10 +15,8 @@ namespace LabLog
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Computer>().HasKey(c => c.ComputerId);
-            //modelBuilder.Entity<RoomModel>().HasKey(c => c.Name);
-            modelBuilder.Entity<ILabEvent>().HasKey(c => c.RoomId);
-            modelBuilder.Entity<ILabEvent>().HasKey(c => c.Version);
+            modelBuilder.Entity<LabEvent>().HasKey(c => c.RoomId);
+            modelBuilder.Entity<LabEvent>().HasKey(c => c.Version);
         
         }
     }
