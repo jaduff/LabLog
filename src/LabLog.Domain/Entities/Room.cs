@@ -19,7 +19,6 @@ namespace LabLog.Domain.Entities
             room.Id = Guid.NewGuid();
             var e = LabEvent.Create(room.Id, 
                 ++room.Version, new RoomCreatedEvent());
-            e.SetEventBody(new RoomCreatedEvent());
             room._eventHandler(e);
             return room;
         }
