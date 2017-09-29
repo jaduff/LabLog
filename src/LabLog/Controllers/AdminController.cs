@@ -6,37 +6,44 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
 using LabLog.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 
 namespace LabLog.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult Index(string id)
 
+        private readonly EventModelContext _db;
+        public AdminController(EventModelContext db)
         {
-            using (var db = new RoomModelContext())
-            {
-                    ViewData["Rooms"] = db.Rooms.ToList();
-            }
+            _db = db;
+        }
+
+        public IActionResult Index()
+        {
+            ViewData["Rooms"]="";
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(RoomModel room)
         {
-            if (ModelState.IsValid)
-            {
-                Console.WriteLine(room.Name + " added to database");
-                using (var db = new RoomModelContext())
-                {
-                    db.Add(room);
-                    db.SaveChanges();
-                }
-                //return RedirectToAction("IndexSuccess", new { message = msg});
-            }
-            return View();   
+            //if (ModelState.IsValid)
+            //{
+                // Use this so attempt to add to database only occurs when model is valid.
+            //}
+            int count;
+            Domain.Entities.Room.Create(room.Name, e => {
+                _db.Add(e);
+                count = _db.SaveChanges();
+            });
+
+
+            ViewData["Rooms"]="";
+            return View();
         }
 
         public IActionResult AddRoom()
@@ -45,9 +52,6 @@ namespace LabLog.Controllers
         }
         public IActionResult Room()
         {
-            using (var db = new RoomModelContext())
-            {
-            }
             return View();
         }
 
@@ -56,14 +60,6 @@ namespace LabLog.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult EventDemo()
-        {
-            var room = LabLog.Domain.Entities.Room.Create(e => {
-                // This is an Action that stores events in the database.
-                // e is the event. Store it.
-            });
 
-            return Ok();
-        }
     }
 }
