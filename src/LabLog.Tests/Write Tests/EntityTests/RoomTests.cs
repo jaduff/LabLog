@@ -10,7 +10,7 @@ namespace LabLog.Tests.EntityTests
         [Fact]
         public async Task RoomCanBeCreated()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(c => { })
                 .When(i => i.CreateARoom("Test Room Name"))
                 .Then(t => t.RoomIsCreated())
@@ -23,7 +23,7 @@ namespace LabLog.Tests.EntityTests
         [Fact]
         public async Task RoomCanBeNamed()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(a => a.Room())
                 .When(i => i.NameARoom())
                 .Then(t => t.RoomNameChangedEventRaised())

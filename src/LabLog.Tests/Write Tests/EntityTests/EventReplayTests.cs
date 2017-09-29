@@ -10,7 +10,7 @@ namespace LabLog.Tests.EntityTests
         [Fact]
         public async Task NewRoomReplaysComputerAdded()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(a => a.Room())
                 .And(a => a.ComputerAddedEvent(6, "Computer Six"))
                 .When(i => i.ReplayEvents())
