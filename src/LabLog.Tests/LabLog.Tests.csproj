@@ -13,4 +13,7 @@
     <ProjectReference Include="..\LabLog.Domain\LabLog.Domain.csproj" />
     <ProjectReference Include="..\LabLog\LabLog.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Read Tests\" />
+  </ItemGroup>
 </Project>
