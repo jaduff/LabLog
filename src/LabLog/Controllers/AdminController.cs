@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
 using LabLog.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 
 namespace LabLog.Controllers
@@ -28,7 +29,7 @@ namespace LabLog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(Room formroom)
+        public IActionResult Index(RoomModel _room)
         {
             //if (ModelState.IsValid)
             //{
@@ -36,6 +37,7 @@ namespace LabLog.Controllers
             //}
             int count;
             var room = LabLog.Domain.Entities.Room.Create(e => {
+                e.SetEventBody(_room);
                 _db.Add(e);
                 count = _db.SaveChanges();
             });
