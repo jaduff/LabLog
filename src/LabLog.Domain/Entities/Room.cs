@@ -18,12 +18,12 @@ namespace LabLog.Domain.Entities
 
         }
 
-        public static Room Create(Action<ILabEvent> eventHandler)
+        public static Room Create(string name, Action<ILabEvent> eventHandler)
         {
             var room = new Room(eventHandler);
             room.Id = Guid.NewGuid();
             var e = LabEvent.Create(room.Id, 
-                ++room.Version, new RoomCreatedEvent());
+                ++room.Version, new RoomCreatedEvent { Name = name });
             room._eventHandler(e);
             return room;
         }

@@ -19,4 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LabLog.Domain\LabLog.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 </Project>

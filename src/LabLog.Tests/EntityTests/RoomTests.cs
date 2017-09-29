@@ -12,10 +12,10 @@ namespace LabLog.Tests.EntityTests
         {
             await CTest<RoomContext>
                 .Given(c => { })
-                .When(i => i.CreateARoom())
+                .When(i => i.CreateARoom("Test Room Name"))
                 .Then(t => t.RoomIsCreated())
                 .And(t => t.IdIsSet())
-                .And(t => t.RoomCreatedEventRaised())
+                .And(t => t.RoomCreatedEventRaised("Test Room Name"))
                 .And(t => t.EventHasRoomId())
                 .ExecuteAsync();
         }

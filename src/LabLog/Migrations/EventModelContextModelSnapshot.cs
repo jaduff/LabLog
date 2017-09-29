@@ -21,20 +21,18 @@ namespace LabLog.Migrations
 
             modelBuilder.Entity("LabLog.Domain.Events.LabEvent", b =>
                 {
-                    b.Property<int>("Version")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("RoomId");
+
+                    b.Property<int>("Version");
 
                     b.Property<string>("EventBody");
 
-                    b.Property<string>("EventType");
-
-                    b.Property<Guid>("RoomId");
+                    b.Property<string>("EventType")
+                        .IsRequired();
 
                     b.Property<DateTimeOffset>("Timestamp");
 
-                    b.HasKey("Version");
-
-                    b.HasAlternateKey("RoomId");
+                    b.HasKey("RoomId", "Version");
 
                     b.ToTable("LabEvents");
                 });

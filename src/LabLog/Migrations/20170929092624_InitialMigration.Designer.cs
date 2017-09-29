@@ -11,8 +11,8 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    [Migration("20170928082432_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20170929092624_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,20 +22,18 @@ namespace LabLog.Migrations
 
             modelBuilder.Entity("LabLog.Domain.Events.LabEvent", b =>
                 {
-                    b.Property<int>("Version")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("RoomId");
+
+                    b.Property<int>("Version");
 
                     b.Property<string>("EventBody");
 
-                    b.Property<string>("EventType");
-
-                    b.Property<Guid>("RoomId");
+                    b.Property<string>("EventType")
+                        .IsRequired();
 
                     b.Property<DateTimeOffset>("Timestamp");
 
-                    b.HasKey("Version");
-
-                    b.HasAlternateKey("RoomId");
+                    b.HasKey("RoomId", "Version");
 
                     b.ToTable("LabEvents");
                 });

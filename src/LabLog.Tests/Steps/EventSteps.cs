@@ -36,11 +36,13 @@ namespace LabLog.Tests.Steps
             Assert.Equal(computerName, body.ComputerName);
         }
 
-        public static void RoomCreatedEventRaised(this IThen<RoomContext> then)
+        public static void RoomCreatedEventRaised(this IThen<RoomContext> then, string name)
         {
             Assert.Equal(1, then.Context.ReceivedEvents.Count);
             Assert.Equal(LabLog.Domain.Events.RoomCreatedEvent.EventTypeString, then.Context.ReceivedEvents.First().EventType);
-            Assert.NotNull(then.Context.ReceivedEvents.First().GetEventBody<RoomCreatedEvent>());
+            var body = then.Context.ReceivedEvents.First().GetEventBody<RoomCreatedEvent>();
+            Assert.NotNull(body);
+            Assert.Equal(name, body.Name);
         }
 
         public static void EventHasRoomId(this IThen<RoomContext> then)

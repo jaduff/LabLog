@@ -12,7 +12,7 @@ namespace LabLog.Tests.Steps
     {
         public static void Room(this IGiven<RoomContext> given)
         {
-            given.Context.Room = Domain.Entities.Room.Create(GetEventHandler(given.Context));
+            given.Context.Room = Domain.Entities.Room.Create("Test name", GetEventHandler(given.Context));
         }
 
         public static Action<ILabEvent> GetEventHandler(RoomContext context)
@@ -27,9 +27,9 @@ namespace LabLog.Tests.Steps
             when.Context.Room.AddComputer(new Computer(computerId, computerName));
         }        
 
-        public static void CreateARoom(this IWhen<RoomContext> when)
+        public static void CreateARoom(this IWhen<RoomContext> when, string name)
         {
-            when.Context.Room = Domain.Entities.Room.Create(GetEventHandler(when.Context));
+            when.Context.Room = Domain.Entities.Room.Create(name, GetEventHandler(when.Context));
         }
 
         public static void RoomIsCreated(this IThen<RoomContext> then)

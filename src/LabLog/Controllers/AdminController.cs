@@ -29,18 +29,19 @@ namespace LabLog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(RoomModel _room)
+        public IActionResult Index(RoomModel room)
         {
             //if (ModelState.IsValid)
             //{
                 // Use this so attempt to add to database only occurs when model is valid.
             //}
             int count;
-            var room = LabLog.Domain.Entities.Room.Create(e => {
-                e.SetEventBody(_room);
+            Domain.Entities.Room.Create(room.Name, e => {
                 _db.Add(e);
                 count = _db.SaveChanges();
             });
+
+
             ViewData["Rooms"]="";
             return View();
         }
@@ -59,14 +60,6 @@ namespace LabLog.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult EventDemo()
-        {
-            var room = LabLog.Domain.Entities.Room.Create(e => {
-                // This is an Action that stores events in the database.
-                // e is the event. Store it.
-            });
 
-            return Ok();
-        }
     }
 }
