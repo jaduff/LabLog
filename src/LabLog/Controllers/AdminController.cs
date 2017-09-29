@@ -13,7 +13,7 @@ namespace LabLog.Controllers
     public class AdminController : Controller
     {
 
-        private EventModelContext _db;
+        private readonly EventModelContext _db;
         public AdminController(EventModelContext db)
         {
             _db = db;
