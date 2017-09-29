@@ -53,6 +53,7 @@ TestResults/
 *.log
 *.sqlite
 *.db
+*.db-journal
 sqlite/
 # OS generated files #
 ######################
