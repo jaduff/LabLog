@@ -4,7 +4,7 @@ using LabLog.Domain.Entities;
 
 namespace LabLog.Tests
 {
-    public class RoomContext
+    public class WriteRoomContext
     {
         public Room Room { get; set; }
         public List<ILabEvent> ReceivedEvents { get; } = new List<ILabEvent>();
