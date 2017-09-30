@@ -9,12 +9,26 @@ namespace LabLog.ReadTests.Steps
 {
     public static class Steps
     {
-        public static void RoomCreatedEvent(this IGiven<ReadRoomContext> given)
+        public static void RoomCreatedEvent(this IGiven<ReadRoomContext> given, Guid guid, int version, string name)
         {
             RoomCreatedEvent roomCreatedEvent = new RoomCreatedEvent();
-            roomCreatedEvent.Name = "Test Room";
-            LabEvent labEvent = LabEvent.Create(new Guid("11111111-1111-1111-1111-11111111"), 1, roomCreatedEvent); 
+            roomCreatedEvent.Name = name;
+            LabEvent labEvent = LabEvent.Create(guid, version, roomCreatedEvent); 
             given.Context.RetrievedEvents.Add(labEvent);
+        }
+
+        public static void RoomIdMatches(this IThen<ReadRoomContext> then, Guid guid)
+        {
+            Assert.Equal(then.Context.Room.Id,guid);
+        }
+        public static void RoomVersionMatches(this IThen<ReadRoomContext> then, int version)
+        {
+            Assert.Equal(then.Context.Room.Version,version);
+        }
+        public static void RoomNameMatches(this IThen<ReadRoomContext> then,string name)
+        {
+            Assert.Equal(then.Context.Room.Name,name);
+
         }
 
         public static void CreateTheRoom(this IWhen<ReadRoomContext> when)
