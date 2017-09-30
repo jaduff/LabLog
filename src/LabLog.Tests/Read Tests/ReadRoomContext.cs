@@ -6,7 +6,7 @@ namespace LabLog.ReadTests
 {
     public class ReadRoomContext
     {
-        public Room Room { get; set; }
+        public RoomModel Room { get; set; }
         public List<ILabEvent> RetrievedEvents { get; } = new List<ILabEvent>();
     }
 }

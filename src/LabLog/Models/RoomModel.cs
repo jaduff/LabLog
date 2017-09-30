@@ -9,6 +9,8 @@ namespace LabLog
         [Required]
         [Display(Name = "Room Identifier")]
         public string Name {get; set;}
+        public Guid Id {get; set;}
+        public int version {get; set;}
         public List<ComputerModel> Computers {get; set;}
 
 
