@@ -9,25 +9,28 @@ namespace LabLog.ReadTests.Steps
 {
     public static class Steps
     {
-        public static void RoomCreatedEvent(this IGiven<ReadRoomContext> given, Guid guid, int version, string name)
+        public static void RoomCreatedEvent(this IGiven<ReadRoomContext> given)
         {
+            given.Context.Id = new Guid("11111111-1111-1111-1111-11111111");
+            given.Context.Name = "Test Room";
+            given.Context.Version = 1;
             RoomCreatedEvent roomCreatedEvent = new RoomCreatedEvent();
-            roomCreatedEvent.Name = name;
-            LabEvent labEvent = LabEvent.Create(guid, version, roomCreatedEvent); 
+            roomCreatedEvent.Name = given.Context.Name;
+            LabEvent labEvent = LabEvent.Create(given.Context.Id, given.Context.Version, roomCreatedEvent); 
             given.Context.RetrievedEvents.Add(labEvent);
         }
 
-        public static void RoomIdMatches(this IThen<ReadRoomContext> then, Guid guid)
+        public static void RoomIdMatches(this IThen<ReadRoomContext> then)
         {
-            Assert.Equal(then.Context.Room.Id,guid);
+            Assert.Equal(then.Context.Room.Id,then.Context.Id);
         }
-        public static void RoomVersionMatches(this IThen<ReadRoomContext> then, int version)
+        public static void RoomVersionMatches(this IThen<ReadRoomContext> then)
         {
-            Assert.Equal(then.Context.Room.Version,version);
+            Assert.Equal(then.Context.Room.Version,then.Context.Version);
         }
-        public static void RoomNameMatches(this IThen<ReadRoomContext> then,string name)
+        public static void RoomNameMatches(this IThen<ReadRoomContext> then)
         {
-            Assert.Equal(then.Context.Room.Name,name);
+            Assert.Equal(then.Context.Room.Name,then.Context.Name);
 
         }
 

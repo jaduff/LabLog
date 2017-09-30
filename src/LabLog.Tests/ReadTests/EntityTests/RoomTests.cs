@@ -12,18 +12,14 @@ namespace LabLog.ReadTests.EntityTests
         [Fact]
         public async Task RoomCanBeCreatedFromEvent()
         {
-            string name = "test room";
-            Guid guid = new Guid("11111111-1111-1111-1111-111111111111");
-            int version = 1;
-
             await CTest<ReadRoomContext>
-                .Given(a => a.RoomCreatedEvent(guid, version, name))
+                .Given(a => a.RoomCreatedEvent())
                 .When(i => i.CreateTheRoom())
                 .Then(t => t.RoomIsCreated())
                 .And(t => t.IdIsSet())
-                .And(t => t.RoomIdMatches(guid))
-                .And(t => t.RoomNameMatches(name))
-                .And(t => t.RoomVersionMatches(version))
+                .And(t => t.RoomIdMatches())
+                .And(t => t.RoomNameMatches())
+                .And(t => t.RoomVersionMatches())
                 .ExecuteAsync();
         }
 
