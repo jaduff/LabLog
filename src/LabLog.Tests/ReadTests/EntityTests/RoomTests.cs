@@ -4,7 +4,7 @@ using Xunit;
 using LabLog.Domain.Events;
 using LabLog.ReadTests.Steps;
 
-namespace LabLog.ReadTests.rEntityTests
+namespace LabLog.ReadTests.EntityTests
 {
     class RoomTests
     {
