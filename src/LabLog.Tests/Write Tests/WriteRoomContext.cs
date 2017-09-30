@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LabLog.Domain.Events;
 using LabLog.Domain.Entities;
 
-namespace LabLog.Tests
+namespace LabLog.WriteTests
 {
     public class WriteRoomContext
     {

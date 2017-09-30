@@ -5,7 +5,7 @@ using LabLog.Domain.Entities;
 using LabLog.Domain.Events;
 using Xunit;
 
-namespace LabLog.Tests.Steps
+namespace LabLog.WriteTests.Steps
 {
     public static class Steps
     {

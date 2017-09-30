@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using CheetahTesting;
-using LabLog.Tests.Steps;
+using LabLog.WriteTests.Steps;
 using Xunit;
 
-namespace LabLog.Tests.EntityTests
+namespace LabLog.WriteTests.EntityTests
 {
     public class EventReplayTests
     {

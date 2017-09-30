@@ -5,7 +5,7 @@ using LabLog.Domain.Events;
 using Xunit;
 using Newtonsoft.Json;
 
-namespace LabLog.Tests.Steps
+namespace LabLog.WriteTests.Steps
 {
     public static class EventSteps
     {
