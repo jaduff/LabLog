@@ -32,8 +32,7 @@ namespace LabLog.Controllers
                 room.ApplyRoomCreatedEvent(roomCreatedEvent);
                 roomList.Add(room);
             }
-            ViewData["Rooms"] = roomList;
-            return View();
+            return View(roomList);
         }
 
 

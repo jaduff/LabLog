@@ -1,4 +1,4 @@
-﻿@model RoomModel
+﻿@model List<RoomModel>
 @{
     ViewData["Title"] = "Admin";
 }
@@ -6,15 +6,12 @@
 <h1>Admin</h1>
 <h2>Rooms</h2>
 <ul>
-    @if(ViewData["Rooms"] != "")
-    {
-        foreach (var room in ViewData["Rooms"] as List<RoomModel>)
+        @foreach (var room in Model)
         {
             <li>
-                @room.Name
+                @room?.Name
             </li>
         }
-    }
 
 </ul>
 
