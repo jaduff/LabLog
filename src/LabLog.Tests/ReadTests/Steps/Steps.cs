@@ -20,20 +20,6 @@ namespace LabLog.ReadTests.Steps
             given.Context.RetrievedEvents.Add(labEvent);
         }
 
-        public static void RoomIdMatches(this IThen<ReadRoomContext> then)
-        {
-            Assert.Equal(then.Context.Room.Id,then.Context.Id);
-        }
-        public static void RoomVersionMatches(this IThen<ReadRoomContext> then)
-        {
-            Assert.Equal(then.Context.Room.Version,then.Context.Version);
-        }
-        public static void RoomNameMatches(this IThen<ReadRoomContext> then)
-        {
-            Assert.Equal(then.Context.Room.Name,then.Context.Name);
-
-        }
-
         public static void CreateTheRoom(this IWhen<ReadRoomContext> when)
         {
             ILabEvent labEvent = when.Context.RetrievedEvents[0];
@@ -53,6 +39,9 @@ namespace LabLog.ReadTests.Steps
         public static void RoomIsCreated(this IThen<ReadRoomContext> then)
         {
             Assert.NotNull(then.Context.Room);
+            Assert.Equal(then.Context.Room.Name, then.Context.Name);
+            Assert.Equal(then.Context.Room.Id, then.Context.Id);
+            Assert.Equal(then.Context.Room.Version, then.Context.Version);
         }
 
         public static void IdIsSet(this IThen<ReadRoomContext> then)

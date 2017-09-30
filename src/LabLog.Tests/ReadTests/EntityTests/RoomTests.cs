@@ -17,9 +17,6 @@ namespace LabLog.ReadTests.EntityTests
                 .When(i => i.CreateTheRoom())
                 .Then(t => t.RoomIsCreated())
                 .And(t => t.IdIsSet())
-                .And(t => t.RoomIdMatches())
-                .And(t => t.RoomNameMatches())
-                .And(t => t.RoomVersionMatches())
                 .ExecuteAsync();
         }
 
