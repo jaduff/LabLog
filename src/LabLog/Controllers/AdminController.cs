@@ -50,9 +50,7 @@ namespace LabLog.Controllers
                 count = _db.SaveChanges();
             });
 
-
-            ViewData["Rooms"]="";
-            return View();
+            return RedirectToAction("Index");
         }
 
         public IActionResult AddRoom()
