@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
-using LabLog.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using LabLog.Domain.Events;
 
 
 namespace LabLog.Controllers
@@ -22,7 +22,17 @@ namespace LabLog.Controllers
 
         public IActionResult Index()
         {
-            ViewData["Rooms"]="";
+            List<RoomModel> roomList = new List<RoomModel>();
+            var events = from _events in _db.LabEvents
+                         where _events.EventType.Equals(RoomCreatedEvent.EventTypeString)
+                         select _events;
+            foreach (LabEvent roomCreatedEvent in events)
+            {
+                RoomModel room = new RoomModel();
+                room.ApplyRoomCreatedEvent(roomCreatedEvent);
+                roomList.Add(room);
+            }
+            ViewData["Rooms"] = roomList;
             return View();
         }
 
