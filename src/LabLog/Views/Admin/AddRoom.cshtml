@@ -5,7 +5,8 @@
 
 
 <h1>Add Room</h1>
-<form asp-controller="Admin" asp-action="Index" method="post">
+<span class="alert">@ViewData["message"]</span>
+<form asp-controller="Admin" asp-action="AddRoom" method="post">
     <div class="formgroup">
         <input asp-for="Name" class="form-control" placeholder="Room Name" />
         <button type="submit">Add Room</button>

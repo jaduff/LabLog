@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
 using Microsoft.AspNetCore.Http;
 using LabLog.Domain.Events;
+using LabLog.Domain.Exceptions;
 
 
 namespace LabLog.Controllers
@@ -35,27 +36,35 @@ namespace LabLog.Controllers
             return View(roomList);
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Index(RoomModel room)
-        {
-            //if (ModelState.IsValid)
-            //{
-                // Use this so attempt to add to database only occurs when model is valid.
-            //}
-            int count;
-            Domain.Entities.Room.Create(room.Name, e => {
-                _db.Add(e);
-                count = _db.SaveChanges();
-            });
-
-            return RedirectToAction("Index");
-        }
-
         public IActionResult AddRoom()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddRoom(RoomModel room)
+        {
+            //if (ModelState.IsValid)
+            //{
+            // Use this so attempt to add to database only occurs when model is valid.
+            //}
+            int count;
+            try
+            {
+                Domain.Entities.Room.Create(room.Name, e =>
+                {
+                    _db.Add(e);
+                    count = _db.SaveChanges();
+                });
+            }
+            catch (LabException ex)
+            {
+                ViewData["message"] = ex.Message;
+                return View();
+            }
+
+            return RedirectToAction("Index");
         }
         public IActionResult Room()
         {
