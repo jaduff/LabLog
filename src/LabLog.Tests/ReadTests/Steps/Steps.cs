@@ -21,10 +21,7 @@ namespace LabLog.ReadTests.Steps
         {
             ILabEvent labEvent = when.Context.RetrievedEvents[0];
             when.Context.Room = new RoomModel();
-            RoomCreatedEvent roomCreatedEvent= labEvent.GetEventBody<RoomCreatedEvent>();
-            when.Context.Room.Name = roomCreatedEvent.Name; //this won't work because of lack of event handler. Check room.cs line 38
-            when.Context.Room.Id = labEvent.RoomId;
-            when.Context.Room.version = labEvent.Version;
+            when.Context.Room.ApplyRoomCreatedEvent(labEvent);
         }
 
         public static void Room(this IGiven<ReadRoomContext> given)
