@@ -1,16 +1,16 @@
 using System.Threading.Tasks;
 using CheetahTesting;
-using LabLog.Tests.Steps;
+using LabLog.WriteTests.Steps;
 using Xunit;
 
-namespace LabLog.Tests.EntityTests
+namespace LabLog.WriteTests.EntityTests
 {
     public class EventReplayTests
     {
         [Fact]
         public async Task NewRoomReplaysComputerAdded()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(a => a.Room())
                 .And(a => a.ComputerAddedEvent(6, "Computer Six"))
                 .When(i => i.ReplayEvents())

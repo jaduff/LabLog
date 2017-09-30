@@ -1,16 +1,16 @@
 using System.Threading.Tasks;
 using CheetahTesting;
-using LabLog.Tests.Steps;
+using LabLog.WriteTests.Steps;
 using Xunit;
 
-namespace LabLog.Tests.EntityTests
+namespace LabLog.WriteTests.EntityTests
 {
     public class VersionTests
     {
         [Fact]
         public async Task VersionStartsAt1()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(a => a.Room())
                 .When(c => {})
                 .Then(t => t.VersionIs(1))
@@ -20,7 +20,7 @@ namespace LabLog.Tests.EntityTests
         [Fact]
         public async Task VersionIncrementsOnce()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(a => a.Room())
                 .When(i => i.AddAComputer(1, "Computer One"))
                 .Then(t => t.VersionIs(2))
@@ -31,7 +31,7 @@ namespace LabLog.Tests.EntityTests
         [Fact]
         public async Task VersionIncrementsTwice()
         {
-            await CTest<RoomContext>
+            await CTest<WriteRoomContext>
                 .Given(a => a.Room())
                 .When(i => i.AddAComputer(1, "Computer One"))
                 .And(i => i.NameARoom())
