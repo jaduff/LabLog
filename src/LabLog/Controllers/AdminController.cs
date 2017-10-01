@@ -46,10 +46,6 @@ namespace LabLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddRoom(RoomModel room)
         {
-            //if (ModelState.IsValid)
-            //{
-            // Use this so attempt to add to database only occurs when model is valid.
-            //}
         int count;
             try
             {
