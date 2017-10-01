@@ -57,8 +57,8 @@ namespace LabLog.Controllers
             }
             catch (LabException ex)
             {
-                ViewData["message"] = ex.Message;
-                return View();
+                ViewData["message"] = ex.LabMessage;
+                return View(room);
             }
 
             return RedirectToAction("Index");

@@ -7,9 +7,10 @@ namespace LabLog.Domain.Exceptions
 {
     public class LabException : Exception
     {
-        public LabException(string message)
+        public String LabMessage { get; }
+        public LabException(string _message)
         {
-
+            LabMessage = _message;
         }
 
 

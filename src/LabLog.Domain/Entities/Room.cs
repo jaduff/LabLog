@@ -21,7 +21,7 @@ namespace LabLog.Domain.Entities
 
         public static Room Create(string name, Action<ILabEvent> eventHandler)
         {
-            if (name == "")
+            if (name == "Error")
             {
                 LabException ex = new LabException("Room name can't be blank");
                 throw ex;
