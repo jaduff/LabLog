@@ -36,6 +36,7 @@ namespace LabLog.Controllers
             return View(roomList);
         }
 
+        [HttpGet]
         public IActionResult AddRoom()
         {
             return View();
@@ -49,7 +50,7 @@ namespace LabLog.Controllers
             //{
             // Use this so attempt to add to database only occurs when model is valid.
             //}
-            int count;
+        int count;
             try
             {
                 Domain.Entities.Room.Create(room.Name, e =>
@@ -65,7 +66,9 @@ namespace LabLog.Controllers
             }
 
             return RedirectToAction("Index");
+            
         }
+
         public IActionResult Room()
         {
             return View();
