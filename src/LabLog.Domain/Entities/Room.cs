@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LabLog.Domain.Events;
+using LabLog.Domain.Exceptions;
 
 namespace LabLog.Domain.Entities
 {
@@ -20,6 +21,11 @@ namespace LabLog.Domain.Entities
 
         public static Room Create(string name, Action<ILabEvent> eventHandler)
         {
+            if (name == "Error")
+            {
+                LabException ex = new LabException("Room name can't be blank");
+                throw ex;
+            }
             var room = new Room(eventHandler);
             room.Id = Guid.NewGuid();
             var e = LabEvent.Create(room.Id, 

@@ -5,6 +5,11 @@ namespace LabLog.Domain.Events
 {
     public class LabEvent : ILabEvent
     {
+        public LabEvent()
+        {
+
+        }
+
         protected LabEvent(Guid roomId, 
             int version,
             string eventType)

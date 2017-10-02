@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
-using LabLog.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using LabLog.Domain.Events;
+using LabLog.Domain.Exceptions;
 
 
 namespace LabLog.Controllers
@@ -22,34 +23,48 @@ namespace LabLog.Controllers
 
         public IActionResult Index()
         {
-            ViewData["Rooms"]="";
-            return View();
+            List<RoomModel> roomList = new List<RoomModel>();
+            var events = from _events in _db.LabEvents
+                         where _events.EventType.Equals(RoomCreatedEvent.EventTypeString)
+                         select _events;
+            foreach (LabEvent roomCreatedEvent in events)
+            {
+                RoomModel room = new RoomModel();
+                room.ApplyRoomCreatedEvent(roomCreatedEvent);
+                roomList.Add(room);
+            }
+            return View(roomList);
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Index(RoomModel room)
-        {
-            //if (ModelState.IsValid)
-            //{
-                // Use this so attempt to add to database only occurs when model is valid.
-            //}
-            int count;
-            Domain.Entities.Room.Create(room.Name, e => {
-                _db.Add(e);
-                count = _db.SaveChanges();
-            });
-
-
-            ViewData["Rooms"]="";
-            return View();
-        }
-
+        [HttpGet]
         public IActionResult AddRoom()
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddRoom(RoomModel room)
+        {
+        int count;
+            try
+            {
+                Domain.Entities.Room.Create(room.Name, e =>
+                {
+                    _db.Add(e);
+                    count = _db.SaveChanges();
+                });
+            }
+            catch (LabException ex)
+            {
+                ViewData["message"] = ex.LabMessage;
+                return View(room);
+            }
+
+            return RedirectToAction("Index");
+            
+        }
+
         public IActionResult Room()
         {
             return View();

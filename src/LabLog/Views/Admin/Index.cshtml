@@ -1,4 +1,4 @@
-﻿@model RoomModel
+﻿@model List<RoomModel>
 @{
     ViewData["Title"] = "Admin";
 }
@@ -6,20 +6,16 @@
 <h1>Admin</h1>
 <h2>Rooms</h2>
 <ul>
-    @if(ViewData["Rooms"] != "")
-    {
-        foreach (var room in ViewData["Rooms"] as List<RoomModel>)
+        @foreach (var room in Model)
         {
             <li>
-                @room.Name
+                <a asp-controller="Admin" asp-action="Room" asp-route-id="@room.Name">@room.Name</a>
             </li>
         }
-    }
 
 </ul>
 
 
-
-<form action="./admin/AddRoom">
+<form asp-controller="Admin" asp-action="AddRoom" method="get">
     <input type="submit" value="New Room" />
 </form>

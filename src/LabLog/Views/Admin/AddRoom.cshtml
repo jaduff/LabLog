@@ -1,13 +1,14 @@
-@model LabLog.Domain.Entities.Room
+@model LabLog.RoomModel
 @{
     ViewData["Title"] = "Add Room";
 }
 
 
 <h1>Add Room</h1>
-<form asp-controller="Admin" asp-action="Index" method="post">
+<span class="alert">@ViewData["message"]</span>
+<form asp-controller="Admin" asp-action="AddRoom" method="post">
     <div class="formgroup">
-        <input asp-for="Name" class="form-control" placeholder="Room Name" />
+        <input asp-for="Name" class="form-control" placeholder="@(Model == null ? "Room Name" : @Model.Name)" />
         <button type="submit">Add Room</button>
     </div>
 </form>
