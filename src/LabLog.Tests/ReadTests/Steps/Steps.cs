@@ -16,7 +16,7 @@ namespace LabLog.ReadTests.Steps
             given.Context.Version = 1;
             RoomCreatedEvent roomCreatedEvent = new RoomCreatedEvent();
             roomCreatedEvent.Name = given.Context.Name;
-            LabEvent labEvent = LabEvent.Create(given.Context.Id, given.Context.Version, roomCreatedEvent); 
+            LabEvent labEvent = LabEvent.Create(given.Context.Id, given.Context.Version, "User", roomCreatedEvent); 
             given.Context.RetrievedEvents.Add(labEvent);
         }
 

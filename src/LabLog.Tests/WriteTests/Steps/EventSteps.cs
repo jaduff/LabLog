@@ -13,7 +13,7 @@ namespace LabLog.WriteTests.Steps
             int computerId, string computerName)
         {
             given.Context.PendingEvents.Add(LabEvent.Create(Guid.NewGuid(),
-                1,
+                1, "User",
                 new ComputerAddedEvent(computerId, computerName)));
         }
 

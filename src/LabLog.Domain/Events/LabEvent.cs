@@ -21,7 +21,7 @@ namespace LabLog.Domain.Events
         }
 
         public static LabEvent Create<T>(Guid roomId, 
-            int version, 
+            int version, string eventAuthor,
             T labEvent) where T : IEventBody
             {
                 var e = new LabEvent(roomId, version, labEvent.EventType);
@@ -44,5 +44,6 @@ namespace LabLog.Domain.Events
         public DateTimeOffset Timestamp { get; set; }
         public string EventType { get; set;}
         public string EventBody { get;set;}
+        public string EventAuthor { get; set; }
     }
 }

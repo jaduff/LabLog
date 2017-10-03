@@ -11,7 +11,7 @@ namespace LabLog.WriteTests.Steps
     {
         public static void Room(this IGiven<WriteRoomContext> given)
         {
-            given.Context.Room = Domain.Entities.Room.Create("Test name", GetEventHandler(given.Context));
+            given.Context.Room = Domain.Entities.Room.Create("Test name", "User", GetEventHandler(given.Context));
         }
 
         public static Action<ILabEvent> GetEventHandler(WriteRoomContext context)
@@ -23,12 +23,12 @@ namespace LabLog.WriteTests.Steps
             int computerId, 
             string computerName)
         {
-            when.Context.Room.AddComputer(new Computer(computerId, computerName));
+            when.Context.Room.AddComputer(new Computer(computerId, computerName), "User");
         }        
 
         public static void CreateARoom(this IWhen<WriteRoomContext> when, string name)
         {
-            when.Context.Room = Domain.Entities.Room.Create(name, GetEventHandler(when.Context));
+            when.Context.Room = Domain.Entities.Room.Create(name, "User", GetEventHandler(when.Context));
         }
 
         public static void RoomIsCreated(this IThen<WriteRoomContext> then)
@@ -44,7 +44,7 @@ namespace LabLog.WriteTests.Steps
 
         public static void NameARoom(this IWhen<WriteRoomContext> when)
         {
-            when.Context.Room.Name = "TD";
+            when.Context.Room.SetName("TD", "User");
         }
 
         public static void VersionIs(this IThen<WriteRoomContext> then, int version)

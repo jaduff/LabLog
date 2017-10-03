@@ -19,7 +19,7 @@ namespace LabLog.Domain.Entities
 
         }
 
-        public static Room Create(string name, Action<ILabEvent> eventHandler)
+        public static Room Create(string name, string eventAuthor, Action<ILabEvent> eventHandler)
         {
             if (name == "Error")
             {
@@ -29,7 +29,7 @@ namespace LabLog.Domain.Entities
             var room = new Room(eventHandler);
             room.Id = Guid.NewGuid();
             var e = LabEvent.Create(room.Id, 
-                ++room.Version, new RoomCreatedEvent { Name = name });
+                ++room.Version, eventAuthor, new RoomCreatedEvent { Name = name });
             room._eventHandler(e);
             return room;
         }
@@ -37,26 +37,28 @@ namespace LabLog.Domain.Entities
         public List<Computer> Computers { get; } = new List<Computer>();
         public Guid Id { get; set; }
         private String _name;
-        public String Name {
+        public String Name
+        {
             get { return _name; }
-            set
+        }
+        
+        public void SetName (string name, string eventAuthor)
+        {
+            if (_eventHandler == null)
             {
-                if (_eventHandler == null)
-                {
-                    return;
-                }
-                _name = value;
-                var @event = LabEvent.Create(Id,
-                    ++Version,
-                    new RoomNameChangedEvent(_name)
-                );
-                _eventHandler(@event);
+                return;
             }
+            _name = name;
+            var @event = LabEvent.Create(Id,
+                ++Version, eventAuthor,
+                new RoomNameChangedEvent(_name)
+            );
+            _eventHandler(@event);
         }
 
         public int Version { get; private set; }
 
-        public void AddComputer(Computer computer)
+        public void AddComputer(Computer computer, string eventAuthor)
         {
             if (_eventHandler == null)
             {
@@ -65,7 +67,7 @@ namespace LabLog.Domain.Entities
 
             var @event = LabEvent.Create(
                 Guid.NewGuid(),
-                ++Version,
+                ++Version, eventAuthor,
                 new ComputerAddedEvent(computer.ComputerId, computer.ComputerName));
             _eventHandler(@event);
         }
