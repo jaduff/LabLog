@@ -14,7 +14,7 @@ namespace LabLog.Controllers
 {
     public class AdminController : Controller
     {
-        private string _user = "User";
+        private string _user = "User"; //Dummy user. To be replaced by authentication data once implemented.
 
         private readonly EventModelContext _db;
         public AdminController(EventModelContext db)

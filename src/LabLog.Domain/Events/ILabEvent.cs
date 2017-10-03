@@ -12,6 +12,6 @@ namespace LabLog.Domain.Events
         int Version { get; set; }
         T GetEventBody<T>();
         void SetEventBody<T>(T eventBody);
-        string EventAuthor { get; set; }
+        string EventAuthor { get; set; } //The user who initiated the event.
     }
 }
