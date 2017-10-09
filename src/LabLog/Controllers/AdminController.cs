@@ -16,6 +16,7 @@ namespace LabLog.Controllers
     {
 
         private readonly EventModelContext _db;
+        private string _user = "user";
         public AdminController(EventModelContext db)
         {
             _db = db;
@@ -51,6 +52,7 @@ namespace LabLog.Controllers
             {
                 Domain.Entities.Room.Create(room.Name, e =>
                 {
+                    e.EventAuthor = _user;
                     _db.Add(e);
                     count = _db.SaveChanges();
                 });
