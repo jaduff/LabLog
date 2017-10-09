@@ -44,5 +44,6 @@ namespace LabLog.Domain.Events
         public DateTimeOffset Timestamp { get; set; }
         public string EventType { get; set;}
         public string EventBody { get;set;}
+        public string EventAuthor { get; set; }
     }
 }
