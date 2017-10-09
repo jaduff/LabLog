@@ -11,9 +11,10 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    partial class EventModelContextModelSnapshot : ModelSnapshot
+    [Migration("20171003105445_eventAuthor")]
+    partial class eventAuthor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
