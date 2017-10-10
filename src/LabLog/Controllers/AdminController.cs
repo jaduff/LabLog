@@ -47,21 +47,21 @@ namespace LabLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddRoom(RoomModel room)
         {
-        int count;
-            try
-            {
-                Domain.Entities.Room.Create(room.Name, e =>
+            int count;
+                try
                 {
-                    e.EventAuthor = _user;
-                    _db.Add(e);
-                    count = _db.SaveChanges();
-                });
-            }
-            catch (LabException ex)
-            {
-                ViewData["message"] = ex.LabMessage;
-                return View(room);
-            }
+                    Domain.Entities.Room.Create(room.Name, e =>
+                    {
+                        e.EventAuthor = _user;
+                        _db.Add(e);
+                        count = _db.SaveChanges();
+                    });
+                }
+                catch (LabException ex)
+                {
+                    ViewData["message"] = ex.LabMessage;
+                    return View(room);
+                }
 
             return RedirectToAction("Index");
             
