@@ -70,8 +70,6 @@ namespace LabLog.Controllers
         [Route("Room/{id}/{name?}")]
         public IActionResult Room(Guid id, string name)
         {
-            string message = String.Format("{0}::{1}", id, name);
-
             RoomModel room = new RoomModel();
             var events = _db.LabEvents
                                     .Where(w => (w.RoomId == id))
@@ -83,7 +81,6 @@ namespace LabLog.Controllers
             
             //need to return error where no room is returned
 
-            ViewData["message"] = message; //this is temporary for diagnostic purposes.
             return View(room);
         }
 
