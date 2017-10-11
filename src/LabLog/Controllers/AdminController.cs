@@ -67,6 +67,7 @@ namespace LabLog.Controllers
             
         }
 
+        [Route("Room/{id}/{name?}")]
         public IActionResult Room()
         {
             //if room.Name doesn't match RouteData name, redirect, warn user.
