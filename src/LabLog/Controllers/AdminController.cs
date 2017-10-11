@@ -67,9 +67,24 @@ namespace LabLog.Controllers
             
         }
 
-        public IActionResult Room()
+        [Route("Room/{id}/{name?}")]
+        public IActionResult Room(Guid id, string name)
         {
-            return View();
+            string message = String.Format("{0}::{1}", id, name);
+
+            RoomModel room = new RoomModel();
+            var events = _db.LabEvents
+                                    .Where(w => (w.RoomId == id))
+                                    .OrderBy(o => (o.Version));
+            foreach (LabEvent roomEvent in events)
+            {
+                room.Replay(roomEvent);
+            }
+            
+            //need to return error where no room is returned
+
+            ViewData["message"] = message; //this is temporary for diagnostic purposes.
+            return View(room);
         }
 
         public IActionResult Error()
