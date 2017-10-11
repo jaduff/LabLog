@@ -43,7 +43,7 @@ namespace LabLog
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Admin}/{action=Index}/{id?}");
+                    template: "{controller=Admin}/{action=Index}/{id?}/{name?}");
 
             });
         }

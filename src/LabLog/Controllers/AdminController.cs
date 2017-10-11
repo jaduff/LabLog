@@ -69,7 +69,26 @@ namespace LabLog.Controllers
 
         public IActionResult Room()
         {
-            return View();
+            //if room.Name doesn't match RouteData name, redirect, warn user.
+            var roomId = RouteData.Values["id"];
+            var roomGUID = new Guid(roomId.ToString());
+
+            var roomName = RouteData.Values["name"];
+            string message = String.Format("{0}::{1}", roomId, roomName);
+
+            RoomModel room = new RoomModel();
+            var events = _db.LabEvents
+                                    .Where(w => (w.RoomId == roomGUID))
+                                    .OrderBy(o => (o.Version));
+            foreach (LabEvent roomEvent in events)
+            {
+                room.Replay(roomEvent);
+            }
+            
+            //need to return error where no room is returned
+
+            ViewData["message"] = message; //this is temporary for diagnostic purposes.
+            return View(room);
         }
 
         public IActionResult Error()
