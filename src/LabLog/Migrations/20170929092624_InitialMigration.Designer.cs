@@ -22,7 +22,7 @@ namespace LabLog.Migrations
 
             modelBuilder.Entity("LabLog.Domain.Events.LabEvent", b =>
                 {
-                    b.Property<Guid>("RoomId");
+                    b.Property<Guid>("SchoolId");
 
                     b.Property<int>("Version");
 
@@ -33,7 +33,7 @@ namespace LabLog.Migrations
 
                     b.Property<DateTimeOffset>("Timestamp");
 
-                    b.HasKey("RoomId", "Version");
+                    b.HasKey("SchoolId", "Version");
 
                     b.ToTable("LabEvents");
                 });

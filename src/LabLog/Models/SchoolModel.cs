@@ -5,34 +5,34 @@ using System.Collections.Generic;
 using LabLog.Domain.Events;
 namespace LabLog
 {
-    public class RoomModel
+    public class SchoolModel
     {
         [Required]
-        [Display(Name = "Room Identifier")]
+        [Display(Name = "School Identifier")]
         public string Name {get; set;}
         public Guid Id {get; set;}
         public int Version {get; set;}
         public List<ComputerModel> Computers {get; set;}
 
-        public void ApplyRoomCreatedEvent(ILabEvent e)
+        public void ApplySchoolCreatedEvent(ILabEvent e)
         {
-            RoomCreatedEvent roomCreatedEvent= e.GetEventBody<RoomCreatedEvent>();
-            Name = roomCreatedEvent.Name;
-            Id = e.RoomId;
+            SchoolCreatedEvent schoolCreatedEvent= e.GetEventBody<SchoolCreatedEvent>();
+            Name = schoolCreatedEvent.Name;
+            Id = e.SchoolId;
             Version = e.Version;
         }
         public void Replay(ILabEvent labEvent)
         {
             switch (labEvent.EventType)
             {
-                case RoomCreatedEvent.EventTypeString:
-                    ApplyRoomCreatedEvent(labEvent);
+                case SchoolCreatedEvent.EventTypeString:
+                    ApplySchoolCreatedEvent(labEvent);
                 break;
             }
         }
 
 
-        /* some way of representing room layout? Image blob? URL to image? something fancy like a floor plan using drag and drop? */
+        /* some way of representing school layout? Image blob? URL to image? something fancy like a floor plan using drag and drop? */
         
     }
 }

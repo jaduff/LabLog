@@ -9,45 +9,45 @@ namespace LabLog.ReadTests.Steps
 {
     public static class Steps
     {
-        public static void RoomCreatedEvent(this IGiven<ReadRoomContext> given)
+        public static void SchoolCreatedEvent(this IGiven<ReadSchoolContext> given)
         {
             given.Context.Id = new Guid("11111111-1111-1111-1111-11111111");
-            given.Context.Name = "Test Room";
+            given.Context.Name = "Test School";
             given.Context.Version = 1;
-            RoomCreatedEvent roomCreatedEvent = new RoomCreatedEvent();
-            roomCreatedEvent.Name = given.Context.Name;
-            LabEvent labEvent = LabEvent.Create(given.Context.Id, given.Context.Version, roomCreatedEvent); 
+            SchoolCreatedEvent schoolCreatedEvent = new SchoolCreatedEvent();
+            schoolCreatedEvent.Name = given.Context.Name;
+            LabEvent labEvent = LabEvent.Create(given.Context.Id, given.Context.Version, schoolCreatedEvent); 
             given.Context.RetrievedEvents.Add(labEvent);
         }
 
-        public static void CreateTheRoom(this IWhen<ReadRoomContext> when)
+        public static void CreateTheSchool(this IWhen<ReadSchoolContext> when)
         {
             ILabEvent labEvent = when.Context.RetrievedEvents[0];
-            when.Context.Room = new RoomModel();
-            when.Context.Room.ApplyRoomCreatedEvent(labEvent);
+            when.Context.School = new SchoolModel();
+            when.Context.School.ApplySchoolCreatedEvent(labEvent);
         }
 
-        public static void Room(this IGiven<ReadRoomContext> given)
+        public static void School(this IGiven<ReadSchoolContext> given)
         {
         }
 
-        public static Action<ILabEvent> GetEventHandler(ReadRoomContext context)
+        public static Action<ILabEvent> GetEventHandler(ReadSchoolContext context)
         {
             return e => context.RetrievedEvents.Add(e);
         }
 
-        public static void RoomIsCreated(this IThen<ReadRoomContext> then)
+        public static void SchoolIsCreated(this IThen<ReadSchoolContext> then)
         {
-            Assert.NotNull(then.Context.Room);
-            Assert.Equal(then.Context.Room.Name, then.Context.Name);
-            Assert.Equal(then.Context.Room.Id, then.Context.Id);
-            Assert.Equal(then.Context.Room.Version, then.Context.Version);
+            Assert.NotNull(then.Context.School);
+            Assert.Equal(then.Context.School.Name, then.Context.Name);
+            Assert.Equal(then.Context.School.Id, then.Context.Id);
+            Assert.Equal(then.Context.School.Version, then.Context.Version);
         }
 
-        public static void IdIsSet(this IThen<ReadRoomContext> then)
+        public static void IdIsSet(this IThen<ReadSchoolContext> then)
         {
-            Assert.NotNull(then.Context.Room.Id);
-            Assert.NotEqual(default(Guid), then.Context.Room.Id);
+            Assert.NotNull(then.Context.School.Id);
+            Assert.NotEqual(default(Guid), then.Context.School.Id);
         }
 
     }

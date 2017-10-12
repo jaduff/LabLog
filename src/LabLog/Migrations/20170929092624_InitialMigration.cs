@@ -12,7 +12,7 @@ namespace LabLog.Migrations
                 name: "LabEvents",
                 columns: table => new
                 {
-                    RoomId = table.Column<Guid>(type: "BLOB", nullable: false),
+                    SchoolId = table.Column<Guid>(type: "BLOB", nullable: false),
                     Version = table.Column<int>(type: "INTEGER", nullable: false),
                     EventBody = table.Column<string>(type: "TEXT", nullable: true),
                     EventType = table.Column<string>(type: "TEXT", nullable: false),
@@ -20,7 +20,7 @@ namespace LabLog.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LabEvents", x => new { x.RoomId, x.Version });
+                    table.PrimaryKey("PK_LabEvents", x => new { x.SchoolId, x.Version });
                 });
         }
 

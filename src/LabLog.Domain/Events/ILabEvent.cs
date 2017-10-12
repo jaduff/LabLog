@@ -5,7 +5,7 @@ namespace LabLog.Domain.Events
 {
     public interface ILabEvent
     {
-        Guid RoomId { get; set; }
+        Guid SchoolId { get; set; }
         DateTimeOffset Timestamp { get; set; }
         string EventType { get; set;}
         string EventBody{get;set;}

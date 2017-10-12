@@ -1,21 +1,21 @@
-﻿@model List<RoomModel>
+﻿@model List<SchoolModel>
 @{
     ViewData["Title"] = "Admin";
 }
 
 <h1>Admin</h1>
-<h2>Rooms</h2>
+<h2>Schools</h2>
 <ul>
-        @foreach (var room in Model)
+        @foreach (var school in Model)
         {
             <li>
-                <a asp-controller="Admin" asp-action="Room" asp-route-id="@room.Id" asp-route-name="@room.Name">@room.Name</a>
+                <a asp-controller="Admin" asp-action="School" asp-route-id="@school.Id" asp-route-name="@school.Name">@school.Name</a>
             </li>
         }
 
 </ul>
 
 
-<form asp-controller="Admin" asp-action="AddRoom" method="get">
-    <input type="submit" value="New Room" />
+<form asp-controller="Admin" asp-action="AddSchool" method="get">
+    <input type="submit" value="New School" />
 </form>

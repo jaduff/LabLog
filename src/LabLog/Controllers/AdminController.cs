@@ -24,33 +24,33 @@ namespace LabLog.Controllers
 
         public IActionResult Index()
         {
-            List<RoomModel> roomList = new List<RoomModel>();
+            List<SchoolModel> schoolList = new List<SchoolModel>();
             var events = from _events in _db.LabEvents
-                         where _events.EventType.Equals(RoomCreatedEvent.EventTypeString)
+                         where _events.EventType.Equals(SchoolCreatedEvent.EventTypeString)
                          select _events;
-            foreach (LabEvent roomCreatedEvent in events)
+            foreach (LabEvent schoolCreatedEvent in events)
             {
-                RoomModel room = new RoomModel();
-                room.ApplyRoomCreatedEvent(roomCreatedEvent);
-                roomList.Add(room);
+                SchoolModel school = new SchoolModel();
+                school.ApplySchoolCreatedEvent(schoolCreatedEvent);
+                schoolList.Add(school);
             }
-            return View(roomList);
+            return View(schoolList);
         }
 
         [HttpGet]
-        public IActionResult AddRoom()
+        public IActionResult AddSchool()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddRoom(RoomModel room)
+        public IActionResult AddSchool(SchoolModel school)
         {
             int count;
                 try
                 {
-                    Domain.Entities.Room.Create(room.Name, e =>
+                    Domain.Entities.School.Create(school.Name, e =>
                     {
                         e.EventAuthor = _user;
                         _db.Add(e);
@@ -60,28 +60,28 @@ namespace LabLog.Controllers
                 catch (LabException ex)
                 {
                     ViewData["message"] = ex.LabMessage;
-                    return View(room);
+                    return View(school);
                 }
 
             return RedirectToAction("Index");
             
         }
 
-        [Route("Room/{id}/{name?}")]
-        public IActionResult Room(Guid id, string name)
+        [Route("School/{id}/{name?}")]
+        public IActionResult School(Guid id, string name)
         {
-            RoomModel room = new RoomModel();
+            SchoolModel school = new SchoolModel();
             var events = _db.LabEvents
-                                    .Where(w => (w.RoomId == id))
+                                    .Where(w => (w.SchoolId == id))
                                     .OrderBy(o => (o.Version));
-            foreach (LabEvent roomEvent in events)
+            foreach (LabEvent schoolEvent in events)
             {
-                room.Replay(roomEvent);
+                school.Replay(schoolEvent);
             }
             
-            //need to return error where no room is returned
+            //need to return error where no school is returned
 
-            return View(room);
+            return View(school);
         }
 
         public IActionResult Error()

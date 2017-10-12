@@ -15,9 +15,9 @@ namespace LabLog.Controllers
             return View();
         }
 
-        public IActionResult Room(string id)
+        public IActionResult School(string id)
         {
-            ViewData["Message"] = "Room Page.";
+            ViewData["Message"] = "School Page.";
 
             return View();
         }

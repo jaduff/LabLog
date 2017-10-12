@@ -15,7 +15,7 @@ namespace LabLog
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<LabEvent>().HasKey(c => new { c.RoomId, c.Version });
+            modelBuilder.Entity<LabEvent>().HasKey(c => new { c.SchoolId, c.Version });
             modelBuilder.Entity<LabEvent>().Property(c => c.EventType).IsRequired();
         }
     }
