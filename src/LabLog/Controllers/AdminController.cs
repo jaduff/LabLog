@@ -25,15 +25,8 @@ namespace LabLog.Controllers
         public IActionResult Index()
         {
             List<SchoolModel> schoolList = new List<SchoolModel>();
-            var events = from _events in _db.LabEvents
-                         where _events.EventType.Equals(SchoolCreatedEvent.EventTypeString)
-                         select _events;
-            foreach (LabEvent schoolCreatedEvent in events)
-            {
-                SchoolModel school = new SchoolModel();
-                school.ApplySchoolCreatedEvent(schoolCreatedEvent);
-                schoolList.Add(school);
-            }
+            schoolList = _db.Schools.ToList();
+
             return View(schoolList);
         }
 
@@ -54,7 +47,8 @@ namespace LabLog.Controllers
                     {
                         e.EventAuthor = _user;
                         _db.Add(e);
-                        count = _db.SaveChanges();
+                        _db.Add(school);
+                        _db.SaveChanges();
                     });
                 }
                 catch (LabException ex)
@@ -70,25 +64,80 @@ namespace LabLog.Controllers
         [Route("School/{id}/{name?}")]
         public IActionResult School(Guid id, string name)
         {
-            SchoolModel school = new SchoolModel();
-            var events = _db.LabEvents
-                                    .Where(w => (w.SchoolId == id))
-                                    .OrderBy(o => (o.Version));
-            foreach (LabEvent schoolEvent in events)
-            {
-                school.Replay(schoolEvent);
-            }
-            
+            List<RoomModel> roomList = new List<RoomModel>();
+            return View(roomList);
+        }
+
+        [Route("School/{id}/{name?}/Room/{roomName?}")]
+        public IActionResult Room(Guid id, string name)
+        {
+            RoomModel room = new RoomModel();
             //need to return error where no school is returned
 
-            return View(school);
+            return View(room);
         }
+
+        [Route("School/{id}/{name?}/AddRoom")]
+        [HttpGet]
+        public IActionResult AddRoom()
+        {
+            return View();
+        }
+
+        [Route("School/{id}/{name?}/AddRoom")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddRoom(RoomModel room)
+        {
+            int count;
+            try
+            {
+                Domain.Entities.School.Create(room.Name, e =>
+                {
+                    e.EventAuthor = _user;
+                    _db.Add(e);
+                    count = _db.SaveChanges();
+                });
+            }
+            catch (LabException ex)
+            {
+                ViewData["message"] = ex.LabMessage;
+                return View(room);
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
 
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        public IActionResult RebuildReadModel()
+        {
+            var schools = _db.Schools.AsEnumerable();
+            foreach (SchoolModel school in schools)
+            {
+                _db.Remove(school);
+            }
+            _db.SaveChanges();
+            var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
+
+            foreach (ILabEvent e in eSchools)
+            {
+                SchoolModel _school = new SchoolModel();
+                var schoolEvents = _db.LabEvents
+                    .Where(w => (w.SchoolId == e.SchoolId))
+                    .OrderBy(o => (o.Version));
+                _school.ReplaySchoolEvents(schoolEvents);
+                _db.Add(_school);
+            }
+            _db.SaveChanges();
+            
+            return RedirectToAction("Index");
+        }
 
     }
 }

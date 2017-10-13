@@ -1,9 +1,21 @@
-﻿@model LabLog.SchoolModel
+﻿@model List<RoomModel>
 @{
-    ViewData["Title"] = "List of Schools";
+    ViewData["Title"] = "Admin";
 }
 
-@ViewData["message"]
-@Model.Name
-<p>This page is the School View page.</p>
-<p>It will contain the layout of the school (which can be edited), along with edit and delete options.</p>
+<h1>Admin</h1>
+<h2>Schools</h2>
+<ul>
+    @foreach (var room in Model)
+    {
+        <li>
+            <a asp-controller="Admin" asp-action="Room" asp-route-name="@room.Name">@room.Name</a>
+        </li>
+    }
+
+</ul>
+
+
+<form asp-controller="Admin" asp-action="AddRoom" method="get">
+    <input type="submit" value="New Room" />
+</form>

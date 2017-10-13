@@ -7,6 +7,5 @@ namespace LabLog.Models
         public string SerialNumber {get; set;}
         public string School {get; set;}
         public int ComputerNumber {get; set;}
-
     }
 }

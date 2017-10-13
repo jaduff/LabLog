@@ -1,0 +1,14 @@
+@model LabLog.RoomModel
+@{
+    ViewData["Title"] = "Add Room";
+}
+
+
+<h1>Add Room</h1>
+<span class="alert">@ViewData["message"]</span>
+<form asp-controller="Admin" asp-action="AddRoom" method="post">
+    <div class="formgroup">
+        <input asp-for="Name" class="form-control" placeholder="@(Model == null ? "Room Name" : @Model.RoomName)" />
+        <button type="submit">Add Room</button>
+    </div>
+</form>
