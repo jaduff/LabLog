@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LabLog.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,8 +29,7 @@ namespace LabLog.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "BLOB", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Version = table.Column<int>(type: "INTEGER", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,8 +42,7 @@ namespace LabLog.Migrations
                 {
                     Id = table.Column<Guid>(type: "BLOB", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    SchoolModelId = table.Column<Guid>(type: "BLOB", nullable: true),
-                    Version = table.Column<int>(type: "INTEGER", nullable: false)
+                    SchoolModelId = table.Column<Guid>(type: "BLOB", nullable: true)
                 },
                 constraints: table =>
                 {

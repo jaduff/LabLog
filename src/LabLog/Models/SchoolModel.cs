@@ -11,7 +11,6 @@ namespace LabLog
         [Display(Name = "School Identifier")]
         public string Name { get; set; }
         public Guid Id { get; set; }
-        public int Version { get; set; }
         public List<RoomModel> Rooms { get; set; } = new List<RoomModel>();
 
         public void ApplySchoolCreatedEvent(ILabEvent e)
@@ -19,7 +18,6 @@ namespace LabLog
             SchoolCreatedEvent schoolCreatedEvent = e.GetEventBody<SchoolCreatedEvent>();
             Name = schoolCreatedEvent.Name;
             Id = e.SchoolId;
-            Version = e.Version;
         }
 
         public void ApplyRoomAddedEvent(ILabEvent e)

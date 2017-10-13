@@ -88,20 +88,18 @@ namespace LabLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddRoom(Guid id, RoomModel room)
         {
+            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == id)).ToList();
+            room.Id = new Guid();
+
             try
             {
-                //This has something to do with "WHEN GIVEN A SCHOOL.." in testing. What school?
-                //How do you add events to an existing school?
-                //Instantiate a school, give it the id, name, etc?
-
-                Domain.Entities.School school = new Domain.Entities.School(e =>
+                Domain.Entities.School school = new Domain.Entities.School(id, eventList, e =>
                 {
                     e.EventAuthor = _user;
                     _db.Add(e);
                 });
-                school.Id = id;
-
-                school.AddRoom(room.Name, );
+                school.AddRoom(room.Name);
+                
                 _db.Add(room);
                 _db.SaveChanges();
             }

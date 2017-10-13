@@ -67,8 +67,6 @@ namespace LabLog.Migrations
 
                     b.Property<Guid?>("SchoolModelId");
 
-                    b.Property<int>("Version");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SchoolModelId");
@@ -83,8 +81,6 @@ namespace LabLog.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
-
-                    b.Property<int>("Version");
 
                     b.HasKey("Id");
 

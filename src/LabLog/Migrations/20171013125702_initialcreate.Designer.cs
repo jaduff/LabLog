@@ -11,8 +11,8 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    [Migration("20171013044244_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20171013125702_initialcreate")]
+    partial class initialcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,8 +68,6 @@ namespace LabLog.Migrations
 
                     b.Property<Guid?>("SchoolModelId");
 
-                    b.Property<int>("Version");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SchoolModelId");
@@ -84,8 +82,6 @@ namespace LabLog.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
-
-                    b.Property<int>("Version");
 
                     b.HasKey("Id");
 

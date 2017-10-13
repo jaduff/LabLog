@@ -14,24 +14,14 @@ namespace LabLog.Domain.Entities
             _eventHandler = eventHandler;
         }
 
-        public School()
+        public School(Guid id, List<LabEvent> events, Action<ILabEvent> eventHandler)
         {
-
-        }
-
-        public static School GetSchool (Guid id, Action<ILabEvent> eventHandler)
-        {
-            if (id == null)
+            _eventHandler = eventHandler;
+            Id = id;
+            foreach (LabEvent _event in events)
             {
-                LabException ex = new LabException("School id can't be blank");
-                throw ex;
+                Replay(_event);
             }
-            var school = new School(eventHandler);
-            school.Id = id;
-            var e = LabEvent.Create(school.Id,
-                ++school.Version, new SchoolCreatedEvent { Name = name });
-            school._eventHandler(e);
-            return school;
         }
 
         public static School Create(string name, Action<ILabEvent> eventHandler)
@@ -86,7 +76,7 @@ namespace LabLog.Domain.Entities
             _eventHandler(@event);
         }
 
-        public void AddRoom(Room room, Action<ILabEvent> eventHandler)
+        public void AddRoom(string roomName)
         {
             if (_eventHandler == null)
             {
@@ -96,7 +86,7 @@ namespace LabLog.Domain.Entities
             var @event = LabEvent.Create(
                 Guid.NewGuid(),
                 ++Version,
-                new RoomAddedEvent(room.RoomName));
+                new RoomAddedEvent(roomName));
             _eventHandler(@event);
         }
 
@@ -113,10 +103,20 @@ namespace LabLog.Domain.Entities
             Rooms.Add(new Room(body.RoomName));
         }
 
+        private void ApplySchoolCreatedEvent(ILabEvent e)
+        {
+            Id = e.SchoolId;
+            var body = e.GetEventBody<SchoolCreatedEvent>();
+            _name = body.Name;
+        }
+
         public void Replay(ILabEvent labEvent)
         {
             switch (labEvent.EventType)
             {
+                case SchoolCreatedEvent.EventTypeString:
+                    ApplySchoolCreatedEvent(labEvent);
+                break;
                 case ComputerAddedEvent.EventTypeString:
                     ApplyComputerAddedEvent(labEvent);
                 break;
