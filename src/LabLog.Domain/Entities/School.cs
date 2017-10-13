@@ -19,9 +19,24 @@ namespace LabLog.Domain.Entities
 
         }
 
+        public static School GetSchool (Guid id, Action<ILabEvent> eventHandler)
+        {
+            if (id == null)
+            {
+                LabException ex = new LabException("School id can't be blank");
+                throw ex;
+            }
+            var school = new School(eventHandler);
+            school.Id = id;
+            var e = LabEvent.Create(school.Id,
+                ++school.Version, new SchoolCreatedEvent { Name = name });
+            school._eventHandler(e);
+            return school;
+        }
+
         public static School Create(string name, Action<ILabEvent> eventHandler)
         {
-            if (name == "Error")
+            if (name == "")
             {
                 LabException ex = new LabException("School name can't be blank");
                 throw ex;
@@ -71,7 +86,7 @@ namespace LabLog.Domain.Entities
             _eventHandler(@event);
         }
 
-        public void AddRoom(Room room)
+        public void AddRoom(Room room, Action<ILabEvent> eventHandler)
         {
             if (_eventHandler == null)
             {

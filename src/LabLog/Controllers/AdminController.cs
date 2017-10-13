@@ -40,22 +40,21 @@ namespace LabLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddSchool(SchoolModel school)
         {
-            int count;
-                try
+            try
+            {
+                Domain.Entities.School.Create(school.Name, e =>
                 {
-                    Domain.Entities.School.Create(school.Name, e =>
-                    {
-                        e.EventAuthor = _user;
-                        _db.Add(e);
-                        _db.Add(school);
-                        _db.SaveChanges();
-                    });
-                }
-                catch (LabException ex)
-                {
-                    ViewData["message"] = ex.LabMessage;
-                    return View(school);
-                }
+                    e.EventAuthor = _user;
+                    _db.Add(e);
+                });
+                _db.Add(school);
+                _db.SaveChanges();
+            }
+            catch (LabException ex)
+            {
+                ViewData["message"] = ex.LabMessage;
+                return View(school);
+            }
 
             return RedirectToAction("Index");
             
@@ -87,17 +86,24 @@ namespace LabLog.Controllers
         [Route("School/{id}/{name?}/AddRoom")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddRoom(RoomModel room)
+        public IActionResult AddRoom(Guid id, RoomModel room)
         {
-            int count;
             try
             {
-                Domain.Entities.School.Create(room.Name, e =>
+                //This has something to do with "WHEN GIVEN A SCHOOL.." in testing. What school?
+                //How do you add events to an existing school?
+                //Instantiate a school, give it the id, name, etc?
+
+                Domain.Entities.School school = new Domain.Entities.School(e =>
                 {
                     e.EventAuthor = _user;
                     _db.Add(e);
-                    count = _db.SaveChanges();
                 });
+                school.Id = id;
+
+                school.AddRoom(room.Name, );
+                _db.Add(room);
+                _db.SaveChanges();
             }
             catch (LabException ex)
             {
@@ -105,7 +111,7 @@ namespace LabLog.Controllers
                 return View(room);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("School", id );
 
         }
 
