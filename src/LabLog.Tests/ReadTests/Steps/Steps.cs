@@ -13,10 +13,9 @@ namespace LabLog.ReadTests.Steps
         {
             given.Context.Id = new Guid("11111111-1111-1111-1111-11111111");
             given.Context.Name = "Test School";
-            given.Context.Version = 1;
             SchoolCreatedEvent schoolCreatedEvent = new SchoolCreatedEvent();
             schoolCreatedEvent.Name = given.Context.Name;
-            LabEvent labEvent = LabEvent.Create(given.Context.Id, given.Context.Version, schoolCreatedEvent); 
+            LabEvent labEvent = LabEvent.Create(given.Context.Id, 1, schoolCreatedEvent); 
             given.Context.RetrievedEvents.Add(labEvent);
         }
 
@@ -41,7 +40,6 @@ namespace LabLog.ReadTests.Steps
             Assert.NotNull(then.Context.School);
             Assert.Equal(then.Context.School.Name, then.Context.Name);
             Assert.Equal(then.Context.School.Id, then.Context.Id);
-            Assert.Equal(then.Context.School.Version, then.Context.Version);
         }
 
         public static void IdIsSet(this IThen<ReadSchoolContext> then)

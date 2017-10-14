@@ -64,6 +64,11 @@ namespace LabLog.Controllers
         public IActionResult School(Guid id, string name)
         {
             List<RoomModel> roomList = new List<RoomModel>();
+            SchoolModel school = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
+            if (school.Rooms != null)
+            {
+                roomList = school.Rooms;
+            }
             return View(roomList);
         }
 
@@ -99,8 +104,17 @@ namespace LabLog.Controllers
                     _db.Add(e);
                 });
                 school.AddRoom(room.Name);
-                
-                _db.Add(room);
+
+                SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
+                if (schoolModel != null)
+                {
+                    if (schoolModel.Rooms == null) //this is only necessary if SchoolModel can return null instead of Rooms
+                    {
+                        schoolModel.Rooms = new List<RoomModel>();
+                    }
+                    schoolModel.Rooms.Add(room);
+                }
+
                 _db.SaveChanges();
             }
             catch (LabException ex)

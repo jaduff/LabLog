@@ -29,7 +29,7 @@ namespace LabLog.WriteTests.Steps
         public static void AddARoom(this IWhen<WriteSchoolContext> when,
             string roomName)
         {
-            when.Context.School.AddRoom(new Room(roomName));
+            when.Context.School.AddRoom(roomName);
         }
 
         public static void CreateASchool(this IWhen<WriteSchoolContext> when, string name)

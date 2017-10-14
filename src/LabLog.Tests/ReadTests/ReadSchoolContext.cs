@@ -13,6 +13,5 @@ namespace LabLog.ReadTests
         public string Name { get; set; }
 
         public Guid Id {get; set;}
-        public int Version {get; set;}
     }
 }

@@ -11,7 +11,7 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    [Migration("20171013125702_initialcreate")]
+    [Migration("20171014011941_initialcreate")]
     partial class initialcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
