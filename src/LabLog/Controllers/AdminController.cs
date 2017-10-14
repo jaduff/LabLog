@@ -8,6 +8,7 @@ using LabLog.Models;
 using Microsoft.AspNetCore.Http;
 using LabLog.Domain.Events;
 using LabLog.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace LabLog.Controllers
@@ -64,7 +65,7 @@ namespace LabLog.Controllers
         public IActionResult School(Guid id, string name)
         {
             List<RoomModel> roomList = new List<RoomModel>();
-            SchoolModel school = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
+            SchoolModel school = _db.Schools.Include(i => (i.Rooms)).Where(w => (w.Id == id)).SingleOrDefault();
             if (school.Rooms != null)
             {
                 roomList = school.Rooms;
