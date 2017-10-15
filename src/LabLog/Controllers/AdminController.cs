@@ -11,6 +11,7 @@ using LabLog.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 
+
 namespace LabLog.Controllers
 {
     public class AdminController : Controller
@@ -23,6 +24,8 @@ namespace LabLog.Controllers
             _db = db;
         }
 
+        [Route("/")]
+        [Route("Admin")]
         public IActionResult Index()
         {
             List<SchoolModel> schoolList = new List<SchoolModel>();
@@ -61,35 +64,35 @@ namespace LabLog.Controllers
             
         }
 
-        [Route("School/{id}/{name?}")]
+        [Route("Admin/{id}/{name?}")]
         public IActionResult School(Guid id, string name)
         {
-            List<RoomModel> roomList = new List<RoomModel>();
             SchoolModel school = _db.Schools.Include(i => (i.Rooms)).Where(w => (w.Id == id)).SingleOrDefault();
-            if (school.Rooms != null)
+            if (school.Rooms == null)
             {
-                roomList = school.Rooms;
+                school.Rooms = new List<RoomModel>();
             }
-            return View(roomList);
+            return View(school);
         }
 
-        [Route("School/{id}/{name?}/Room/{roomName?}")]
-        public IActionResult Room(Guid id, string name)
+        [Route("Admin/Room/{schoolID}/{roomName}")]
+        public IActionResult Room(Guid schoolID, string roomName)
         {
             RoomModel room = new RoomModel();
+            room.Computers = new List<ComputerModel>();
             //need to return error where no school is returned
 
             return View(room);
         }
 
-        [Route("School/{id}/{name?}/AddRoom")]
+        [Route("Admin/{id}/{name?}/AddRoom")]
         [HttpGet]
         public IActionResult AddRoom()
         {
             return View();
         }
 
-        [Route("School/{id}/{name?}/AddRoom")]
+        [Route("Admin/{id}/{name?}/AddRoom")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddRoom(Guid id, RoomModel room)
@@ -126,6 +129,21 @@ namespace LabLog.Controllers
 
             return RedirectToAction("School", id );
 
+        }
+
+
+        [Route("Admin/{id}/{name?}/{RoomName}/{AddComputer}")]
+        [HttpGet]
+        public IActionResult AddComputer()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Admin/{id}/{name?}/{RoomName}/{AddComputer}")]
+        public IActionResult AddComputer(ComputerModel computer)
+        {
+            return RedirectToAction("Room");//This needs to be thought about.
         }
 
 

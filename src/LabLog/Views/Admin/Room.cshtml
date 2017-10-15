@@ -1,0 +1,21 @@
+﻿@model RoomModel
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Admin</h1>
+<h2>@Model.Name</h2>
+<ul>
+    @foreach (var computer in Model.Computers)
+    {
+        <li>
+            <a asp-controller="Admin" asp-action="Computer" asp-route-name="@computer.ComputerNumber">Computer @computer.ComputerNumber</a>
+        </li>
+    }
+
+</ul>
+
+
+<form asp-controller="Admin" asp-action="AddComputer" method="get">
+    <input type="submit" value="New Computer" />
+</form>
