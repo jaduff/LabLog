@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LabLog.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,8 +61,8 @@ namespace LabLog.Migrations
                 {
                     SerialNumber = table.Column<string>(type: "TEXT", nullable: false),
                     ComputerNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoomModelId = table.Column<Guid>(type: "BLOB", nullable: true),
-                    School = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    RoomModelId = table.Column<Guid>(type: "BLOB", nullable: true)
                 },
                 constraints: table =>
                 {

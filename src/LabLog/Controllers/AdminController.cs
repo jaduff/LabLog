@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using LabLog.Domain.Events;
 using LabLog.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using LabLog.ViewModels.Admin;
 
 
 
@@ -34,12 +35,39 @@ namespace LabLog.Controllers
             return View(schoolList);
         }
 
+        [Route("/RebuildReadModel")]
+        public IActionResult RebuildReadModel()
+        {
+            var schools = _db.Schools.AsEnumerable();
+            foreach (SchoolModel school in schools)
+            {
+                _db.Remove(school);
+            }
+            _db.SaveChanges();
+            var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
+
+            foreach (ILabEvent e in eSchools)
+            {
+                SchoolModel _school = new SchoolModel();
+                var schoolEvents = _db.LabEvents
+                    .Where(w => (w.SchoolId == e.SchoolId))
+                    .OrderBy(o => (o.Version));
+                _school.ReplaySchoolEvents(schoolEvents);
+                _db.Add(_school);
+            }
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        [Route("Admin/AddSchool")]
         [HttpGet]
         public IActionResult AddSchool()
         {
             return View();
         }
 
+        [Route("Admin/AddSchool")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddSchool(SchoolModel school)
@@ -64,25 +92,16 @@ namespace LabLog.Controllers
             
         }
 
-        [Route("Admin/{id}/{name?}")]
-        public IActionResult School(Guid id, string name)
+        [Route("Admin/{id}/{name}/Room/{roomName}")]
+        public IActionResult Room(Guid id, string roomName)
         {
-            SchoolModel school = _db.Schools.Include(i => (i.Rooms)).Where(w => (w.Id == id)).SingleOrDefault();
-            if (school.Rooms == null)
-            {
-                school.Rooms = new List<RoomModel>();
-            }
-            return View(school);
-        }
-
-        [Route("Admin/Room/{schoolID}/{roomName}")]
-        public IActionResult Room(Guid schoolID, string roomName)
-        {
-            RoomModel room = new RoomModel();
-            room.Computers = new List<ComputerModel>();
+            SchoolModel school = _db.Schools.Include(i => i.Rooms).Where(s => (s.Id == id)).SingleOrDefault();
+            RoomModel room = school.Rooms.Where(w => (w.Name == roomName)).SingleOrDefault();
+            
+            RoomViewModel roomViewModel = new RoomViewModel(school, room);
             //need to return error where no school is returned
 
-            return View(room);
+            return View(roomViewModel);
         }
 
         [Route("Admin/{id}/{name?}/AddRoom")]
@@ -106,18 +125,13 @@ namespace LabLog.Controllers
                 {
                     e.EventAuthor = _user;
                     _db.Add(e);
-                });
-                school.AddRoom(room.Name);
 
-                SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
-                if (schoolModel != null)
-                {
-                    if (schoolModel.Rooms == null) //this is only necessary if SchoolModel can return null instead of Rooms
+                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
+                    if (schoolModel != null)
                     {
-                        schoolModel.Rooms = new List<RoomModel>();
+                        schoolModel.ApplyRoomAddedEvent(e);
                     }
-                    schoolModel.Rooms.Add(room);
-                }
+                });
 
                 _db.SaveChanges();
             }
@@ -132,49 +146,68 @@ namespace LabLog.Controllers
         }
 
 
-        [Route("Admin/{id}/{name?}/{RoomName}/{AddComputer}")]
+        [Route("Admin/{schoolID}/{name}/Room/{roomname}/AddComputer")]
         [HttpGet]
-        public IActionResult AddComputer()
+        public IActionResult AddComputer(Guid schoolID, string roomName)
         {
-            return View();
+            AddComputerViewModel computerViewModel = new AddComputerViewModel();
+            computerViewModel.School = _db.Schools.Include(i => i.Rooms).Where(w => (w.Id == schoolID)).SingleOrDefault();
+            computerViewModel.Room = computerViewModel.School.Rooms.Where(w => (w.Name == roomName)).SingleOrDefault();
+            computerViewModel.Computer = new ComputerModel();
+            return View(computerViewModel);
         }
 
         [HttpPost]
-        [Route("Admin/{id}/{name?}/{RoomName}/{AddComputer}")]
-        public IActionResult AddComputer(ComputerModel computer)
+        [Route("Admin/{id}/{name}/Room/{RoomName}/AddComputer")]
+        public IActionResult AddComputer(AddComputerViewModel computerView)
         {
+            //Need logic to check for duplicate names, etc. Or write model?
+            //Validate computer number in range of number of computers in room? Is that a thing?
+
+            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == computerView.School.Id)).ToList();
+
+            try
+            {
+                Domain.Entities.School school = new Domain.Entities.School(computerView.School.Id, eventList, e =>
+                {
+                    e.EventAuthor = _user;
+                    _db.Add(e);
+
+                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
+                    if (schoolModel != null)
+                    {
+                        schoolModel.ApplyRoomAddedEvent(e);
+                    }
+                });
+
+                _db.SaveChanges();
+            }
+            catch (LabException ex)
+            {
+                ViewData["message"] = ex.LabMessage;
+                return View(computerView);
+            }
+
+
             return RedirectToAction("Room");//This needs to be thought about.
         }
 
+        [Route("Admin/{id}/{name?}")]
+        public IActionResult School(Guid id, string name)
+        {
+            SchoolModel school = _db.Schools.Include(i => (i.Rooms)).Where(w => (w.Id == id)).SingleOrDefault();
+            if (school.Rooms == null)
+            {
+                school.Rooms = new List<RoomModel>();
+            }
+            return View(school);
+        }
 
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult RebuildReadModel()
-        {
-            var schools = _db.Schools.AsEnumerable();
-            foreach (SchoolModel school in schools)
-            {
-                _db.Remove(school);
-            }
-            _db.SaveChanges();
-            var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
-
-            foreach (ILabEvent e in eSchools)
-            {
-                SchoolModel _school = new SchoolModel();
-                var schoolEvents = _db.LabEvents
-                    .Where(w => (w.SchoolId == e.SchoolId))
-                    .OrderBy(o => (o.Version));
-                _school.ReplaySchoolEvents(schoolEvents);
-                _db.Add(_school);
-            }
-            _db.SaveChanges();
-            
-            return RedirectToAction("Index");
-        }
 
     }
 }

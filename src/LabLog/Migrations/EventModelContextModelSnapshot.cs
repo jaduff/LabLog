@@ -46,9 +46,9 @@ namespace LabLog.Migrations
 
                     b.Property<int>("ComputerNumber");
 
-                    b.Property<Guid?>("RoomModelId");
+                    b.Property<string>("Name");
 
-                    b.Property<string>("School");
+                    b.Property<Guid?>("RoomModelId");
 
                     b.HasKey("SerialNumber");
 

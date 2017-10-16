@@ -11,7 +11,7 @@ namespace LabLog
         [Display(Name = "Room Identifier")]
         public string Name {get; set;}
         public Guid Id {get; set;}
-        public List<ComputerModel> Computers {get; set;}
+        public List<ComputerModel> Computers { get; set; } = new List<ComputerModel>();
 
 
         /* some way of representing room layout? Image blob? URL to image? something fancy like a floor plan using drag and drop? */

@@ -1,12 +1,12 @@
-﻿@model RoomModel
+﻿@model LabLog.ViewModels.Admin.RoomViewModel
 @{
     ViewData["Title"] = "Admin";
 }
 
 <h1>Admin</h1>
-<h2>@Model.Name</h2>
+<h2>@Model.Room.Name</h2>
 <ul>
-    @foreach (var computer in Model.Computers)
+    @foreach (var computer in Model.Room.Computers)
     {
         <li>
             <a asp-controller="Admin" asp-action="Computer" asp-route-name="@computer.ComputerNumber">Computer @computer.ComputerNumber</a>
@@ -16,6 +16,6 @@
 </ul>
 
 
-<form asp-controller="Admin" asp-action="AddComputer" method="get">
+<form asp-controller="Admin" asp-action="AddComputer" asp-route-schoolID="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="get">
     <input type="submit" value="New Computer" />
 </form>

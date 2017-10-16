@@ -1,14 +1,16 @@
-@model ComputerModel
+@model LabLog.ViewModels.Admin.AddComputerViewModel
 @{
     ViewData["Title"] = "Add Computer";
 }
 
 
-<h1>Add Room</h1>
+<h1>Add Computer</h1>
 <span class="alert">@ViewData["message"]</span>
-<form asp-controller="Admin" asp-action="AddComputer" method="post">
+<form asp-controller="Admin" asp-action="AddComputer" asp-route-schoolID="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="get">
     <div class="formgroup">
-        <input asp-for="Name" class="form-control" placeholder="@(Model == null ? "Room Name" : @Model.Name)" />
+        <input class="form-control" asp-for="@Model.Computer.Name" placeholder="Computer Name" />
+        <input class="form-control" asp-for="@Model.Computer.SerialNumber" placeholder="Serial Number" />
+        <input class="form-control" asp-for="@Model.Computer.ComputerNumber" placeholder="Position Number" />
         <button type="submit">Add Computer</button>
     </div>
 </form>
