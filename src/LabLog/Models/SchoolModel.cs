@@ -37,22 +37,28 @@ namespace LabLog
             // RoomModel room = Rooms.Find(f => (f.Id == e.)) -- No way to link computer to room? ComputerModel needs a room reference?
         }
 
+        public void ReplaySchoolEvent(ILabEvent e)
+        {
+            switch (e.EventType)
+            {
+                case SchoolCreatedEvent.EventTypeString:
+                    ApplySchoolCreatedEvent(e);
+                    break;
+                case RoomAddedEvent.EventTypeString:
+                    ApplyRoomAddedEvent(e);
+                    break;
+                case ComputerAddedEvent.EventTypeString:
+                    ApplyComputerAddedEvent(e);
+                    break;
+            }
+
+        }
+
         public void ReplaySchoolEvents(IEnumerable<LabEvent> eList)
         {
             foreach (LabEvent e in eList)
             {
-                switch (e.EventType)
-                {
-                    case SchoolCreatedEvent.EventTypeString:
-                        ApplySchoolCreatedEvent(e);
-                        break;
-                    case RoomAddedEvent.EventTypeString:
-                        ApplyRoomAddedEvent(e);
-                        break;
-                    case ComputerAddedEvent.EventTypeString:
-                        ApplyComputerAddedEvent(e);
-                        break;
-                }
+                ReplaySchoolEvent(e);
             }
         }
     }

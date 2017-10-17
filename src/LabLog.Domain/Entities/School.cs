@@ -7,15 +7,16 @@ namespace LabLog.Domain.Entities
 {
     public class School
     {
-        private  Action<ILabEvent> _eventHandler;
+        private readonly Action<ILabEvent> _eventHandler;
 
         private School(Action<ILabEvent> eventHandler)
         {
             _eventHandler = eventHandler;
         }
 
-        public School(List<LabEvent> events)
+        public School(List<LabEvent> events, Action<ILabEvent> eventHandler)
         {
+            _eventHandler = eventHandler;
             foreach (LabEvent _event in events)
             {
                 Replay(_event);
@@ -74,9 +75,8 @@ namespace LabLog.Domain.Entities
             _eventHandler(@event);
         }
 
-        public void AddRoom(string roomName, Action<ILabEvent> eventHandler)
+        public void AddRoom(string roomName)
         {
-            _eventHandler = eventHandler;
             if (_eventHandler == null)
             {
                 return;

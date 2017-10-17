@@ -119,16 +119,16 @@ namespace LabLog.Controllers
 
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(eventList);
-                school.AddRoom(room.Name, e =>
+                Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
                 {
                     e.EventAuthor = _user;
-                    _db.Add(e); //version not incrementing correctly.
+                    _db.Add(e);
 
                     SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
-                    schoolModel.ApplyRoomAddedEvent(e);
+                    schoolModel.ReplaySchoolEvent(e);
                     _db.SaveChanges();
                 });
+                school.AddRoom(room.Name);
 
             }
             catch (LabException ex)
@@ -164,18 +164,17 @@ namespace LabLog.Controllers
 
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(eventList);
-                // , e =>
-                // {
-                //     e.EventAuthor = _user;
-                //     _db.Add(e);
+                Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
+                {
+                    e.EventAuthor = _user;
+                    _db.Add(e);
 
-                //     SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
-                //     if (schoolModel != null)
-                //     {
-                //         schoolModel.ApplyRoomAddedEvent(e);
-                //     }
-                // });
+                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
+                    if (schoolModel != null)
+                    {
+                        schoolModel.ReplaySchoolEvent(e);
+                    }
+                });
 
                 _db.SaveChanges();
             }
