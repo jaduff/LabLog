@@ -9,47 +9,53 @@ namespace LabLog.WriteTests.Steps
 {
     public static class Steps
     {
-        public static void Room(this IGiven<WriteRoomContext> given)
+        public static void School(this IGiven<WriteSchoolContext> given)
         {
-            given.Context.Room = Domain.Entities.Room.Create("Test name", GetEventHandler(given.Context));
+            given.Context.School = Domain.Entities.School.Create("Test name", GetEventHandler(given.Context));
         }
 
-        public static Action<ILabEvent> GetEventHandler(WriteRoomContext context)
+        public static Action<ILabEvent> GetEventHandler(WriteSchoolContext context)
         {
             return e => context.ReceivedEvents.Add(e);
         }
 
-        public static void AddAComputer(this IWhen<WriteRoomContext> when, 
+        public static void AddAComputer(this IWhen<WriteSchoolContext> when, 
             int computerId, 
             string computerName)
         {
-            when.Context.Room.AddComputer(new Computer(computerId, computerName));
-        }        
-
-        public static void CreateARoom(this IWhen<WriteRoomContext> when, string name)
-        {
-            when.Context.Room = Domain.Entities.Room.Create(name, GetEventHandler(when.Context));
+            when.Context.School.AddComputer(new Computer(computerId, computerName));
         }
 
-        public static void RoomIsCreated(this IThen<WriteRoomContext> then)
+        public static void AddARoom(this IWhen<WriteSchoolContext> when,
+            string roomName)
         {
-            Assert.NotNull(then.Context.Room);
+            when.Context.School.AddRoom(roomName);
         }
 
-        public static void IdIsSet(this IThen<WriteRoomContext> then)
+        public static void CreateASchool(this IWhen<WriteSchoolContext> when, string name)
         {
-            Assert.NotNull(then.Context.Room.Id);
-            Assert.NotEqual(default(Guid), then.Context.Room.Id);
+            when.Context.School = Domain.Entities.School.Create(name, GetEventHandler(when.Context));
         }
 
-        public static void NameARoom(this IWhen<WriteRoomContext> when)
+        public static void SchoolIsCreated(this IThen<WriteSchoolContext> then)
         {
-            when.Context.Room.Name = "TD";
+            Assert.NotNull(then.Context.School);
         }
 
-        public static void VersionIs(this IThen<WriteRoomContext> then, int version)
+        public static void IdIsSet(this IThen<WriteSchoolContext> then)
         {
-            Assert.Equal(version, then.Context.Room.Version);
+            Assert.NotNull(then.Context.School.Id);
+            Assert.NotEqual(default(Guid), then.Context.School.Id);
+        }
+
+        public static void NameASchool(this IWhen<WriteSchoolContext> when)
+        {
+            when.Context.School.Name = "TD";
+        }
+
+        public static void VersionIs(this IThen<WriteSchoolContext> then, int version)
+        {
+            Assert.Equal(version, then.Context.School.Version);
         }
     }
 }

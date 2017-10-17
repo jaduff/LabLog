@@ -5,14 +5,13 @@ using System;
 
 namespace LabLog.ReadTests
 {
-    public class ReadRoomContext
+    public class ReadSchoolContext
     {
-        public RoomModel Room { get; set; }
+        public SchoolModel School { get; set; }
         public List<ILabEvent> RetrievedEvents { get; } = new List<ILabEvent>();
 
         public string Name { get; set; }
 
         public Guid Id {get; set;}
-        public int Version {get; set;}
     }
 }

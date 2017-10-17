@@ -10,8 +10,8 @@ namespace LabLog.WriteTests.EntityTests
         [Fact]
         public async Task VersionStartsAt1()
         {
-            await CTest<WriteRoomContext>
-                .Given(a => a.Room())
+            await CTest<WriteSchoolContext>
+                .Given(a => a.School())
                 .When(c => {})
                 .Then(t => t.VersionIs(1))
                 .ExecuteAsync();
@@ -20,8 +20,8 @@ namespace LabLog.WriteTests.EntityTests
         [Fact]
         public async Task VersionIncrementsOnce()
         {
-            await CTest<WriteRoomContext>
-                .Given(a => a.Room())
+            await CTest<WriteSchoolContext>
+                .Given(a => a.School())
                 .When(i => i.AddAComputer(1, "Computer One"))
                 .Then(t => t.VersionIs(2))
                 .And(t => t.EventHasVersion(0, 1))
@@ -31,10 +31,10 @@ namespace LabLog.WriteTests.EntityTests
         [Fact]
         public async Task VersionIncrementsTwice()
         {
-            await CTest<WriteRoomContext>
-                .Given(a => a.Room())
+            await CTest<WriteSchoolContext>
+                .Given(a => a.School())
                 .When(i => i.AddAComputer(1, "Computer One"))
-                .And(i => i.NameARoom())
+                .And(i => i.NameASchool())
                 .Then(t => t.VersionIs(3))
                 .And(t => t.EventHasVersion(0, 1))
                 .And(t => t.EventHasVersion(1, 2))

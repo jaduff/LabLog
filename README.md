@@ -6,3 +6,7 @@ This project is an attempt to increase accountability of students using shared c
 
 ## UI Wireframes
 Interactive wireframes generated from Adobe Experience Design (beta) https://xd.adobe.com/view/d8a50ef1-51f1-40da-9588-874151c18c0e/
+
+
+## To Do
+* Optimistic locking on event creation

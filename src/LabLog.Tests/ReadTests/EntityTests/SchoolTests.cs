@@ -7,15 +7,15 @@ using System;
 
 namespace LabLog.ReadTests.EntityTests
 {
-    class RoomTests
+    class SchoolTests
     {
         [Fact]
-        public async Task RoomCanBeCreatedFromEvent()
+        public async Task SchoolCanBeCreatedFromEvent()
         {
-            await CTest<ReadRoomContext>
-                .Given(a => a.RoomCreatedEvent())
-                .When(i => i.CreateTheRoom())
-                .Then(t => t.RoomIsCreated())
+            await CTest<ReadSchoolContext>
+                .Given(a => a.SchoolCreatedEvent())
+                .When(i => i.CreateTheSchool())
+                .Then(t => t.SchoolIsCreated())
                 .And(t => t.IdIsSet())
                 .ExecuteAsync();
         }

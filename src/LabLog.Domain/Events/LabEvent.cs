@@ -10,21 +10,21 @@ namespace LabLog.Domain.Events
 
         }
 
-        protected LabEvent(Guid roomId, 
+        protected LabEvent(Guid schoolId, 
             int version,
             string eventType)
         {
-            RoomId = roomId;
+            SchoolId = schoolId;
             Version = version;
             Timestamp = DateTimeOffset.UtcNow;
             EventType = eventType;
         }
 
-        public static LabEvent Create<T>(Guid roomId, 
+        public static LabEvent Create<T>(Guid schoolId, 
             int version, 
             T labEvent) where T : IEventBody
             {
-                var e = new LabEvent(roomId, version, labEvent.EventType);
+                var e = new LabEvent(schoolId, version, labEvent.EventType);
                 e.SetEventBody(labEvent);
                 return e;
             }
@@ -39,7 +39,7 @@ namespace LabLog.Domain.Events
             EventBody = JsonConvert.SerializeObject(eventBody);
         }
 
-        public Guid RoomId { get; set; }
+        public Guid SchoolId { get; set; }
         public int Version{get;set;}
         public DateTimeOffset Timestamp { get; set; }
         public string EventType { get; set;}

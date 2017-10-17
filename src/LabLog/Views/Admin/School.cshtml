@@ -1,0 +1,21 @@
+﻿@model SchoolModel
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Admin</h1>
+<h2>Rooms</h2>
+<ul>
+    @foreach (var room in Model.Rooms)
+    {
+        <li>
+            <a asp-controller="Admin" asp-action="Room" asp-route-id="@Model.Id" asp-route-roomName="@room.Name">@room.Name</a>
+        </li>
+    }
+
+</ul>
+
+
+<form asp-controller="Admin" asp-action="AddRoom" method="get">
+    <input type="submit" value="New Room" />
+</form>

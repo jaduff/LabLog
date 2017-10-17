@@ -1,9 +1,21 @@
-﻿@model LabLog.RoomModel
+﻿@model LabLog.ViewModels.Admin.RoomViewModel
 @{
-    ViewData["Title"] = "List of Rooms";
+    ViewData["Title"] = "Admin";
 }
 
-@ViewData["message"]
-@Model.Name
-<p>This page is the Room View page.</p>
-<p>It will contain the layout of the room (which can be edited), along with edit and delete options.</p>
+<h1>Admin</h1>
+<h2>@Model.Room.Name</h2>
+<ul>
+    @foreach (var computer in Model.Room.Computers)
+    {
+        <li>
+            <a asp-controller="Admin" asp-action="Computer" asp-route-name="@computer.ComputerNumber">Computer @computer.ComputerNumber</a>
+        </li>
+    }
+
+</ul>
+
+
+<form asp-controller="Admin" asp-action="AddComputer" asp-route-schoolID="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="get">
+    <input type="submit" value="New Computer" />
+</form>

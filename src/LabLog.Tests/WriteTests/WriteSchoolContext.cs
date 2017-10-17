@@ -4,9 +4,9 @@ using LabLog.Domain.Entities;
 
 namespace LabLog.WriteTests
 {
-    public class WriteRoomContext
+    public class WriteSchoolContext
     {
-        public Room Room { get; set; }
+        public School School { get; set; }
         public List<ILabEvent> ReceivedEvents { get; } = new List<ILabEvent>();
         public List<ILabEvent> PendingEvents { get; } = new List<ILabEvent>();
     }

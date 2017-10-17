@@ -1,0 +1,28 @@
+﻿@model ComputerModel
+@{
+    ViewData["Title"] = "List of Schools";
+}
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 10px;
+    }
+    th {
+        text-align: center;
+    }
+    tr {
+        text-align: center;
+    }
+</style>
+
+<h1>School @ViewData["SchoolName"]</h1>
+
+<img src="~/images/example_school.svg" height="500px"/>
+
+<table>
+    <tr><th>Computer</th><th>User</th><th>Action</th></tr>
+    @foreach (var computer in ViewData["Computers"] as List<ComputerModel>)
+    {
+        <tr><td>@computer.ComputerNumber</td><td></td><td>Add Edit Delete</td></tr>
+    }
+</table>
