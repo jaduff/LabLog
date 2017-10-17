@@ -22,5 +22,6 @@ namespace LabLog
             modelBuilder.Entity<SchoolModel>().HasKey(c => new { c.Id });
             modelBuilder.Entity<ComputerModel>().HasKey(c => new { c.SerialNumber });
         }
+
     }
 }

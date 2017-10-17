@@ -7,17 +7,15 @@ namespace LabLog.Domain.Entities
 {
     public class School
     {
-        private readonly Action<ILabEvent> _eventHandler;
+        private  Action<ILabEvent> _eventHandler;
 
         private School(Action<ILabEvent> eventHandler)
         {
             _eventHandler = eventHandler;
         }
 
-        public School(Guid id, List<LabEvent> events, Action<ILabEvent> eventHandler)
+        public School(List<LabEvent> events)
         {
-            _eventHandler = eventHandler;
-            Id = id;
             foreach (LabEvent _event in events)
             {
                 Replay(_event);
@@ -76,15 +74,16 @@ namespace LabLog.Domain.Entities
             _eventHandler(@event);
         }
 
-        public void AddRoom(string roomName)
+        public void AddRoom(string roomName, Action<ILabEvent> eventHandler)
         {
+            _eventHandler = eventHandler;
             if (_eventHandler == null)
             {
                 return;
             }
 
             var @event = LabEvent.Create(
-                Guid.NewGuid(),
+                Id,
                 ++Version,
                 new RoomAddedEvent(roomName));
             _eventHandler(@event);
@@ -95,12 +94,15 @@ namespace LabLog.Domain.Entities
             var body = e.GetEventBody<ComputerAddedEvent>();
             Computers.Add(new Computer(body.ComputerId,
                 body.ComputerName));
+            Version = e.Version;
         }
 
         private void ApplyRoomAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<RoomAddedEvent>();
-            Rooms.Add(new Room(body.RoomName));
+            Room room = new Room(body.RoomId, body.RoomName);
+            Rooms.Add(room);
+            Version = e.Version;
         }
 
         private void ApplySchoolCreatedEvent(ILabEvent e)
@@ -108,6 +110,7 @@ namespace LabLog.Domain.Entities
             Id = e.SchoolId;
             var body = e.GetEventBody<SchoolCreatedEvent>();
             _name = body.Name;
+            Version = e.Version;
         }
 
         public void Replay(ILabEvent labEvent)

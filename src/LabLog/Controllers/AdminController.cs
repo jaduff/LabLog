@@ -38,12 +38,9 @@ namespace LabLog.Controllers
         [Route("/RebuildReadModel")]
         public IActionResult RebuildReadModel()
         {
-            var schools = _db.Schools.AsEnumerable();
-            foreach (SchoolModel school in schools)
-            {
-                _db.Remove(school);
-            }
-            _db.SaveChanges();
+            _db.Database.ExecuteSqlCommand("DELETE FROM ComputerModel;");
+            _db.Database.ExecuteSqlCommand("DELETE FROM RoomModel;");
+            _db.Database.ExecuteSqlCommand("DELETE FROM Schools;");
             var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
 
             foreach (ILabEvent e in eSchools)
@@ -54,8 +51,8 @@ namespace LabLog.Controllers
                     .OrderBy(o => (o.Version));
                 _school.ReplaySchoolEvents(schoolEvents);
                 _db.Add(_school);
+                _db.SaveChanges();
             }
-            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -76,11 +73,13 @@ namespace LabLog.Controllers
             {
                 Domain.Entities.School.Create(school.Name, e =>
                 {
+                    SchoolModel _school = new SchoolModel();
                     e.EventAuthor = _user;
                     _db.Add(e);
+                    _school.ApplySchoolCreatedEvent(e);
+                    _db.Add(_school);
+                    _db.SaveChanges();
                 });
-                _db.Add(school);
-                _db.SaveChanges();
             }
             catch (LabException ex)
             {
@@ -117,23 +116,20 @@ namespace LabLog.Controllers
         public IActionResult AddRoom(Guid id, RoomModel room)
         {
             List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == id)).ToList();
-            room.Id = new Guid();
 
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(id, eventList, e =>
+                Domain.Entities.School school = new Domain.Entities.School(eventList);
+                school.AddRoom(room.Name, e =>
                 {
                     e.EventAuthor = _user;
-                    _db.Add(e);
+                    _db.Add(e); //version not incrementing correctly.
 
                     SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
-                    if (schoolModel != null)
-                    {
-                        schoolModel.ApplyRoomAddedEvent(e);
-                    }
+                    schoolModel.ApplyRoomAddedEvent(e);
+                    _db.SaveChanges();
                 });
 
-                _db.SaveChanges();
             }
             catch (LabException ex)
             {
@@ -168,17 +164,18 @@ namespace LabLog.Controllers
 
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(computerView.School.Id, eventList, e =>
-                {
-                    e.EventAuthor = _user;
-                    _db.Add(e);
+                Domain.Entities.School school = new Domain.Entities.School(eventList);
+                // , e =>
+                // {
+                //     e.EventAuthor = _user;
+                //     _db.Add(e);
 
-                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
-                    if (schoolModel != null)
-                    {
-                        schoolModel.ApplyRoomAddedEvent(e);
-                    }
-                });
+                //     SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
+                //     if (schoolModel != null)
+                //     {
+                //         schoolModel.ApplyRoomAddedEvent(e);
+                //     }
+                // });
 
                 _db.SaveChanges();
             }
