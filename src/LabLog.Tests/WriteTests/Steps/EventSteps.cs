@@ -47,7 +47,6 @@ namespace LabLog.WriteTests.Steps
             Assert.Equal(position, body.Position);
             Assert.Equal(computerName, body.ComputerName);
             Assert.Equal(serialNumber, body.SerialNumber);
-            Assert.Equal(roomId, body.RoomId);
         }
 
         public static void RoomAddedEventRaised(this IThen<WriteSchoolContext> then,

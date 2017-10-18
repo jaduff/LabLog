@@ -30,7 +30,7 @@ namespace LabLog.WriteTests.Steps
             string computerName,
             int position)
         {
-            when.Context.School.AddComputer(new Computer(roomId, serialNumber, computerName, position));
+            when.Context.School.AddComputer(new Computer(serialNumber, computerName, position));
         }
 
         public static void AddARoom(this IWhen<WriteSchoolContext> when,

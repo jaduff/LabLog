@@ -38,7 +38,6 @@ namespace LabLog.Domain.Entities
             return school;
         }
 
-        public List<Computer> Computers { get; } = new List<Computer>();
         public List<Room> Rooms { get; } = new List<Room>();
         public Guid Id { get; set; }
         private String _name;
@@ -93,11 +92,13 @@ namespace LabLog.Domain.Entities
         private void ApplyComputerAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<ComputerAddedEvent>();
-            Computers.Add(new Computer(body.RoomId, body.SerialNumber,
+            Room room = Rooms.Find(f => (f.RoomId == body.RoomId));
+            room.Computers.Add(new Computer(body.SerialNumber,
                 body.ComputerName, body.Position));
+            if (room.Computers == null) {throw new Exception("room.Computers is null");}
             Version = e.Version;
         }
-
+ 
         private void ApplyRoomAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<RoomAddedEvent>();

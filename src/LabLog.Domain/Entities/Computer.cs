@@ -8,10 +8,9 @@ namespace LabLog.Domain.Entities
         public string SerialNumber {get;}
         public int Position {get;}
 
-        public Computer(Guid roomId, string serialNumber,
+        public Computer(string serialNumber,
             string computerName, int position)
         {
-            RoomId = roomId;
             SerialNumber = serialNumber;
             ComputerName = computerName;
             Position = position;
