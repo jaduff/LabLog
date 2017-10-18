@@ -85,7 +85,8 @@ namespace LabLog.Domain.Entities
             var @event = LabEvent.Create(
                 Id,
                 ++Version,
-                new RoomAddedEvent(roomName));
+                new RoomAddedEvent(Guid.NewGuid(), roomName));
+            ApplyRoomAddedEvent(@event);
             _eventHandler(@event);
         }
 

@@ -6,10 +6,10 @@ namespace LabLog.Domain.Entities
         public string RoomName { get; }
         public Guid RoomId {get;}
 
-        public Room(Guid id, string roomName)
+        public Room(Guid roomId, string roomName)
         {
             RoomName = roomName;
-            RoomId = RoomId;
+            RoomId = roomId;
 
         }
     }

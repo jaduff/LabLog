@@ -10,19 +10,20 @@ namespace LabLog.WriteTests.Steps
     public static class EventSteps
     {
         public static void ComputerAddedEvent(this IGiven<WriteSchoolContext> given,
-            int computerId, string computerName)
+            Guid roomId, string serialNumber, string computerName, int position)
         {
             given.Context.PendingEvents.Add(LabEvent.Create(Guid.NewGuid(),
                 1,
-                new ComputerAddedEvent(computerId, computerName)));
+                new ComputerAddedEvent(roomId, serialNumber, computerName, position)));
         }
 
         public static void RoomAddedEvent(this IGiven<WriteSchoolContext> given,
+            Guid roomId,
             string roomName)
         {
-            given.Context.PendingEvents.Add(LabEvent.Create(Guid.NewGuid(),
+            given.Context.PendingEvents.Add(LabEvent.Create(new Guid(),
                 1,
-                new RoomAddedEvent(roomName)));
+                new RoomAddedEvent(roomId, roomName)));
         }
 
         public static void ReplayEvents(this IWhen<WriteSchoolContext> when)
@@ -34,15 +35,19 @@ namespace LabLog.WriteTests.Steps
         }
 
         public static void ComputerAddedEventRaised(this IThen<WriteSchoolContext> then, 
-            int computerId,
-            string computerName)
+            Guid roomId,
+            string serialNumber,
+            string computerName,
+            int position)
         {
-            Assert.Equal(2, then.Context.ReceivedEvents.Count);
-            var @event = then.Context.ReceivedEvents[1];
+            Assert.Equal(3, then.Context.ReceivedEvents.Count);
+            var @event = then.Context.ReceivedEvents[2];
             Assert.Equal(LabLog.Domain.Events.ComputerAddedEvent.EventTypeString, @event.EventType);
             ComputerAddedEvent body = @event.GetEventBody<ComputerAddedEvent>();
-            Assert.Equal(computerId, body.ComputerId);
+            Assert.Equal(position, body.Position);
             Assert.Equal(computerName, body.ComputerName);
+            Assert.Equal(serialNumber, body.SerialNumber);
+            Assert.Equal(roomId, body.RoomId);
         }
 
         public static void RoomAddedEventRaised(this IThen<WriteSchoolContext> then,
