@@ -4,7 +4,6 @@ namespace LabLog.Domain.Entities
     public class Computer
     {
         public string ComputerName { get; }
-        public Guid RoomId {get;}
         public string SerialNumber {get;}
         public int Position {get;}
 

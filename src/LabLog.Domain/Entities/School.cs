@@ -60,7 +60,7 @@ namespace LabLog.Domain.Entities
 
         public int Version { get; private set; }
 
-        public void AddComputer(Computer computer)
+        public void AddComputer(Guid roomId, Computer computer)
         {
             if (_eventHandler == null)
             {
@@ -70,7 +70,8 @@ namespace LabLog.Domain.Entities
             var @event = LabEvent.Create(
                 Guid.NewGuid(),
                 ++Version,
-                new ComputerAddedEvent(computer.RoomId, computer.SerialNumber, computer.ComputerName, computer.Position));
+                new ComputerAddedEvent(roomId, computer.SerialNumber, computer.ComputerName, computer.Position));
+                ApplyComputerAddedEvent(@event);
             _eventHandler(@event);
         }
 
@@ -93,6 +94,7 @@ namespace LabLog.Domain.Entities
         {
             var body = e.GetEventBody<ComputerAddedEvent>();
             Room room = Rooms.Find(f => (f.RoomId == body.RoomId));
+            if (room == null) { throw new Exception ("Could not find room with id " + body.RoomId + ".  Found " + Rooms.Count + " rooms.");}
             room.Computers.Add(new Computer(body.SerialNumber,
                 body.ComputerName, body.Position));
             if (room.Computers == null) {throw new Exception("room.Computers is null");}

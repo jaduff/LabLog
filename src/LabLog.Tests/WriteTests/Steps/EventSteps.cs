@@ -21,7 +21,7 @@ namespace LabLog.WriteTests.Steps
             Guid roomId,
             string roomName)
         {
-            given.Context.PendingEvents.Add(LabEvent.Create(new Guid(),
+            given.Context.PendingEvents.Add(LabEvent.Create(given.Context.School.Id,
                 1,
                 new RoomAddedEvent(roomId, roomName)));
         }

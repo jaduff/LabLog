@@ -177,7 +177,7 @@ namespace LabLog.Controllers
                 });
                 RoomModel room = _db.Schools.Include(i => (i.Rooms).Where(w=> (w.Name == roomName))).Where(w => (w.Id == schoolId)).SingleOrDefault().Rooms.Find(f => (f.Name == roomName));
                 Domain.Entities.Computer computer = new Domain.Entities.Computer(computerView.Computer.SerialNumber, computerView.Computer.Name, computerView.Computer.ComputerNumber);
-                school.AddComputer(computer);
+                school.AddComputer(room.Id, computer);
 
                 _db.SaveChanges();
             }

@@ -8,7 +8,7 @@ namespace LabLog.ReadTests
     public class ReadSchoolContext
     {
         public SchoolModel School { get; set; }
-        public List<ILabEvent> RetrievedEvents { get; } = new List<ILabEvent>();
+        public IEnumerable<LabEvent> RetrievedEvents { get; set; }
 
         public string Name { get; set; }
 
