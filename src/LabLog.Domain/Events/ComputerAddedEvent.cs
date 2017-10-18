@@ -5,11 +5,13 @@ namespace LabLog.Domain.Events
 {
     public class ComputerAddedEvent : IEventBody
     {
-        public ComputerAddedEvent(int computerId, 
-            string computerName)
+        public ComputerAddedEvent(Guid roomId, string serialNumber, 
+            string computerName, int position)
         {
+            RoomId = roomId;
             ComputerName = computerName;
-            ComputerId = computerId;
+            SerialNumber = serialNumber;
+            Position = position;
         }
 
         [Obsolete("This constructor is for serialization only. Do not use in code.")]
@@ -19,7 +21,9 @@ namespace LabLog.Domain.Events
         }
         public string EventType => EventTypeString;
         public string ComputerName{get;set;}
-        public int ComputerId { get; set; }
+        public string SerialNumber { get; set; }
         public const string EventTypeString ="ComputerAdded";
+        public Guid RoomId {get; set;}
+        public int Position {get; set;}
     }
 }

@@ -1,16 +1,20 @@
+using System;
 namespace LabLog.Domain.Entities
 {
     public class Computer
     {
-        public int ComputerId { get; }
         public string ComputerName { get; }
-        public string RoomName { get; }
+        public Guid RoomId {get;}
+        public string SerialNumber {get;}
+        public int Position {get;}
 
-        public Computer(int computerId,
-            string computerName)
+        public Computer(Guid roomId, string serialNumber,
+            string computerName, int position)
         {
-            ComputerId = computerId;
+            RoomId = roomId;
+            SerialNumber = serialNumber;
             ComputerName = computerName;
+            Position = position;
         }
     }
 }

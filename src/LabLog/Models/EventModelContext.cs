@@ -21,6 +21,7 @@ namespace LabLog
             modelBuilder.Entity<LabEvent>().Property(c => c.EventType).IsRequired();
             modelBuilder.Entity<SchoolModel>().HasKey(c => new { c.Id });
             modelBuilder.Entity<ComputerModel>().HasKey(c => new { c.SerialNumber });
+            modelBuilder.Entity<RoomModel>().HasKey(c => new { c.Id });
         }
 
     }

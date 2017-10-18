@@ -17,7 +17,7 @@ namespace LabLog.Domain.Events
         }
         public string EventType => EventTypeString;
         public string RoomName{get;set;}
-        public Guid RoomId {get; set;} = new Guid();
+        public Guid RoomId {get; set;} = Guid.NewGuid();
         public const string EventTypeString ="RoomAdded";
     }
 }

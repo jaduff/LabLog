@@ -71,7 +71,7 @@ namespace LabLog.Domain.Entities
             var @event = LabEvent.Create(
                 Guid.NewGuid(),
                 ++Version,
-                new ComputerAddedEvent(computer.ComputerId, computer.ComputerName));
+                new ComputerAddedEvent(computer.RoomId, computer.SerialNumber, computer.ComputerName, computer.Position));
             _eventHandler(@event);
         }
 
@@ -92,8 +92,8 @@ namespace LabLog.Domain.Entities
         private void ApplyComputerAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<ComputerAddedEvent>();
-            Computers.Add(new Computer(body.ComputerId,
-                body.ComputerName));
+            Computers.Add(new Computer(body.RoomId, body.SerialNumber,
+                body.ComputerName, body.Position));
             Version = e.Version;
         }
 

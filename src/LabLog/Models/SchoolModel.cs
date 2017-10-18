@@ -25,6 +25,7 @@ namespace LabLog
             RoomModel room = new RoomModel();
             var body = e.GetEventBody<RoomAddedEvent>();
             room.Name = body.RoomName;
+            room.Id = body.RoomId;
             Rooms.Add(room);
         }
 
@@ -33,8 +34,8 @@ namespace LabLog
             ComputerModel computer = new ComputerModel();
             var body = e.GetEventBody<ComputerAddedEvent>();
             computer.Name = body.ComputerName;
-            //something wrong with the properties of ComputerModel.
-            // RoomModel room = Rooms.Find(f => (f.Id == e.)) -- No way to link computer to room? ComputerModel needs a room reference?
+            RoomModel room = Rooms.Find(f => (f.Id == body.RoomId));
+            room.Computers.Add(computer);
         }
 
         public void ReplaySchoolEvent(ILabEvent e)

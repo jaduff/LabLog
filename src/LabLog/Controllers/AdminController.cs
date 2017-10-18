@@ -154,13 +154,13 @@ namespace LabLog.Controllers
         }
 
         [HttpPost]
-        [Route("Admin/{id}/{name}/Room/{RoomName}/AddComputer")]
-        public IActionResult AddComputer(AddComputerViewModel computerView)
+        [Route("Admin/{schoolID}/{name}/Room/{RoomName}/AddComputer")]
+        public IActionResult AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
         {
             //Need logic to check for duplicate names, etc. Or write model?
             //Validate computer number in range of number of computers in room? Is that a thing?
 
-            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == computerView.School.Id)).ToList();
+            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == schoolId)).ToList();
 
             try
             {
@@ -169,12 +169,15 @@ namespace LabLog.Controllers
                     e.EventAuthor = _user;
                     _db.Add(e);
 
-                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
+                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == schoolId)).SingleOrDefault();
                     if (schoolModel != null)
                     {
                         schoolModel.ReplaySchoolEvent(e);
                     }
                 });
+                RoomModel room = _db.Schools.Include(i => (i.Rooms).Where(w=> (w.Name == roomName))).Where(w => (w.Id == schoolId)).SingleOrDefault().Rooms.Find(f => (f.Name == roomName));
+                Domain.Entities.Computer computer = new Domain.Entities.Computer(room.Id,computerView.Computer.SerialNumber, computerView.Computer.Name, computerView.Computer.ComputerNumber);
+                school.AddComputer(computer);
 
                 _db.SaveChanges();
             }
