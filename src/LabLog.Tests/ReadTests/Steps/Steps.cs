@@ -11,12 +11,12 @@ namespace LabLog.ReadTests.Steps
     {
         public static void SchoolCreatedEvent(this IGiven<ReadSchoolContext> given)
         {
-            given.Context.Id = new Guid("11111111-1111-1111-1111-11111111");
+            given.Context.Id = new Guid("11111111-1111-1111-1111-111111111111");
             given.Context.Name = "Test School";
             SchoolCreatedEvent schoolCreatedEvent = new SchoolCreatedEvent();
             schoolCreatedEvent.Name = given.Context.Name;
             LabEvent labEvent = LabEvent.Create(given.Context.Id, 1, schoolCreatedEvent); 
-            given.Context.RetrievedEvents.Append(labEvent);
+            given.Context.RetrievedEvents.Add(labEvent);
         }
 
         public static void CreateTheSchool(this IWhen<ReadSchoolContext> when)
@@ -58,7 +58,7 @@ namespace LabLog.ReadTests.Steps
                 Guid.NewGuid(),
                 1,
                 new RoomAddedEvent(roomId, roomName));
-            when.Context.RetrievedEvents.Append(@event);
+            when.Context.RetrievedEvents.Add(@event);
         }
         public static void ComputerAddedEvent(this IGiven<ReadSchoolContext> when,
             Guid roomId, string serialNumber, string computerName, int position)
@@ -67,7 +67,7 @@ namespace LabLog.ReadTests.Steps
                 Guid.NewGuid(),
                 1,
                 new ComputerAddedEvent(roomId, serialNumber, computerName, position));
-            when.Context.RetrievedEvents.Append(@event);
+            when.Context.RetrievedEvents.Add(@event);
         }
 
         public static void ReplayEvents (this IWhen<ReadSchoolContext> when)

@@ -34,7 +34,10 @@ namespace LabLog
             ComputerModel computer = new ComputerModel();
             var body = e.GetEventBody<ComputerAddedEvent>();
             computer.Name = body.ComputerName;
+            computer.SerialNumber = body.SerialNumber;
+            computer.Position = body.Position;
             RoomModel room = Rooms.Find(f => (f.Id == body.RoomId));
+            if (room == null) { throw new Exception("Error: Could not find a match for room with id: " + body.RoomId);}
             room.Computers.Add(computer);
         }
 
