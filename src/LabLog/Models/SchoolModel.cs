@@ -25,22 +25,44 @@ namespace LabLog
             RoomModel room = new RoomModel();
             var body = e.GetEventBody<RoomAddedEvent>();
             room.Name = body.RoomName;
+            room.Id = body.RoomId;
             Rooms.Add(room);
+        }
+
+        public void ApplyComputerAddedEvent(ILabEvent e)
+        {
+            ComputerModel computer = new ComputerModel();
+            var body = e.GetEventBody<ComputerAddedEvent>();
+            computer.Name = body.ComputerName;
+            computer.SerialNumber = body.SerialNumber;
+            computer.Position = body.Position;
+            RoomModel room = Rooms.Find(f => (f.Id == body.RoomId));
+            if (room == null) { throw new Exception("Error: Could not find a match for room with id: " + body.RoomId);}
+            room.Computers.Add(computer);
+        }
+
+        public void ReplaySchoolEvent(ILabEvent e)
+        {
+            switch (e.EventType)
+            {
+                case SchoolCreatedEvent.EventTypeString:
+                    ApplySchoolCreatedEvent(e);
+                    break;
+                case RoomAddedEvent.EventTypeString:
+                    ApplyRoomAddedEvent(e);
+                    break;
+                case ComputerAddedEvent.EventTypeString:
+                    ApplyComputerAddedEvent(e);
+                    break;
+            }
+
         }
 
         public void ReplaySchoolEvents(IEnumerable<LabEvent> eList)
         {
             foreach (LabEvent e in eList)
             {
-                switch (e.EventType)
-                {
-                    case SchoolCreatedEvent.EventTypeString:
-                        ApplySchoolCreatedEvent(e);
-                        break;
-                    case RoomAddedEvent.EventTypeString:
-                        ApplyRoomAddedEvent(e);
-                        break;
-                }
+                ReplaySchoolEvent(e);
             }
         }
     }

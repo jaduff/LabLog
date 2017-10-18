@@ -7,7 +7,7 @@ using System;
 
 namespace LabLog.ReadTests.EntityTests
 {
-    class SchoolTests
+    public class SchoolTests
     {
         [Fact]
         public async Task SchoolCanBeCreatedFromEvent()

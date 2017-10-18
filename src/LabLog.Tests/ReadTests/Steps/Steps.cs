@@ -11,7 +11,7 @@ namespace LabLog.ReadTests.Steps
     {
         public static void SchoolCreatedEvent(this IGiven<ReadSchoolContext> given)
         {
-            given.Context.Id = new Guid("11111111-1111-1111-1111-11111111");
+            given.Context.Id = new Guid("11111111-1111-1111-1111-111111111111");
             given.Context.Name = "Test School";
             SchoolCreatedEvent schoolCreatedEvent = new SchoolCreatedEvent();
             schoolCreatedEvent.Name = given.Context.Name;
@@ -21,18 +21,21 @@ namespace LabLog.ReadTests.Steps
 
         public static void CreateTheSchool(this IWhen<ReadSchoolContext> when)
         {
-            ILabEvent labEvent = when.Context.RetrievedEvents[0];
+            ILabEvent labEvent = when.Context.RetrievedEvents.First();
             when.Context.School = new SchoolModel();
             when.Context.School.ApplySchoolCreatedEvent(labEvent);
         }
 
         public static void School(this IGiven<ReadSchoolContext> given)
         {
+            given.Context.School = new SchoolModel();
+            given.Context.School.Id = new Guid("11111111-1111-1111-1111-111111111111");
+            given.Context.School.Name = "Test School";
         }
 
         public static Action<ILabEvent> GetEventHandler(ReadSchoolContext context)
         {
-            return e => context.RetrievedEvents.Add(e);
+            return e => context.RetrievedEvents.Append(e);
         }
 
         public static void SchoolIsCreated(this IThen<ReadSchoolContext> then)
@@ -46,6 +49,30 @@ namespace LabLog.ReadTests.Steps
         {
             Assert.NotNull(then.Context.School.Id);
             Assert.NotEqual(default(Guid), then.Context.School.Id);
+        }
+
+        public static void RoomAddedEvent(this IGiven<ReadSchoolContext> when,
+            Guid roomId, string roomName)
+        {
+            var @event = LabEvent.Create(
+                Guid.NewGuid(),
+                1,
+                new RoomAddedEvent(roomId, roomName));
+            when.Context.RetrievedEvents.Add(@event);
+        }
+        public static void ComputerAddedEvent(this IGiven<ReadSchoolContext> when,
+            Guid roomId, string serialNumber, string computerName, int position)
+        {
+            var @event = LabEvent.Create(
+                Guid.NewGuid(),
+                1,
+                new ComputerAddedEvent(roomId, serialNumber, computerName, position));
+            when.Context.RetrievedEvents.Add(@event);
+        }
+
+        public static void ReplayEvents (this IWhen<ReadSchoolContext> when)
+        {
+            when.Context.School.ReplaySchoolEvents(when.Context.RetrievedEvents);
         }
 
     }

@@ -38,12 +38,9 @@ namespace LabLog.Controllers
         [Route("/RebuildReadModel")]
         public IActionResult RebuildReadModel()
         {
-            var schools = _db.Schools.AsEnumerable();
-            foreach (SchoolModel school in schools)
-            {
-                _db.Remove(school);
-            }
-            _db.SaveChanges();
+            _db.Database.ExecuteSqlCommand("DELETE FROM ComputerModel;");
+            _db.Database.ExecuteSqlCommand("DELETE FROM RoomModel;");
+            _db.Database.ExecuteSqlCommand("DELETE FROM Schools;");
             var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
 
             foreach (ILabEvent e in eSchools)
@@ -54,8 +51,8 @@ namespace LabLog.Controllers
                     .OrderBy(o => (o.Version));
                 _school.ReplaySchoolEvents(schoolEvents);
                 _db.Add(_school);
+                _db.SaveChanges();
             }
-            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -76,11 +73,13 @@ namespace LabLog.Controllers
             {
                 Domain.Entities.School.Create(school.Name, e =>
                 {
+                    SchoolModel _school = new SchoolModel();
                     e.EventAuthor = _user;
                     _db.Add(e);
+                    _school.ApplySchoolCreatedEvent(e);
+                    _db.Add(_school);
+                    _db.SaveChanges();
                 });
-                _db.Add(school);
-                _db.SaveChanges();
             }
             catch (LabException ex)
             {
@@ -117,23 +116,20 @@ namespace LabLog.Controllers
         public IActionResult AddRoom(Guid id, RoomModel room)
         {
             List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == id)).ToList();
-            room.Id = new Guid();
 
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(id, eventList, e =>
+                Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
                 {
                     e.EventAuthor = _user;
                     _db.Add(e);
 
                     SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
-                    if (schoolModel != null)
-                    {
-                        schoolModel.ApplyRoomAddedEvent(e);
-                    }
+                    schoolModel.ReplaySchoolEvent(e);
+                    _db.SaveChanges();
                 });
+                school.AddRoom(room.Name);
 
-                _db.SaveChanges();
             }
             catch (LabException ex)
             {
@@ -158,27 +154,30 @@ namespace LabLog.Controllers
         }
 
         [HttpPost]
-        [Route("Admin/{id}/{name}/Room/{RoomName}/AddComputer")]
-        public IActionResult AddComputer(AddComputerViewModel computerView)
+        [Route("Admin/{schoolID}/{name}/Room/{RoomName}/AddComputer")]
+        public IActionResult AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
         {
             //Need logic to check for duplicate names, etc. Or write model?
             //Validate computer number in range of number of computers in room? Is that a thing?
 
-            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == computerView.School.Id)).ToList();
+            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == schoolId)).ToList();
 
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(computerView.School.Id, eventList, e =>
+                Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
                 {
                     e.EventAuthor = _user;
                     _db.Add(e);
 
-                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == computerView.School.Id)).SingleOrDefault();
+                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == schoolId)).SingleOrDefault();
                     if (schoolModel != null)
                     {
-                        schoolModel.ApplyRoomAddedEvent(e);
+                        schoolModel.ReplaySchoolEvent(e);
                     }
                 });
+                RoomModel room = _db.Schools.Include(i => (i.Rooms).Where(w=> (w.Name == roomName))).Where(w => (w.Id == schoolId)).SingleOrDefault().Rooms.Find(f => (f.Name == roomName));
+                Domain.Entities.Computer computer = new Domain.Entities.Computer(computerView.Computer.SerialNumber, computerView.Computer.Name, computerView.Computer.Position);
+                school.AddComputer(room.Id, computer);
 
                 _db.SaveChanges();
             }

@@ -14,16 +14,24 @@ namespace LabLog.WriteTests.Steps
             given.Context.School = Domain.Entities.School.Create("Test name", GetEventHandler(given.Context));
         }
 
+        public static void Room(this IGiven<WriteSchoolContext> given,
+            string roomName)
+        {
+            given.Context.School.AddRoom("Test Room");
+        }
+
         public static Action<ILabEvent> GetEventHandler(WriteSchoolContext context)
         {
             return e => context.ReceivedEvents.Add(e);
         }
 
         public static void AddAComputer(this IWhen<WriteSchoolContext> when, 
-            int computerId, 
-            string computerName)
+            Guid roomId,
+            string serialNumber,
+            string computerName,
+            int position)
         {
-            when.Context.School.AddComputer(new Computer(computerId, computerName));
+            when.Context.School.AddComputer(roomId, new Computer(serialNumber, computerName, position));
         }
 
         public static void AddARoom(this IWhen<WriteSchoolContext> when,

@@ -12,8 +12,9 @@ namespace LabLog.WriteTests.EntityTests
         {
             await CTest<WriteSchoolContext>
                 .Given(a => a.School())
-                .When(i => i.AddAComputer(6, "Computer Six"))
-                .Then(t => t.ComputerAddedEventRaised(6, "Computer Six"))
+                .When(i => i.AddARoom("Test Room"))
+                .And(i => i.AddAComputer(i.Context.School.Rooms[0].RoomId, "serial", "Computer Six", 6))
+                .Then(t => t.ComputerAddedEventRaised(t.Context.School.Rooms[0].RoomId, "serial","Computer Six", 6))
                 .ExecuteAsync();
         }
     }

@@ -14,10 +14,9 @@ namespace LabLog.Domain.Entities
             _eventHandler = eventHandler;
         }
 
-        public School(Guid id, List<LabEvent> events, Action<ILabEvent> eventHandler)
+        public School(List<LabEvent> events, Action<ILabEvent> eventHandler)
         {
             _eventHandler = eventHandler;
-            Id = id;
             foreach (LabEvent _event in events)
             {
                 Replay(_event);
@@ -39,7 +38,6 @@ namespace LabLog.Domain.Entities
             return school;
         }
 
-        public List<Computer> Computers { get; } = new List<Computer>();
         public List<Room> Rooms { get; } = new List<Room>();
         public Guid Id { get; set; }
         private String _name;
@@ -62,7 +60,7 @@ namespace LabLog.Domain.Entities
 
         public int Version { get; private set; }
 
-        public void AddComputer(Computer computer)
+        public void AddComputer(Guid roomId, Computer computer)
         {
             if (_eventHandler == null)
             {
@@ -72,7 +70,8 @@ namespace LabLog.Domain.Entities
             var @event = LabEvent.Create(
                 Guid.NewGuid(),
                 ++Version,
-                new ComputerAddedEvent(computer.ComputerId, computer.ComputerName));
+                new ComputerAddedEvent(roomId, computer.SerialNumber, computer.ComputerName, computer.Position));
+                ApplyComputerAddedEvent(@event);
             _eventHandler(@event);
         }
 
@@ -84,23 +83,30 @@ namespace LabLog.Domain.Entities
             }
 
             var @event = LabEvent.Create(
-                Guid.NewGuid(),
+                Id,
                 ++Version,
-                new RoomAddedEvent(roomName));
+                new RoomAddedEvent(Guid.NewGuid(), roomName));
+            ApplyRoomAddedEvent(@event);
             _eventHandler(@event);
         }
 
         private void ApplyComputerAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<ComputerAddedEvent>();
-            Computers.Add(new Computer(body.ComputerId,
-                body.ComputerName));
+            Room room = Rooms.Find(f => (f.RoomId == body.RoomId));
+            if (room == null) { throw new Exception ("Could not find room with id " + body.RoomId + ".  Found " + Rooms.Count + " rooms.");}
+            room.Computers.Add(new Computer(body.SerialNumber,
+                body.ComputerName, body.Position));
+            if (room.Computers == null) {throw new Exception("room.Computers is null");}
+            Version = e.Version;
         }
-
+ 
         private void ApplyRoomAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<RoomAddedEvent>();
-            Rooms.Add(new Room(body.RoomName));
+            Room room = new Room(body.RoomId, body.RoomName);
+            Rooms.Add(room);
+            Version = e.Version;
         }
 
         private void ApplySchoolCreatedEvent(ILabEvent e)
@@ -108,6 +114,7 @@ namespace LabLog.Domain.Entities
             Id = e.SchoolId;
             var body = e.GetEventBody<SchoolCreatedEvent>();
             _name = body.Name;
+            Version = e.Version;
         }
 
         public void Replay(ILabEvent labEvent)
