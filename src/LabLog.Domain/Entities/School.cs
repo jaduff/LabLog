@@ -27,7 +27,8 @@ namespace LabLog.Domain.Entities
         {
             if (name == "")
             {
-                LabException ex = new LabException("School name can't be blank");
+                LabException ex = new LabException();
+                ex.AddException(new Exception("Room names must be unique"));
                 throw ex;
             }
             var school = new School(eventHandler);
@@ -80,6 +81,14 @@ namespace LabLog.Domain.Entities
             if (_eventHandler == null)
             {
                 return;
+            }
+
+            if (Rooms.FindAll(f => (f.RoomName == roomName)).Count > 0)
+            {
+                var ex = new Exception ("Duplicate room exception");
+                var exceptions = new LabException();
+                exceptions.AddException(ex);
+                throw exceptions;
             }
 
             var @event = LabEvent.Create(

@@ -17,7 +17,7 @@ namespace LabLog.WriteTests.Steps
         public static void Room(this IGiven<WriteSchoolContext> given,
             string roomName)
         {
-            given.Context.School.AddRoom("Test Room");
+            given.Context.School.AddRoom(roomName);
         }
 
         public static Action<ILabEvent> GetEventHandler(WriteSchoolContext context)
