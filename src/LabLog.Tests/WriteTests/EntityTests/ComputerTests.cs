@@ -62,7 +62,7 @@ namespace LabLog.WriteTests.EntityTests
                     catch(LabException ex)
                     {
                         Assert.Throws<UniqueComputerSerialException>(() => ex.NextException());
-                        Assert.Throws<UniqueComputerClassPositionException>(() => ex.NextException());
+                        Assert.Throws<UniqueComputerRoomPositionException>(() => ex.NextException());
                     }
                 })
                 .ExecuteAsync();

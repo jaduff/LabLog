@@ -2,7 +2,7 @@ using System;
 
 namespace LabLog.Domain.Exceptions
 {
-    public class UniqueComputerClassPositionException: Exception
+    public class UniqueComputerRoomPositionException: Exception
     {
     }
 }

@@ -81,7 +81,7 @@ namespace LabLog.Domain.Entities
 
             foreach (Computer _computer in room.Computers)
             {
-                if (computer.Position == _computer.Position) { ex.AddException(new UniqueComputerClassPositionException());}
+                if (computer.Position == _computer.Position) { ex.AddException(new UniqueComputerRoomPositionException());}
             }
 
             if (ex.HasExceptions()) {throw ex;}
