@@ -31,10 +31,11 @@ namespace LabLog.WriteTests.EntityTests
                     try
                     {
                        t.Context.Delayed();
+                       Assert.False(true);
                     }
                     catch (LabException ex)
                     {
-                        Assert.Throws<Exception>(() => ex.NextException());
+                        Assert.Throws<UniqueRoomNameException>(() => ex.NextException());
                     }
                 })
                 .ExecuteAsync();

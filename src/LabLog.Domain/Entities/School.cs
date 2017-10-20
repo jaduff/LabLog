@@ -28,7 +28,7 @@ namespace LabLog.Domain.Entities
             if (name == "")
             {
                 LabException ex = new LabException();
-                ex.AddException(new Exception("Room names must be unique"));
+                ex.AddException(new Exception("School names must not be null"));
                 throw ex;
             }
             var school = new School(eventHandler);
@@ -67,6 +67,16 @@ namespace LabLog.Domain.Entities
             {
                 return;
             }
+            foreach (Room _room in Rooms)
+            {
+                if (_room.Computers.FindAll(f => (f.SerialNumber == computer.SerialNumber)).Count > 0)
+                {
+                    LabException ex = new LabException();
+                    ex.AddException(new UniqueComputerSerialException());
+                    throw ex;
+                }
+            }
+
 
             var @event = LabEvent.Create(
                 Guid.NewGuid(),
@@ -85,9 +95,8 @@ namespace LabLog.Domain.Entities
 
             if (Rooms.FindAll(f => (f.RoomName == roomName)).Count > 0)
             {
-                var ex = new Exception ("Duplicate room exception");
                 var exceptions = new LabException();
-                exceptions.AddException(ex);
+                exceptions.AddException(new UniqueRoomNameException());
                 throw exceptions;
             }
 
