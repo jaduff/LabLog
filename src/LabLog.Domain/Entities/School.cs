@@ -67,16 +67,24 @@ namespace LabLog.Domain.Entities
             {
                 return;
             }
+
+            LabException ex = new LabException();
             foreach (Room _room in Rooms)
             {
                 if (_room.Computers.FindAll(f => (f.SerialNumber == computer.SerialNumber)).Count > 0)
                 {
-                    LabException ex = new LabException();
                     ex.AddException(new UniqueComputerSerialException());
-                    throw ex;
                 }
             }
 
+            Room room = Rooms.Find(f => (f.RoomId == roomId));
+
+            foreach (Computer _computer in room.Computers)
+            {
+                if (computer.Position == _computer.Position) { ex.AddException(new UniqueComputerClassPositionException());}
+            }
+
+            if (ex.HasExceptions()) {throw ex;}
 
             var @event = LabEvent.Create(
                 Guid.NewGuid(),

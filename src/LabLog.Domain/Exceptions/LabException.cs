@@ -34,5 +34,17 @@ namespace LabLog.Domain.Exceptions
             _exceptions.Add(ex);
         }
 
+        public bool HasExceptions()
+        {
+            if (_exceptions.Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
