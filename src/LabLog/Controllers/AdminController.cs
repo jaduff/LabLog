@@ -10,6 +10,7 @@ using LabLog.Domain.Events;
 using LabLog.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using LabLog.ViewModels.Admin;
+using LabLog.Services;
 
 
 
@@ -20,9 +21,11 @@ namespace LabLog.Controllers
 
         private readonly EventModelContext _db;
         private string _user = "user";
+        private SchoolEventHandler _school;
         public AdminController(EventModelContext db)
         {
             _db = db;
+            _school = new SchoolEventHandler(_user, _db); 
         }
 
         [Route("/")]
@@ -115,20 +118,10 @@ namespace LabLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddRoom(Guid id, RoomModel room)
         {
-            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == id)).ToList();
-
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
-                {
-                    e.EventAuthor = _user;
-                    _db.Add(e);
+                _school.School(id).AddRoom(room.Name);
 
-                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == id)).SingleOrDefault();
-                    schoolModel.ReplaySchoolEvent(e);
-                    _db.SaveChanges();
-                });
-                school.AddRoom(room.Name);
 
             }
             catch (LabException ex)
@@ -160,26 +153,12 @@ namespace LabLog.Controllers
             //Need logic to check for duplicate names, etc. Or write model?
             //Validate computer number in range of number of computers in room? Is that a thing?
 
-            List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == schoolId)).ToList();
-
             try
             {
-                Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
-                {
-                    e.EventAuthor = _user;
-                    _db.Add(e);
-
-                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == schoolId)).SingleOrDefault();
-                    if (schoolModel != null)
-                    {
-                        schoolModel.ReplaySchoolEvent(e);
-                    }
-                });
+                LabLog.Domain.Entities.School school = _school.School(schoolId);
                 RoomModel room = _db.Schools.Include(i => (i.Rooms).Where(w=> (w.Name == roomName))).Where(w => (w.Id == schoolId)).SingleOrDefault().Rooms.Find(f => (f.Name == roomName));
                 Domain.Entities.Computer computer = new Domain.Entities.Computer(computerView.Computer.SerialNumber, computerView.Computer.Name, computerView.Computer.Position);
                 school.AddComputer(room.Id, computer);
-
-                _db.SaveChanges();
             }
             catch (LabException ex)
             {

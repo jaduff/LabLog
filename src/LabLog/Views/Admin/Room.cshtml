@@ -9,7 +9,7 @@
     @foreach (var computer in Model.Room.Computers)
     {
         <li>
-            <a asp-controller="Admin" asp-action="Computer" asp-route-name="@computer.ComputerNumber">Computer @computer.ComputerNumber</a>
+            <a asp-controller="Admin" asp-action="Computer" asp-route-name="@computer.Position">Computer @computer.Position</a>
         </li>
     }
 
