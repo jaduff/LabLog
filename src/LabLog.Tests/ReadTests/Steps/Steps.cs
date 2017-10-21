@@ -72,7 +72,7 @@ namespace LabLog.ReadTests.Steps
 
         public static void ReplayEvents (this IWhen<ReadSchoolContext> when)
         {
-            when.Context.School.ReplaySchoolEvents(when.Context.RetrievedEvents);
+            when.Context.School.Update(when.Context.RetrievedEvents);
         }
 
     }

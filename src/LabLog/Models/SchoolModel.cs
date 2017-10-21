@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using LabLog.Models;
 using System.Collections.Generic;
 using LabLog.Domain.Events;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
+
 namespace LabLog
 {
     public class SchoolModel
@@ -13,11 +17,15 @@ namespace LabLog
         public Guid Id { get; set; }
         public List<RoomModel> Rooms { get; set; } = new List<RoomModel>();
 
+        [Obsolete("Only made public for database access. Do not use externally")]
+        public int _latestVersion {get; set;}
+
         public void ApplySchoolCreatedEvent(ILabEvent e)
         {
             SchoolCreatedEvent schoolCreatedEvent = e.GetEventBody<SchoolCreatedEvent>();
             Name = schoolCreatedEvent.Name;
             Id = e.SchoolId;
+            _latestVersion = e.Version;
         }
 
         public void ApplyRoomAddedEvent(ILabEvent e)
@@ -27,6 +35,7 @@ namespace LabLog
             room.Name = body.RoomName;
             room.Id = body.RoomId;
             Rooms.Add(room);
+            _latestVersion = e.Version;
         }
 
         public void ApplyComputerAddedEvent(ILabEvent e)
@@ -39,6 +48,7 @@ namespace LabLog
             RoomModel room = Rooms.Find(f => (f.Id == body.RoomId));
             if (room == null) { throw new Exception("Error: Could not find a match for room with id: " + body.RoomId);}
             room.Computers.Add(computer);
+            _latestVersion = e.Version;
         }
 
         public void ReplaySchoolEvent(ILabEvent e)
@@ -58,12 +68,14 @@ namespace LabLog
 
         }
 
-        public void ReplaySchoolEvents(IEnumerable<LabEvent> eList)
+        public void Update(IEnumerable<LabEvent> eventEnum)
         {
-            foreach (LabEvent e in eList)
+            List<LabEvent> eventList = eventEnum.ToList();
+            foreach (LabEvent @event in eventList.FindAll(f => (f.Version > _latestVersion)))
             {
-                ReplaySchoolEvent(e);
+                ReplaySchoolEvent(@event);
             }
         }
+
     }
 }
