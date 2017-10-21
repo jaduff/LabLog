@@ -99,6 +99,7 @@ namespace LabLog.Controllers
         {
             SchoolModel school = _db.Schools.Include(i => i.Rooms).Where(s => (s.Id == id)).SingleOrDefault();
             RoomModel room = school.Rooms.Where(w => (w.Name == roomName)).SingleOrDefault();
+            _db.Entry(room).Collection(c => c.Computers).Load();
             
             RoomViewModel roomViewModel = new RoomViewModel(school, room);
             //need to return error where no school is returned
@@ -150,13 +151,12 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolID}/{name}/Room/{RoomName}/AddComputer")]
         public IActionResult AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
         {
-            //Need logic to check for duplicate names, etc. Or write model?
-            //Validate computer number in range of number of computers in room? Is that a thing?
+            SchoolModel schoolModel = computerView.School;
+            RoomModel room = computerView.Room;
 
             try
             {
                 LabLog.Domain.Entities.School school = _school.School(schoolId);
-                RoomModel room = _db.Schools.Include(i => (i.Rooms).Where(w=> (w.Name == roomName))).Where(w => (w.Id == schoolId)).SingleOrDefault().Rooms.Find(f => (f.Name == roomName));
                 Domain.Entities.Computer computer = new Domain.Entities.Computer(computerView.Computer.SerialNumber, computerView.Computer.Name, computerView.Computer.Position);
                 school.AddComputer(room.Id, computer);
             }
@@ -167,7 +167,8 @@ namespace LabLog.Controllers
             }
 
 
-            return RedirectToAction("Room");//This needs to be thought about.
+            string schoolName = computerView.School.Name;
+            return RedirectToAction("Room", "Admin", new { id = schoolId, name = schoolName, roomName = roomName});
         }
 
         [Route("Admin/{id}/{name?}")]
