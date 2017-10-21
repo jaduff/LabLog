@@ -12,6 +12,7 @@ namespace LabLog
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=./LabLog.db");
+            optionsBuilder.EnableSensitiveDataLogging();
 
         }
 

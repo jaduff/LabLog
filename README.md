@@ -11,3 +11,7 @@ Interactive wireframes generated from Adobe Experience Design (beta) https://xd.
 ## To Do
 * Optimistic locking on event creation
 * When an event is used to update the read model, it should compare version numbers to ensure consistency.
+* Implement Computer View
+* Implement DamageModel
+* Implement ComputerUserModel
+* Implement Teacher controller and views

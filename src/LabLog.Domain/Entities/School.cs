@@ -27,7 +27,8 @@ namespace LabLog.Domain.Entities
         {
             if (name == "")
             {
-                LabException ex = new LabException("School name can't be blank");
+                LabException ex = new LabException();
+                ex.AddException(new Exception("School names must not be null"));
                 throw ex;
             }
             var school = new School(eventHandler);
@@ -67,8 +68,27 @@ namespace LabLog.Domain.Entities
                 return;
             }
 
+            LabException ex = new LabException();
+            foreach (Room _room in Rooms)
+            {
+                if (_room.Computers.FindAll(f => (f.SerialNumber == computer.SerialNumber)).Count > 0)
+                {
+                    ex.AddException(new UniqueComputerSerialException());
+                }
+            }
+
+            Room room = Rooms.Find(f => (f.RoomId == roomId));
+
+            foreach (Computer _computer in room.Computers)
+            {
+                if (computer.Position == _computer.Position) { ex.AddException(new UniqueComputerRoomPositionException());}
+            }
+
+            if (ex.HasExceptions()) {throw ex;}
+
             var @event = LabEvent.Create(
-                Guid.NewGuid(),
+                //Guid.NewGuid(),
+                Id,
                 ++Version,
                 new ComputerAddedEvent(roomId, computer.SerialNumber, computer.ComputerName, computer.Position));
                 ApplyComputerAddedEvent(@event);
@@ -80,6 +100,13 @@ namespace LabLog.Domain.Entities
             if (_eventHandler == null)
             {
                 return;
+            }
+
+            if (Rooms.FindAll(f => (f.RoomName == roomName)).Count > 0)
+            {
+                var exceptions = new LabException();
+                exceptions.AddException(new UniqueRoomNameException());
+                throw exceptions;
             }
 
             var @event = LabEvent.Create(

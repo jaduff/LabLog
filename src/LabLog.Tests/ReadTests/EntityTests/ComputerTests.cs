@@ -21,9 +21,11 @@ namespace LabLog.ReadTests.EntityTests
                     Assert.Equal("Test Computer", t.Context.School.Rooms.Find(f => (f.Id == new Guid("11111111-1111-1111-1111-111111111113"))).Computers[0].Name);
                     Assert.Equal("Serial", t.Context.School.Rooms.Find(f => (f.Id == new Guid("11111111-1111-1111-1111-111111111113"))).Computers[0].SerialNumber);
                     Assert.Equal(9, t.Context.School.Rooms.Find(f => (f.Id == new Guid("11111111-1111-1111-1111-111111111113"))).Computers[0].Position);
+
                 })
                 .ExecuteAsync();
         }
+
 
     }
 }

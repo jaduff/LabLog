@@ -7,12 +7,44 @@ namespace LabLog.Domain.Exceptions
 {
     public class LabException : Exception
     {
-        public String LabMessage { get; }
-        public LabException(string _message)
+        public String LabMessage { get; set; }
+        private List<Exception> _exceptions = new List<Exception>();
+        private int _exceptionCounter = 0;
+        public LabException()
         {
-            LabMessage = _message;
         }
 
+        public int Count()
+        {
+            return _exceptions.Count();
+        }
+
+        public Action NextException()
+        {
+            if (_exceptionCounter < _exceptions.Count())
+            {
+                _exceptionCounter++;
+                throw _exceptions[_exceptionCounter-1];
+            }
+            return null;
+        }
+
+        public void AddException(Exception ex)
+        {
+            _exceptions.Add(ex);
+        }
+
+        public bool HasExceptions()
+        {
+            if (_exceptions.Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }
