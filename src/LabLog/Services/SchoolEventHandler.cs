@@ -16,16 +16,17 @@ namespace LabLog.Services
             _db = db;
             _user = user;
         }
-        public Domain.Entities.School School (Guid schoolId)
+        public Domain.Entities.School School (SchoolModel schoolModel)
         {
+                Guid schoolId = schoolModel.Id;
                 List<LabEvent> eventList = _db.LabEvents.Where(o => (o.SchoolId == schoolId)).ToList();
                 Domain.Entities.School school = new Domain.Entities.School(eventList, e =>
                 {
                     e.EventAuthor = _user;
                     _db.Add(e);
 
-                    SchoolModel schoolModel = _db.Schools.Where(w => (w.Id == schoolId)).SingleOrDefault();
-                    schoolModel.ReplaySchoolEvent(e);
+                    schoolModel.Update(eventList);
+                    schoolModel.ReplaySchoolEvent(e); //Is there some way of combining these two? Need to think through use cases.
                     _db.SaveChanges();
                 });
                 return school;

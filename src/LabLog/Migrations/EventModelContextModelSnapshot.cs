@@ -82,6 +82,8 @@ namespace LabLog.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int>("_latestVersion");
+
                     b.HasKey("Id");
 
                     b.ToTable("Schools");

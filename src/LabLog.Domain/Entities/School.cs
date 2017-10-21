@@ -87,7 +87,8 @@ namespace LabLog.Domain.Entities
             if (ex.HasExceptions()) {throw ex;}
 
             var @event = LabEvent.Create(
-                Guid.NewGuid(),
+                //Guid.NewGuid(),
+                Id,
                 ++Version,
                 new ComputerAddedEvent(roomId, computer.SerialNumber, computer.ComputerName, computer.Position));
                 ApplyComputerAddedEvent(@event);

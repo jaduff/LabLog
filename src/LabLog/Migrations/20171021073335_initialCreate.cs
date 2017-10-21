@@ -29,7 +29,8 @@ namespace LabLog.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "BLOB", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    _latestVersion = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
