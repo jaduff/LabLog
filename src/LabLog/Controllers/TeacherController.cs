@@ -30,11 +30,11 @@ namespace LabLog.Controllers
         }
 
         [Route("Teacher/{schoolId}/{name}/Room/{roomName}")]
-        public IActionResult Room(Guid schoolId, string roomName)
+        public async Task<IActionResult> Room(Guid schoolId, string roomName)
         {
-            SchoolModel school = _schoolService.GetSchool(schoolId);
-            RoomModel room = _schoolService.GetRoom(school, roomName);
-            _schoolService.GetRoomComputers(room);
+            SchoolModel school = await _schoolService.GetSchoolAsync(schoolId);
+            RoomModel room = await _schoolService.GetRoomAsync(school, roomName);
+            await _schoolService.GetRoomComputersAsync(room);
 
             RoomViewModel roomViewModel = new RoomViewModel(_controllerString, school, room);
 
@@ -43,10 +43,10 @@ namespace LabLog.Controllers
 
 
         [Route("Teacher/{schoolId}/{name?}")]
-        public IActionResult School(Guid schoolId, string name)
+        public async Task<IActionResult> School(Guid schoolId, string name)
         {
-            SchoolModel school = _schoolService.GetSchool(schoolId);
-            _schoolService.GetSchoolRooms(school);
+            SchoolModel school = await _schoolService.GetSchoolAsync(schoolId);
+            await _schoolService.GetSchoolRoomsAsync(school);
             if (school.Rooms == null)
             {
                 school.Rooms = new List<RoomModel>();

@@ -38,9 +38,9 @@ namespace LabLog.Controllers
         }
 
         [Route("/RebuildReadModel")]
-        public IActionResult RebuildReadModel()
+        public async Task<IActionResult> RebuildReadModel()
         {
-            _schoolService.RebuildReadModel();
+            await _schoolService.RebuildReadModelAsync();
             return RedirectToAction("Index");
         }
 
@@ -70,9 +70,9 @@ namespace LabLog.Controllers
         }
 
         [Route("Admin/{schoolId}/{name}/Room/{roomName}")]
-        public IActionResult Room(Guid schoolId, string roomName)
+        public async Task<IActionResult> Room(Guid schoolId, string roomName)
         {
-            RoomViewModel roomViewModel = _schoolService.RoomViewModel(schoolId, roomName);
+            RoomViewModel roomViewModel = await _schoolService.RoomViewModelAsync(schoolId, roomName);
 
             return View(roomViewModel);
         }
@@ -87,11 +87,11 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolId}/{name?}/AddRoom")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddRoom(Guid schoolId, RoomModel room)
+        public async Task<IActionResult> AddRoom(Guid schoolId, RoomModel room)
         {
             try
             {
-                _schoolService.AddRoom(schoolId, room.Name);
+                await _schoolService.AddRoomAsync(schoolId, room.Name);
             }
             catch (LabException ex)
             {
@@ -106,21 +106,21 @@ namespace LabLog.Controllers
 
         [Route("Admin/{schoolId}/{name}/Room/{roomname}/AddComputer")]
         [HttpGet]
-        public IActionResult AddComputer(Guid schoolId, string roomName)
+        public async Task<IActionResult> AddComputer(Guid schoolId, string roomName)
         {
-            AddComputerViewModel computerViewModel = _schoolService.AddComputerViewModel(schoolId, roomName);
+            AddComputerViewModel computerViewModel = await _schoolService.AddComputerViewModelAsync(schoolId, roomName);
             return View(computerViewModel);
         }
 
         [HttpPost]
         [Route("Admin/{schoolId}/{name}/Room/{roomName}/AddComputer")]
-        public IActionResult AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
+        public async Task<IActionResult> AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
         {
 
             SchoolModel school = _db.Schools.Where(w => w.Id == schoolId).SingleOrDefault();
             try
             {
-                _schoolService.AddComputer(schoolId, roomName, computerView.Computer);
+                await _schoolService.AddComputerAsync(schoolId, roomName, computerView.Computer);
             }
             catch (LabException ex)
             {
@@ -132,9 +132,9 @@ namespace LabLog.Controllers
         }
 
         [Route("Admin/{schoolId}/{name?}")]
-        public IActionResult School(Guid schoolId, string name)
+        public async Task<IActionResult> School(Guid schoolId, string name)
         {
-            SchoolViewModel schoolView = _schoolService.SchoolViewModel(schoolId);
+            SchoolViewModel schoolView = await _schoolService.SchoolViewModelAsync(schoolId);
             return View(schoolView);
         }
 
