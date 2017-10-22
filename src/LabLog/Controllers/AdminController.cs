@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using LabLog.Domain.Events;
 using LabLog.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using LabLog.ViewModels.Admin;
+using LabLog.ViewModels;
 using LabLog.Services;
 
 
@@ -22,18 +22,19 @@ namespace LabLog.Controllers
         private readonly EventModelContext _db;
         private string _user = "user";
         private SchoolService _schoolService;
+        private const string _controllerString = "Admin";
         public AdminController(EventModelContext db)
         {
             _db = db;
             _schoolService = new SchoolService(db, _user);
         }
 
-        [Route("/")] //This is temporary. Remove when teacher view is implemented.
+        [Route("/")] // This is temporary. Remove when teacher view is implemented.
         [Route("Admin")]
         public IActionResult Index()
         {
-            
-            return View(_schoolService.GetSchools());
+            SchoolListViewModel schoolList = new SchoolListViewModel(_controllerString, _schoolService.GetSchools());  
+            return View(schoolList);
         }
 
         [Route("/RebuildReadModel")]
@@ -75,7 +76,7 @@ namespace LabLog.Controllers
             RoomModel room = _schoolService.GetRoom(school, roomName);
             _schoolService.GetRoomComputers(room);
             
-            RoomViewModel roomViewModel = new RoomViewModel(school, room);
+            RoomViewModel roomViewModel = new RoomViewModel(_controllerString, school, room);
 
             return View(roomViewModel);
         }
@@ -149,7 +150,8 @@ namespace LabLog.Controllers
             {
                 school.Rooms = new List<RoomModel>();
             }
-            return View(school);
+            SchoolViewModel schoolView = new SchoolViewModel(_controllerString, school);
+            return View(schoolView);
         }
 
         public IActionResult Error()

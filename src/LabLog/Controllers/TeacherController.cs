@@ -5,28 +5,54 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LabLog.Models;
+using LabLog.Services;
+using LabLog.ViewModels;
 
 namespace LabLog.Controllers
 {
     public class TeacherController : Controller
     {
+        private readonly EventModelContext _db;
+        private string _user = "user";
+        private SchoolService _schoolService;
+        private const string _controllerString = "Teacher";
+        public TeacherController(EventModelContext db)
+        {
+            _db = db;
+            _schoolService = new SchoolService(db, _user);
+        }
+
+        [Route("Teacher")]
         public IActionResult Index()
         {
-            return View();
+            SchoolListViewModel schoolListViewModel = new SchoolListViewModel(_controllerString, _schoolService.GetSchools());
+            return View(schoolListViewModel);
         }
 
-        public IActionResult School(string id)
+        [Route("Teacher/{schoolId}/{name}/Room/{roomName}")]
+        public IActionResult Room(Guid schoolId, string roomName)
         {
-            ViewData["Message"] = "School Page.";
+            SchoolModel school = _schoolService.GetSchool(schoolId);
+            RoomModel room = _schoolService.GetRoom(school, roomName);
+            _schoolService.GetRoomComputers(room);
 
-            return View();
+            RoomViewModel roomViewModel = new RoomViewModel(_controllerString, school, room);
+
+            return View(roomViewModel);
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
-            return View();
+        [Route("Teacher/{schoolId}/{name?}")]
+        public IActionResult School(Guid schoolId, string name)
+        {
+            SchoolModel school = _schoolService.GetSchool(schoolId);
+            _schoolService.GetSchoolRooms(school);
+            if (school.Rooms == null)
+            {
+                school.Rooms = new List<RoomModel>();
+            }
+            SchoolViewModel schoolViewModel = new SchoolViewModel(_controllerString, school);
+            return View(schoolViewModel);
         }
 
         public IActionResult Error()

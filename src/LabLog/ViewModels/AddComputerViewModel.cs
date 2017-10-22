@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LabLog.Models;
 
-namespace LabLog.ViewModels.Admin
+namespace LabLog.ViewModels
 {
     public class AddComputerViewModel
     {

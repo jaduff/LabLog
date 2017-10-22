@@ -1,0 +1,12 @@
+﻿@model LabLog.ViewModels.SchoolListViewModel
+
+<h2>Schools</h2>
+<ul>
+        @foreach (var school in Model.Schools)
+        {
+            <li>
+                <a asp-controller="@Model.ControllerString" asp-action="School" asp-route-schoolId="@school.Id" asp-route-name="@school.Name">@school.Name</a>
+            </li>
+        }
+
+</ul>
