@@ -80,6 +80,7 @@ _[Ss]cripts
 lib/
 .vs/
 .vscode/
+*.userprefs
 
 # .NET Core
 project.lock.json
