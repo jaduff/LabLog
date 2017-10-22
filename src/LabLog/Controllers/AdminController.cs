@@ -21,16 +21,16 @@ namespace LabLog.Controllers
 
         private readonly EventModelContext _db;
         private string _user = "user";
-        private SchoolEventHandler _school;
-        private List<SchoolModel> _schools;
+        private SchoolEventHandler _schoolEventHandler; //was _school
+        private List<SchoolModel> _schools; //Is this needed at all?
         public AdminController(EventModelContext db)
         {
             _db = db;
-            _school = new SchoolEventHandler(_user, _db); 
-            _schools = _db.Schools.ToList();
+            _school = new SchoolEventHandler(_user, _db);
+            _schools = _db.Schools.ToList(); //Remove this from constructor. Call when needed.
         }
 
-        [Route("/")]
+        [Route("/")] //This is temporary. Remove when teacher view is implemented.
         [Route("Admin")]
         public IActionResult Index()
         {
@@ -40,10 +40,11 @@ namespace LabLog.Controllers
         [Route("/RebuildReadModel")]
         public IActionResult RebuildReadModel()
         {
+            //Move to Services/App.cs
             _db.Database.ExecuteSqlCommand("DELETE FROM ComputerModel;");
             _db.Database.ExecuteSqlCommand("DELETE FROM RoomModel;");
             _db.Database.ExecuteSqlCommand("DELETE FROM Schools;");
-            _schools = new List<SchoolModel>();
+            _schools = new List<SchoolModel>(); //Make this local instead.
             var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
 
             foreach (ILabEvent e in eSchools)
@@ -73,6 +74,7 @@ namespace LabLog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddSchool(SchoolModel school)
         {
+            //Move to Services/SchooModel.cs
             try
             {
                 Domain.Entities.School.Create(school.Name, e =>
