@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using LabLog.Domain.Exceptions;
 
 namespace LabLog.Services
 
@@ -31,5 +32,6 @@ namespace LabLog.Services
                 });
                 return school;
         }
+
     }
 }

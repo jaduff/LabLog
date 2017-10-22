@@ -9,7 +9,7 @@
         @foreach (var school in Model)
         {
             <li>
-                <a asp-controller="Admin" asp-action="School" asp-route-id="@school.Id" asp-route-name="@school.Name">@school.Name</a>
+                <a asp-controller="Admin" asp-action="School" asp-route-schoolId="@school.Id" asp-route-name="@school.Name">@school.Name</a>
             </li>
         }
 

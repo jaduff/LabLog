@@ -6,7 +6,7 @@
 
 <h1>Add Computer</h1>
 <span class="alert">@ViewData["message"]</span>
-<form asp-controller="Admin" asp-action="AddComputer" asp-route-schoolID="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="post">
+<form asp-controller="Admin" asp-action="AddComputer" asp-route-schoolId="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="post">
     <div class="formgroup">
         <input class="form-control" asp-for="@Model.Computer.Name" placeholder="Computer Name" />
         <input class="form-control" asp-for="@Model.Computer.SerialNumber" placeholder="Serial Number" />

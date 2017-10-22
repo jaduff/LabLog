@@ -6,6 +6,7 @@ using LabLog.Domain.Events;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using LabLog.Services;
 
 namespace LabLog
 {
@@ -77,5 +78,32 @@ namespace LabLog
             }
         }
 
+        public RoomModel GetRoom(string roomName)
+        {
+            return (Rooms.Where(w => w.Name == roomName)).SingleOrDefault();
+        }
+
+        public static SchoolModel GetSchoolFromEvents(EventModelContext db, Guid schoolId)
+        {
+            SchoolModel school = new SchoolModel();
+            var schoolEvents = GetSchoolEvents(db, schoolId);
+            school.Update(schoolEvents);
+            return school;
+        }
+
+        public static SchoolModel GetSchoolFromDb(EventModelContext db, Guid schoolId)
+        {
+            return (db.Schools.Where(w => w.Id == schoolId)).SingleOrDefault();
+        }
+
+        public static IEnumerable<LabEvent> GetSchoolEvents(EventModelContext db, Guid schoolId)
+        {
+            //Returns IEnumerable. Use .ToList() to convert if necessary.
+            IEnumerable<LabEvent> eventList = new List<LabEvent>();
+            db.LabEvents
+                    .Where(w => (w.SchoolId == schoolId))
+                    .OrderBy(o => (o.Version));
+            return eventList;
+        }
     }
 }
