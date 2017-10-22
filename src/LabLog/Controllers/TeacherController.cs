@@ -19,7 +19,7 @@ namespace LabLog.Controllers
         public TeacherController(EventModelContext db)
         {
             _db = db;
-            _schoolService = new SchoolService(db, _user);
+            _schoolService = new SchoolService(db, _user, _controllerString);
         }
 
         [Route("Teacher")]

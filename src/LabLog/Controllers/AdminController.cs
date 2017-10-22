@@ -26,7 +26,7 @@ namespace LabLog.Controllers
         public AdminController(EventModelContext db)
         {
             _db = db;
-            _schoolService = new SchoolService(db, _user);
+            _schoolService = new SchoolService(db, _user, _controllerString);
         }
 
         [Route("/")] // This is temporary. Remove when teacher view is implemented.
@@ -72,11 +72,7 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolId}/{name}/Room/{roomName}")]
         public IActionResult Room(Guid schoolId, string roomName)
         {
-            SchoolModel school = _schoolService.GetSchool(schoolId);
-            RoomModel room = _schoolService.GetRoom(school, roomName);
-            _schoolService.GetRoomComputers(room);
-            
-            RoomViewModel roomViewModel = new RoomViewModel(_controllerString, school, room);
+            RoomViewModel roomViewModel = _schoolService.RoomViewModel(schoolId, roomName);
 
             return View(roomViewModel);
         }
@@ -112,11 +108,7 @@ namespace LabLog.Controllers
         [HttpGet]
         public IActionResult AddComputer(Guid schoolId, string roomName)
         {
-            AddComputerViewModel computerViewModel = new AddComputerViewModel();
-            computerViewModel.School = _schoolService.GetSchool(schoolId);
-            _schoolService.GetSchoolRooms(computerViewModel.School);
-            computerViewModel.Room = _schoolService.GetRoom(computerViewModel.School, roomName);
-            computerViewModel.Computer = new ComputerModel();
+            AddComputerViewModel computerViewModel = _schoolService.AddComputerViewModel(schoolId, roomName);
             return View(computerViewModel);
         }
 
@@ -124,13 +116,11 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolId}/{name}/Room/{roomName}/AddComputer")]
         public IActionResult AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
         {
-            SchoolModel school = _schoolService.GetSchool(schoolId);
-            _schoolService.GetSchoolRooms(school);
-            RoomModel room = _schoolService.GetRoom(school, roomName);
 
+            SchoolModel school = _db.Schools.Where(w => w.Id == schoolId).SingleOrDefault();
             try
             {
-                _schoolService.AddComputer(school, room, computerView.Computer);
+                _schoolService.AddComputer(schoolId, roomName, computerView.Computer);
             }
             catch (LabException ex)
             {
@@ -144,13 +134,7 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolId}/{name?}")]
         public IActionResult School(Guid schoolId, string name)
         {
-            SchoolModel school = _schoolService.GetSchool(schoolId);
-            _schoolService.GetSchoolRooms(school);
-            if (school.Rooms == null)
-            {
-                school.Rooms = new List<RoomModel>();
-            }
-            SchoolViewModel schoolView = new SchoolViewModel(_controllerString, school);
+            SchoolViewModel schoolView = _schoolService.SchoolViewModel(schoolId);
             return View(schoolView);
         }
 
