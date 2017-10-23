@@ -31,9 +31,9 @@ namespace LabLog.Controllers
 
         [Route("/")] // This is temporary. Remove when teacher view is implemented.
         [Route("Admin")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            SchoolListViewModel schoolList = new SchoolListViewModel(_controllerString, _schoolService.GetSchools());  
+            SchoolListViewModel schoolList = new SchoolListViewModel(_controllerString, await _schoolService.GetSchoolsAsync());  
             return View(schoolList);
         }
 

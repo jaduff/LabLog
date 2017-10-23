@@ -105,9 +105,9 @@ namespace LabLog.Services
             _school.School(school).AddComputer(roomModel.Id, dComputer);
         }
 
-        public List<SchoolModel> GetSchools()
+        public async Task<List<SchoolModel>> GetSchoolsAsync()
         {
-            return (_db.Schools.ToList());
+            return (await _db.Schools.ToListAsync());
         }
 
         public async Task<AddComputerViewModel> AddComputerViewModelAsync (Guid schoolId, string roomName)
