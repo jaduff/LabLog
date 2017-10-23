@@ -32,7 +32,7 @@ namespace LabLog.Services
 
             foreach (ILabEvent e in schoolCreateEvents)
             {
-                SchoolModel school = SchoolModel.GetSchoolFromEventsAsync(_db, e.SchoolId);
+                SchoolModel school = await SchoolModel.GetSchoolFromEventsAsync(_db, e.SchoolId);
                 await _db.AddAsync(school);
                 await _db.SaveChangesAsync();
             }
@@ -57,14 +57,14 @@ namespace LabLog.Services
                     e.EventAuthor = _user;
                     _db.Add(e);
                     schoolModel.ApplySchoolCreatedEvent(e);
-                    _db.Add(_school);
+                    _db.Add(schoolModel);
                     _db.SaveChanges();
                 });
         }
 
         public async Task<SchoolModel> GetSchoolAsync (Guid schoolId)
         { 
-            SchoolModel school = SchoolModel.GetSchoolFromDb(_db, schoolId); //TODO Make this async
+            SchoolModel school = await SchoolModel.GetSchoolFromDbAsync(_db, schoolId); //TODO Make this async
             await _db.Entry(school).Collection(c => c.Rooms).LoadAsync();
             if (school.Rooms == null) { school.Rooms = new List<RoomModel>(); }
             return (school);
