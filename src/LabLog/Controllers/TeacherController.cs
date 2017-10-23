@@ -23,9 +23,9 @@ namespace LabLog.Controllers
         }
 
         [Route("Teacher")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            SchoolListViewModel schoolListViewModel = new SchoolListViewModel(_controllerString, _schoolService.GetSchools());
+            SchoolListViewModel schoolListViewModel = new SchoolListViewModel(_controllerString, await _schoolService.GetSchoolsAsync());
             return View(schoolListViewModel);
         }
 
