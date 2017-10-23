@@ -32,7 +32,7 @@ namespace LabLog.Services
 
             foreach (ILabEvent e in schoolCreateEvents)
             {
-                SchoolModel school = await GetSchoolAsync(e.SchoolId);
+                SchoolModel school = SchoolModel.GetSchoolFromEventsAsync(_db, e.SchoolId);
                 await _db.AddAsync(school);
                 await _db.SaveChangesAsync();
             }
@@ -42,19 +42,21 @@ namespace LabLog.Services
 
         private async Task DeleteReadModelFromDatabaseAsync()
         {
-            await _db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerModel;");
-            await _db.Database.ExecuteSqlCommandAsync("DELETE FROM RoomModel;");
-            await _db.Database.ExecuteSqlCommandAsync("DELETE FROM Schools;");
+            List<Task> _list = new List<Task>();
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerModel;"));
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM RoomModel;"));
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM Schools;"));
+            await Task.WhenAll(_list);
         }
 
         public void CreateSchool(SchoolModel school)
         {
                 Domain.Entities.School.Create(school.Name, e =>
                 {
-                    SchoolModel _school = new SchoolModel();
+                    SchoolModel schoolModel = new SchoolModel();
                     e.EventAuthor = _user;
                     _db.Add(e);
-                    _school.ApplySchoolCreatedEvent(e);
+                    schoolModel.ApplySchoolCreatedEvent(e);
                     _db.Add(_school);
                     _db.SaveChanges();
                 });
