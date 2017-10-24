@@ -5,7 +5,7 @@
     @foreach (var computer in Model.Room.Computers)
     {
         <li>
-            <a asp-controller="@Model.ControllerString" asp-action="Computer" asp-route-name="@computer.Position">Computer @computer.Position</a>
+            <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="Computer" asp-route-name="@computer.Position">Computer @computer.Position</a>
         </li>
     }
 

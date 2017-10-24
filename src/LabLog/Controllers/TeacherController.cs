@@ -15,17 +15,16 @@ namespace LabLog.Controllers
         private readonly EventModelContext _db;
         private string _user = "user";
         private SchoolService _schoolService;
-        private const string _controllerString = "Teacher";
         public TeacherController(EventModelContext db)
         {
             _db = db;
-            _schoolService = new SchoolService(db, _user, _controllerString);
+            _schoolService = new SchoolService(db, _user);
         }
 
         [Route("Teacher")]
         public async Task<IActionResult> Index()
         {
-            SchoolListViewModel schoolListViewModel = new SchoolListViewModel(_controllerString, await _schoolService.GetSchoolsAsync());
+            SchoolListViewModel schoolListViewModel = new SchoolListViewModel(await _schoolService.GetSchoolsAsync());
             return View(schoolListViewModel);
         }
 
@@ -36,7 +35,7 @@ namespace LabLog.Controllers
             RoomModel room = await _schoolService.GetRoomAsync(school, roomName);
             await _schoolService.GetRoomComputersAsync(room);
 
-            RoomViewModel roomViewModel = new RoomViewModel(_controllerString, school, room);
+            RoomViewModel roomViewModel = new RoomViewModel(school, room);
 
             return View(roomViewModel);
         }
@@ -51,7 +50,7 @@ namespace LabLog.Controllers
             {
                 school.Rooms = new List<RoomModel>();
             }
-            SchoolViewModel schoolViewModel = new SchoolViewModel(_controllerString, school);
+            SchoolViewModel schoolViewModel = new SchoolViewModel(school);
             return View(schoolViewModel);
         }
 

@@ -9,11 +9,9 @@ namespace LabLog.ViewModels
     public class SchoolListViewModel
     {
         public List<SchoolModel> Schools { get; set; }
-        public string ControllerString { get; set; }
 
-        public SchoolListViewModel(string controllerString, List<SchoolModel> schools)
+        public SchoolListViewModel(List<SchoolModel> schools)
         {
-            ControllerString = controllerString;
             Schools = schools;
         }
     }

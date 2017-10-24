@@ -15,14 +15,12 @@ namespace LabLog.Services
         private EventModelContext _db;
         private string _user;
         private SchoolEventHandler _school;
-        private string _controllerString;
 
-        public SchoolService(EventModelContext db, string user, string controllerString)
+        public SchoolService(EventModelContext db, string user)
         {
             _db = db;
             _user = user;
             _school = new SchoolEventHandler(_user, db);
-            _controllerString = controllerString;
         }
 
         public async Task<List<SchoolModel>> RebuildReadModelAsync()
@@ -73,7 +71,7 @@ namespace LabLog.Services
         public async Task<SchoolViewModel> SchoolViewModelAsync(Guid schoolId)
         {
             SchoolModel school = await GetSchoolAsync(schoolId);
-            SchoolViewModel schoolViewModel = new SchoolViewModel(_controllerString, school);
+            SchoolViewModel schoolViewModel = new SchoolViewModel(school);
             return schoolViewModel;
         }
 
@@ -129,7 +127,7 @@ namespace LabLog.Services
             RoomModel room = await GetRoomAsync(school, roomName);
             await GetRoomComputersAsync(room);
 
-            RoomViewModel roomViewModel = new RoomViewModel(_controllerString, school, room);
+            RoomViewModel roomViewModel = new RoomViewModel(school, room);
             return roomViewModel;
         }
 

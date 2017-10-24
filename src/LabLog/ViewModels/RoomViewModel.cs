@@ -10,11 +10,9 @@ namespace LabLog.ViewModels
     {
         public SchoolModel School { get; set; }
         public RoomModel Room { get; set; }
-        public string ControllerString { get; set; }
 
-        public RoomViewModel(string controllerString, SchoolModel school, RoomModel room)
+        public RoomViewModel(SchoolModel school, RoomModel room)
         {
-            ControllerString = controllerString;
             School = school;
             Room = room;
         }

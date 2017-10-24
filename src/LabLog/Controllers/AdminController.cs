@@ -22,18 +22,17 @@ namespace LabLog.Controllers
         private readonly EventModelContext _db;
         private string _user = "user";
         private SchoolService _schoolService;
-        private const string _controllerString = "Admin";
         public AdminController(EventModelContext db)
         {
             _db = db;
-            _schoolService = new SchoolService(db, _user, _controllerString);
+            _schoolService = new SchoolService(db, _user);
         }
 
         [Route("/")] // This is temporary. Remove when teacher view is implemented.
         [Route("Admin")]
         public async Task<IActionResult> Index()
         {
-            SchoolListViewModel schoolList = new SchoolListViewModel(_controllerString, await _schoolService.GetSchoolsAsync());  
+            SchoolListViewModel schoolList = new SchoolListViewModel(await _schoolService.GetSchoolsAsync());  
             return View(schoolList);
         }
 

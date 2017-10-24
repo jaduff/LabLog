@@ -5,7 +5,7 @@
     @foreach (var room in Model.School.Rooms)
     {
         <li>
-            <a asp-controller="@Model.ControllerString" asp-action="Room" asp-route-schoolId="@Model.School.Id" asp-route-roomName="@room.Name">@room.Name</a>
+            <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="Room" asp-route-schoolId="@Model.School.Id" asp-route-roomName="@room.Name">@room.Name</a>
         </li>
     }
 

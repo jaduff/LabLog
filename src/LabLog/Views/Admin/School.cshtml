@@ -7,6 +7,6 @@
 
 @Html.Partial("/Views/Shared/School.cshtml")
 
-<form asp-controller="@Model.ControllerString" asp-action="AddRoom" method="get">
+<form asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="AddRoom" method="get">
     <input type="submit" value="New Room" />
 </form>
