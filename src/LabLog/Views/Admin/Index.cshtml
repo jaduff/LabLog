@@ -1,20 +1,11 @@
-﻿@model List<SchoolModel>
+﻿@model LabLog.ViewModels.SchoolListViewModel
 @{
     ViewData["Title"] = "Admin";
 }
 
 <h1>Admin</h1>
-<h2>Schools</h2>
-<ul>
-        @foreach (var school in Model)
-        {
-            <li>
-                <a asp-controller="Admin" asp-action="School" asp-route-id="@school.Id" asp-route-name="@school.Name">@school.Name</a>
-            </li>
-        }
 
-</ul>
-
+@Html.Partial("/Views/Shared/SchoolList.cshtml")
 
 <form asp-controller="Admin" asp-action="AddSchool" method="get">
     <input type="submit" value="New School" />

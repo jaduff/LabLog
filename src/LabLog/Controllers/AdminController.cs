@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using LabLog.Domain.Events;
 using LabLog.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using LabLog.ViewModels.Admin;
+using LabLog.ViewModels;
 using LabLog.Services;
 
 
@@ -21,43 +21,25 @@ namespace LabLog.Controllers
 
         private readonly EventModelContext _db;
         private string _user = "user";
-        private SchoolEventHandler _school;
-        private List<SchoolModel> _schools;
+        private SchoolService _schoolService;
         public AdminController(EventModelContext db)
         {
             _db = db;
-            _school = new SchoolEventHandler(_user, _db); 
-            _schools = _db.Schools.ToList();
+            _schoolService = new SchoolService(db, _user);
         }
 
-        [Route("/")]
+        [Route("/")] // This is temporary. Remove when teacher view is implemented.
         [Route("Admin")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_schools);
+            SchoolListViewModel schoolList = new SchoolListViewModel(await _schoolService.GetSchoolsAsync());  
+            return View(schoolList);
         }
 
         [Route("/RebuildReadModel")]
-        public IActionResult RebuildReadModel()
+        public async Task<IActionResult> RebuildReadModel()
         {
-            _db.Database.ExecuteSqlCommand("DELETE FROM ComputerModel;");
-            _db.Database.ExecuteSqlCommand("DELETE FROM RoomModel;");
-            _db.Database.ExecuteSqlCommand("DELETE FROM Schools;");
-            _schools = new List<SchoolModel>();
-            var eSchools = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
-
-            foreach (ILabEvent e in eSchools)
-            {
-                SchoolModel _school = new SchoolModel();
-                var schoolEvents = _db.LabEvents
-                    .Where(w => (w.SchoolId == e.SchoolId))
-                    .OrderBy(o => (o.Version));
-                _school.Update(schoolEvents);
-                _db.Add(_school);
-                _db.SaveChanges();
-            }
-            _schools = _db.Schools.ToList();
-
+            await _schoolService.RebuildReadModelAsync();
             return RedirectToAction("Index");
         }
 
@@ -75,58 +57,40 @@ namespace LabLog.Controllers
         {
             try
             {
-                Domain.Entities.School.Create(school.Name, e =>
-                {
-                    SchoolModel _school = new SchoolModel();
-                    e.EventAuthor = _user;
-                    _db.Add(e);
-                    _school.ApplySchoolCreatedEvent(e);
-                    _db.Add(_school);
-                    _db.SaveChanges();
-                });
+                _schoolService.CreateSchool(school);
             }
             catch (LabException ex)
             {
                 ViewData["message"] = ex.LabMessage;
                 return View(school);
             }
-            _schools = _db.Schools.ToList();
-
             return RedirectToAction("Index");
             
         }
 
-        [Route("Admin/{id}/{name}/Room/{roomName}")]
-        public IActionResult Room(Guid id, string roomName)
+        [Route("Admin/{schoolId}/{name}/Room/{roomName}")]
+        public async Task<IActionResult> Room(Guid schoolId, string roomName)
         {
-            SchoolModel school = _schools.Where(s => (s.Id == id)).SingleOrDefault();
-            _db.Entry(school).Collection(c => c.Rooms).Load();
-            RoomModel room = school.Rooms.Where(w => (w.Name == roomName)).SingleOrDefault();
-            _db.Entry(room).Collection(c => c.Computers).Load();
-            
-            RoomViewModel roomViewModel = new RoomViewModel(school, room);
+            RoomViewModel roomViewModel = await _schoolService.RoomViewModelAsync(schoolId, roomName);
 
             return View(roomViewModel);
         }
 
-        [Route("Admin/{id}/{name?}/AddRoom")]
+        [Route("Admin/{schoolId}/{name?}/AddRoom")]
         [HttpGet]
         public IActionResult AddRoom()
         {
             return View();
         }
 
-        [Route("Admin/{id}/{name?}/AddRoom")]
+        [Route("Admin/{schoolId}/{name?}/AddRoom")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddRoom(Guid id, RoomModel room)
+        public async Task<IActionResult> AddRoom(Guid schoolId, RoomModel room)
         {
-            SchoolModel schoolModel = _schools.Where(w => (w.Id == id)).SingleOrDefault();
             try
             {
-                _school.School(schoolModel).AddRoom(room.Name);
-
-
+                await _schoolService.AddRoomAsync(schoolId, room.Name);
             }
             catch (LabException ex)
             {
@@ -134,36 +98,28 @@ namespace LabLog.Controllers
                 return View(room);
             }
 
-            return RedirectToAction("School", id );
+            return RedirectToAction("School", schoolId );
 
         }
 
 
-        [Route("Admin/{schoolID}/{name}/Room/{roomname}/AddComputer")]
+        [Route("Admin/{schoolId}/{name}/Room/{roomname}/AddComputer")]
         [HttpGet]
-        public IActionResult AddComputer(Guid schoolID, string roomName)
+        public async Task<IActionResult> AddComputer(Guid schoolId, string roomName)
         {
-            AddComputerViewModel computerViewModel = new AddComputerViewModel();
-            computerViewModel.School = _schools.Where(w => (w.Id == schoolID)).SingleOrDefault();
-            _db.Entry(computerViewModel.School).Collection(c => c.Rooms).Load();
-            computerViewModel.Room = computerViewModel.School.Rooms.Where(w => (w.Name == roomName)).SingleOrDefault();
-            computerViewModel.Computer = new ComputerModel();
+            AddComputerViewModel computerViewModel = await _schoolService.AddComputerViewModelAsync(schoolId, roomName);
             return View(computerViewModel);
         }
 
         [HttpPost]
-        [Route("Admin/{schoolID}/{name}/Room/{roomName}/AddComputer")]
-        public IActionResult AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
+        [Route("Admin/{schoolId}/{name}/Room/{roomName}/AddComputer")]
+        public async Task<IActionResult> AddComputer(Guid schoolId, string roomName, AddComputerViewModel computerView)
         {
-            SchoolModel schoolModel = _schools.Where(s => (s.Id == schoolId)).SingleOrDefault();
-            _db.Entry(schoolModel).Collection(c => c.Rooms).Load();
-            RoomModel room = schoolModel.Rooms.Where(w => (w.Name == roomName)).SingleOrDefault();
 
+            SchoolModel school = _db.Schools.Where(w => w.Id == schoolId).SingleOrDefault();
             try
             {
-                LabLog.Domain.Entities.School school = _school.School(schoolModel);
-                Domain.Entities.Computer computer = new Domain.Entities.Computer(computerView.Computer.SerialNumber, computerView.Computer.Name, computerView.Computer.Position);
-                school.AddComputer(room.Id, computer);
+                await _schoolService.AddComputerAsync(schoolId, roomName, computerView.Computer);
             }
             catch (LabException ex)
             {
@@ -171,21 +127,14 @@ namespace LabLog.Controllers
                 return View(computerView);
             }
 
-
-            string schoolName = schoolModel.Name;
-            return RedirectToAction("Room", "Admin", new { id = schoolId, name = schoolName, roomName = roomName});
+            return RedirectToAction("Room", "Admin", new { id = schoolId, name = school.Name, roomName = roomName});
         }
 
-        [Route("Admin/{id}/{name?}")]
-        public IActionResult School(Guid id, string name)
+        [Route("Admin/{schoolId}/{name?}")]
+        public async Task<IActionResult> School(Guid schoolId, string name)
         {
-            SchoolModel school = _schools.Where(w => (w.Id == id)).SingleOrDefault();
-            _db.Entry(school).Collection(c => c.Rooms).Load();
-            if (school.Rooms == null)
-            {
-                school.Rooms = new List<RoomModel>();
-            }
-            return View(school);
+            SchoolViewModel schoolView = await _schoolService.SchoolViewModelAsync(schoolId);
+            return View(schoolView);
         }
 
         public IActionResult Error()

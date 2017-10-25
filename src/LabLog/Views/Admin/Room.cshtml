@@ -1,21 +1,12 @@
-﻿@model LabLog.ViewModels.Admin.RoomViewModel
+﻿@model LabLog.ViewModels.RoomViewModel
 @{
     ViewData["Title"] = "Admin";
 }
 
 <h1>Admin</h1>
-<h2>@Model.Room.Name</h2>
-<ul>
-    @foreach (var computer in Model.Room.Computers)
-    {
-        <li>
-            <a asp-controller="Admin" asp-action="Computer" asp-route-name="@computer.Position">Computer @computer.Position</a>
-        </li>
-    }
 
-</ul>
+@Html.Partial("/Views/Shared/Room.cshtml")
 
-
-<form asp-controller="Admin" asp-action="AddComputer" asp-route-schoolID="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="get">
+<form asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="AddComputer" asp-route-schoolId="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" method="get">
     <input type="submit" value="New Computer" />
 </form>

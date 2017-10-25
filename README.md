@@ -9,8 +9,8 @@ Interactive wireframes generated from Adobe Experience Design (beta) https://xd.
 
 
 ## To Do
-* Optimistic locking on event creation
-* When an event is used to update the read model, it should compare version numbers to ensure consistency.
+* you should have a try/catch on primary key collision, replay any new events, then retry your command
+* implement facade pattern to reduce controller complexity
 * Implement Computer View
 * Implement DamageModel
 * Implement ComputerUserModel

@@ -80,6 +80,8 @@ _[Ss]cripts
 lib/
 .vs/
 .vscode/
+*.userprefs
+
 
 # .NET Core
 project.lock.json
@@ -89,6 +91,7 @@ artifacts/
 .idea/
 .vscode/
 node_modules/
+*.userprefs
 
 # MacOS junk
 .DS_Store

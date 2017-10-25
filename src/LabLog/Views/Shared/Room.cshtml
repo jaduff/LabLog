@@ -1,0 +1,12 @@
+﻿@model LabLog.ViewModels.RoomViewModel
+
+<h2>@Model.Room.Name</h2>
+<ul>
+    @foreach (var computer in Model.Room.Computers)
+    {
+        <li>
+            <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="Computer" asp-route-name="@computer.Position">Computer @computer.Position</a>
+        </li>
+    }
+
+</ul>
