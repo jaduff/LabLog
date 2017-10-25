@@ -1,9 +1,8 @@
-﻿@{
-    ViewData["Title"] = "List of Schools";
+﻿@model LabLog.ViewModels.SchoolListViewModel
+@{
+    ViewData["Title"] = "Teacher";
 }
 
+<h1>Teacher</h1>
 
-<p>This page is the admin landing page.</p>
-<p>It will contain a list of schools, as well as
-    the options to create a new school. School editing and deleting will be done from
-    within each School's view page.</p>
+@Html.Partial("/Views/Shared/SchoolList.cshtml")

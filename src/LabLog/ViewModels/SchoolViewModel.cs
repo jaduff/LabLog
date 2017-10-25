@@ -4,17 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using LabLog.Models;
 
-namespace LabLog.ViewModels.Admin
+namespace LabLog.ViewModels
 {
-    public class RoomViewModel
+    public class SchoolViewModel
     {
         public SchoolModel School { get; set; }
-        public RoomModel Room { get; set; }
 
-        public RoomViewModel(SchoolModel school, RoomModel room)
+        public SchoolViewModel (SchoolModel school)
         {
             School = school;
-            Room = room;
         }
     }
 }

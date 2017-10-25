@@ -82,6 +82,7 @@ lib/
 .vscode/
 *.userprefs
 
+
 # .NET Core
 project.lock.json
 project.fragment.lock.json
@@ -90,6 +91,7 @@ artifacts/
 .idea/
 .vscode/
 node_modules/
+*.userprefs
 
 # MacOS junk
 .DS_Store

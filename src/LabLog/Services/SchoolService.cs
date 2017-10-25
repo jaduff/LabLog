@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LabLog.Models;
 using Microsoft.EntityFrameworkCore;
 using LabLog.Domain.Events;
+using LabLog.ViewModels;
 
 
 namespace LabLog.Services
@@ -22,76 +23,114 @@ namespace LabLog.Services
             _school = new SchoolEventHandler(_user, db);
         }
 
-        public List<SchoolModel> RebuildReadModel()
+        public async Task<List<SchoolModel>> RebuildReadModelAsync()
         {
-            DeleteReadModelFromDatabase();
-            var schoolCreateEvents = _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString));
+            await DeleteReadModelFromDatabaseAsync();
+            List<LabEvent> schoolCreateEvents = await _db.LabEvents.Where(o => (o.EventType == SchoolCreatedEvent.EventTypeString)).ToListAsync();
 
             foreach (ILabEvent e in schoolCreateEvents)
             {
-                SchoolModel school = GetSchool(e.SchoolId);
-                _db.Add(school);
-                _db.SaveChanges();
+                SchoolModel school = await SchoolModel.GetSchoolFromEventsAsync(_db, e.SchoolId);
+                await _db.AddAsync(school);
+                await _db.SaveChangesAsync();
             }
             List<SchoolModel> schools = _db.Schools.ToList();
             return schools;
         }
 
-        private void DeleteReadModelFromDatabase()
+        private async Task DeleteReadModelFromDatabaseAsync()
         {
-            _db.Database.ExecuteSqlCommand("DELETE FROM ComputerModel;");
-            _db.Database.ExecuteSqlCommand("DELETE FROM RoomModel;");
-            _db.Database.ExecuteSqlCommand("DELETE FROM Schools;");
+            List<Task> _list = new List<Task>();
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerModel;"));
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM RoomModel;"));
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM Schools;"));
+            await Task.WhenAll(_list);
         }
 
         public void CreateSchool(SchoolModel school)
         {
                 Domain.Entities.School.Create(school.Name, e =>
                 {
-                    SchoolModel _school = new SchoolModel();
+                    SchoolModel schoolModel = new SchoolModel();
                     e.EventAuthor = _user;
                     _db.Add(e);
-                    _school.ApplySchoolCreatedEvent(e);
-                    _db.Add(_school);
+                    schoolModel.ApplySchoolCreatedEvent(e);
+                    _db.Add(schoolModel);
                     _db.SaveChanges();
                 });
         }
 
-        public SchoolModel GetSchool (Guid schoolId)
-        {
-            return (SchoolModel.GetSchoolFromDb(_db, schoolId));
+        public async Task<SchoolModel> GetSchoolAsync (Guid schoolId)
+        { 
+            SchoolModel school = await SchoolModel.GetSchoolFromDbAsync(_db, schoolId); //TODO Make this async
+            await _db.Entry(school).Collection(c => c.Rooms).LoadAsync();
+            if (school.Rooms == null) { school.Rooms = new List<RoomModel>(); }
+            return (school);
         }
 
-        public void GetSchoolRooms(SchoolModel school)
+        public async Task<SchoolViewModel> SchoolViewModelAsync(Guid schoolId)
         {
-            _db.Entry(school).Collection(c => c.Rooms).Load();
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            SchoolViewModel schoolViewModel = new SchoolViewModel(school);
+            return schoolViewModel;
         }
 
-        public RoomModel GetRoom(SchoolModel school, string roomName)
+        public async Task GetSchoolRoomsAsync(SchoolModel school)
         {
-            GetSchoolRooms(school);
+            await _db.Entry(school).Collection(c => c.Rooms).LoadAsync();
+        }
+
+        public async Task<RoomModel> GetRoomAsync(SchoolModel school, string roomName)
+        {
+            await GetSchoolRoomsAsync(school);
             return (school.GetRoom(roomName));
         }
 
-        public void GetRoomComputers(RoomModel room)
+        public async Task GetRoomComputersAsync(RoomModel room)
         {
-            _db.Entry(room).Collection(c => c.Computers).Load();
+            await _db.Entry(room).Collection(c => c.Computers).LoadAsync();
         }
 
-        public void AddRoom(Guid schoolId, string roomName)
+        public async Task AddRoomAsync(Guid schoolId, string roomName)
         {
-            _school.School(GetSchool(schoolId)).AddRoom(roomName);
+            _school.School( await GetSchoolAsync(schoolId)).AddRoom(roomName);
         }
 
-        public void AddComputer(SchoolModel school, RoomModel room, ComputerModel computer)
+        public async Task AddComputerAsync(Guid schoolId, string roomName, ComputerModel computer)
         {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            await GetSchoolRoomsAsync(school);
+            RoomModel roomModel = await GetRoomAsync(school, roomName);
             LabLog.Domain.Entities.Computer dComputer = new LabLog.Domain.Entities.Computer(computer.SerialNumber, computer.Name, computer.Position);
-            _school.School(school).AddComputer(room.Id, dComputer);
+            _school.School(school).AddComputer(roomModel.Id, dComputer);
         }
 
-        public List<SchoolModel> GetSchools()
+        public async Task<List<SchoolModel>> GetSchoolsAsync()
         {
-            return (_db.Schools.ToList());
+            return (await _db.Schools.ToListAsync());
         }
+
+        public async Task<AddComputerViewModel> AddComputerViewModelAsync (Guid schoolId, string roomName)
+        {
+            AddComputerViewModel addComputerViewModel = new AddComputerViewModel();
+            addComputerViewModel.School = await GetSchoolAsync(schoolId);
+            await GetSchoolRoomsAsync(addComputerViewModel.School);
+            addComputerViewModel.Room = await GetRoomAsync(addComputerViewModel.School, roomName);
+            addComputerViewModel.Computer = new ComputerModel();
+            return addComputerViewModel;
+        }
+
+
+        public async Task<RoomViewModel> RoomViewModelAsync (Guid schoolId, string roomName)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            await GetRoomComputersAsync(room);
+
+            RoomViewModel roomViewModel = new RoomViewModel(school, room);
+            return roomViewModel;
+        }
+
+
     }
 }
