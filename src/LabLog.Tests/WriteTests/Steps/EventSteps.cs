@@ -59,6 +59,14 @@ namespace LabLog.WriteTests.Steps
             Assert.Equal(roomName, body.RoomName);
         }
 
+        public static void StudentAssignedEventRaised(this IThen<WriteSchoolContext> then,
+            string username)
+        {
+            var @event = then.Context.ReceivedEvents[3];
+            Assert.Equal(LabLog.Domain.Events.StudentAssignedEvent.EventTypeString, @event.EventType);
+            Assert.Equal("username", @event.GetEventBody<StudentAssignedEvent>().Username);
+        }
+
         public static void SchoolCreatedEventRaised(this IThen<WriteSchoolContext> then, string name)
         {
             Assert.Equal(1, then.Context.ReceivedEvents.Count);

@@ -117,6 +117,19 @@ namespace LabLog.Domain.Entities
             _eventHandler(@event);
         }
 
+        public void AssignStudent(string username, string serialNumber)
+        {
+            if (_eventHandler == null)
+            {
+                return;
+            }
+
+            var @event = LabEvent.Create(Id, ++Version,
+                new StudentAssignedEvent(serialNumber, username));
+            ApplyStudentAssignedEvent(@event);
+            _eventHandler(@event);
+        }
+
         private void ApplyComputerAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<ComputerAddedEvent>();
@@ -126,6 +139,12 @@ namespace LabLog.Domain.Entities
                 body.ComputerName, body.Position));
             if (room.Computers == null) {throw new Exception("room.Computers is null");}
             Version = e.Version;
+        }
+
+        private void ApplyStudentAssignedEvent(ILabEvent e)
+        {
+            var body = e.GetEventBody<StudentAssignedEvent>();
+            
         }
  
         private void ApplyRoomAddedEvent(ILabEvent e)
