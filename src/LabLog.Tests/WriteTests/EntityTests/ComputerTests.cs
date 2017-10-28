@@ -77,6 +77,7 @@ namespace LabLog.WriteTests.EntityTests
                 .And(a => a.RoomWithComputer())
                 .When(i => i.AssignAStudent(i.Context.School.Rooms[0].Computers[0].SerialNumber, "username"))
                 .Then(t => t.StudentAssignedEventRaised("username"))
+                .And(t => t.TimeAssignedGreaterThanZero())
                 .ExecuteAsync();
         }
 

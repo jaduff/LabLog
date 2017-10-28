@@ -20,5 +20,6 @@ namespace LabLog.Domain.Events
         public string Username {get;set;}
         public string SerialNumber {get; set;}
         public const string EventTypeString ="StudentAssignedToComputer";
+        public DateTime TimeAssigned {get;} = DateTime.Now;
     }
 }

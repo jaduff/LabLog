@@ -49,6 +49,13 @@ namespace LabLog.WriteTests.Steps
             Assert.Equal(serialNumber, body.SerialNumber);
         }
 
+        public static void TimeAssignedGreaterThanZero(this IThen<WriteSchoolContext> then)
+        {
+            StudentAssignedEvent body = then.Context.ReceivedEvents[2].GetEventBody<StudentAssignedEvent>();
+            DateTime now = DateTime.Now;
+            Assert.Equal(body.TimeAssigned.Date, now.Date);
+        }
+
         public static void RoomAddedEventRaised(this IThen<WriteSchoolContext> then,
             string roomName)
         {
