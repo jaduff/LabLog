@@ -105,6 +105,13 @@ namespace LabLog.Services
             _school.School(school).AddComputer(roomModel.Id, dComputer);
         }
 
+        public async Task AssignStudentAsync(Guid schoolId, string roomName, string serialNumber, ComputerUserModel studentToAssign)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            _school.School(school).AssignStudent(studentToAssign.UsernameAssigned, serialNumber);
+            //TODO this could be made much more efficient.
+        }
+
         public async Task<List<SchoolModel>> GetSchoolsAsync()
         {
             return (await _db.Schools.ToListAsync());

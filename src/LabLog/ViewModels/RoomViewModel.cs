@@ -16,5 +16,10 @@ namespace LabLog.ViewModels
             School = school;
             Room = room;
         }
+
+        public RoomViewModel()
+        {
+
+        }
     }
 }
