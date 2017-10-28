@@ -70,6 +70,16 @@ namespace LabLog.ReadTests.Steps
             when.Context.RetrievedEvents.Add(@event);
         }
 
+        public static void StudentAssignedEvent(this IGiven<ReadSchoolContext> given,
+            string serialNumber, string userName)
+        {
+            var @event = LabEvent.Create(
+                given.Context.School.Id,
+                1,
+                new StudentAssignedEvent(serialNumber, userName));
+            given.Context.RetrievedEvents.Add(@event);
+        }
+
         public static void ReplayEvents (this IWhen<ReadSchoolContext> when)
         {
             when.Context.School.Update(when.Context.RetrievedEvents);
