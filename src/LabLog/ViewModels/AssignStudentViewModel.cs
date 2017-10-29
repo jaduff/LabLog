@@ -5,7 +5,7 @@ namespace LabLog.ViewModels
 {
     public class AssignStudentViewModel
     {
-        ComputerUserModel user {get; set;}
-        ComputerModel computer  {get; set;}
+        public ComputerModel Computer { get; set; }
+        public string Username { get; set; }
     }
 }

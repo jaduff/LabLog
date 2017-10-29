@@ -42,14 +42,14 @@ namespace LabLog.Controllers
 
         [Route("Teacher/{schoolId}/{name}/Room/{roomName}")]
         [HttpPost]
-        public async Task<IActionResult> AssignStudents(Guid schoolId, string roomName) //TODO need to pull in the model
+        public async Task<IActionResult> AssignStudents(Guid schoolId, string roomName, RoomViewModel viewModel) //TODO need to pull in the model
         {
             //TODO How do I get the data from the form, which is a list of
             // usernames, and the computers to assign them to.
             //How does this work with the View, and with ViewModels?
             SchoolModel school = await _schoolService.GetSchoolAsync(schoolId);
             RoomModel room = await _schoolService.GetRoomAsync(school, roomName);
-            return RedirectToAction("Room", "Teacher", new { id = schoolId, name = school.Name, roomName = roomName});
+            return RedirectToAction("Room", "Teacher", new { schoolId = schoolId, name = school.Name, roomName = roomName});
         }
 
 
