@@ -5,7 +5,4 @@
 
 <h1>Teacher</h1>
 
-<h2>@Model.Room.Name</h2>
-<form asp-controller="Teacher" asp-action="AssignStudents" asp-route-schoolId="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomName="@Model.Room.Name" method="post">
 @Html.Partial("/Views/Shared/Room.cshtml", Model)
-</form>

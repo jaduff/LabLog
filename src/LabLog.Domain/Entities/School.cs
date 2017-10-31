@@ -144,7 +144,7 @@ namespace LabLog.Domain.Entities
         private void ApplyStudentAssignedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<StudentAssignedEvent>();
-            
+            Version = e.Version; 
         }
  
         private void ApplyRoomAddedEvent(ILabEvent e)
@@ -175,6 +175,9 @@ namespace LabLog.Domain.Entities
                 break;
                 case RoomAddedEvent.EventTypeString:
                     ApplyRoomAddedEvent(labEvent);
+                break;
+                case StudentAssignedEvent.EventTypeString:
+                    ApplyStudentAssignedEvent(labEvent);
                 break;
             }
         }

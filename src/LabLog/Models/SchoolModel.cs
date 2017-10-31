@@ -57,14 +57,9 @@ namespace LabLog
         {
             var body = e.GetEventBody<StudentAssignedEvent>();
             ComputerUserModel user = new ComputerUserModel(body.TimeAssigned, body.Username); 
-            foreach (RoomModel room in Rooms)
-            {
-                var computer = room.Computers.Find(f => (f.SerialNumber == body.SerialNumber));
-                if (computer != null)
-                {
-                    computer.UserList.Add(user);
-                }
-            }
+            RoomModel room = Rooms.Find(f => (f.Computers.Find(g => g.SerialNumber == body.SerialNumber).SerialNumber == body.SerialNumber));
+            room.Computers.Find(c => (c.SerialNumber == body.SerialNumber)).UserList.Add(user);
+            _latestVersion = e.Version;
         }
 
         public void ReplaySchoolEvent(ILabEvent e)

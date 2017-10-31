@@ -16,13 +16,6 @@ namespace LabLog.ViewModels
         {
             School = school;
             Room = room;
-            foreach (ComputerModel computer in Room.Computers)
-            {
-                AssignStudentViewModel studentViewModel = new AssignStudentViewModel();
-                studentViewModel.Computer = computer;
-                AssignStudentView.Add(studentViewModel);
-            }
-
         }
 
         public RoomViewModel()
