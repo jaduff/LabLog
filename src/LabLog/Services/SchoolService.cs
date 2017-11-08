@@ -62,7 +62,7 @@ namespace LabLog.Services
 
         public async Task<SchoolModel> GetSchoolAsync (Guid schoolId)
         { 
-            SchoolModel school = await SchoolModel.GetSchoolFromDbAsync(_db, schoolId); //TODO Make this async
+            SchoolModel school = await SchoolModel.GetSchoolFromDbAsync(_db, schoolId);
             await _db.Entry(school).Collection(c => c.Rooms).LoadAsync();
             if (school.Rooms == null) { school.Rooms = new List<RoomModel>(); }
             return (school);
@@ -86,9 +86,10 @@ namespace LabLog.Services
             return (school.GetRoom(roomName));
         }
 
-        public async Task GetRoomComputersAsync(RoomModel room)
+        public async Task<List<ComputerModel>> GetRoomComputersAsync(RoomModel room)
         {
             await _db.Entry(room).Collection(c => c.Computers).LoadAsync();
+            return room.Computers.ToList();
         }
 
         public async Task AddRoomAsync(Guid schoolId, string roomName)
@@ -129,6 +130,15 @@ namespace LabLog.Services
 
             RoomViewModel roomViewModel = new RoomViewModel(school, room);
             return roomViewModel;
+        }
+
+        public async Task AssignStudentToComputerAsync(Guid schoolId, string roomName, string serialNumber, string username)
+        {
+            //TODO get data added to DB
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            List<ComputerModel> computers = await GetRoomComputersAsync(room);
+            _school.School(school).AssignStudent(username, serialNumber);
         }
 
 

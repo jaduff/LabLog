@@ -20,6 +20,14 @@ namespace LabLog.WriteTests.Steps
             given.Context.School.AddRoom(roomName);
         }
 
+        public static void RoomWithComputer(this IGiven<WriteSchoolContext> given)
+        {
+            given.Context.School.AddRoom("Test room");
+            Guid roomId = given.Context.School.Rooms[0].RoomId;
+            Computer computer = new Computer("serialNumber", "computerName", 5);
+            given.Context.School.AddComputer(roomId, computer);
+        }
+
         public static Action<ILabEvent> GetEventHandler(WriteSchoolContext context)
         {
             return e => context.ReceivedEvents.Add(e);
@@ -33,6 +41,13 @@ namespace LabLog.WriteTests.Steps
         {
             when.Context.School.AddComputer(roomId, new Computer(serialNumber, computerName, position));
         }
+
+        public static void AssignAStudent(this IWhen<WriteSchoolContext> when,
+    string username, string serialNumber)
+        {
+            when.Context.School.AssignStudent(serialNumber, username);
+        }
+
 
         public static void AddARoom(this IWhen<WriteSchoolContext> when,
             string roomName)

@@ -53,6 +53,15 @@ namespace LabLog
             _latestVersion = e.Version;
         }
 
+        public void ApplyStudentAssignedEvent(ILabEvent e)
+        {
+            var body = e.GetEventBody<StudentAssignedEvent>();
+            ComputerUserModel user = new ComputerUserModel(body.TimeAssigned, body.Username); 
+            RoomModel room = Rooms.Find(f => (f.Computers.Find(g => g.SerialNumber == body.SerialNumber).SerialNumber == body.SerialNumber));
+            room.Computers.Find(c => (c.SerialNumber == body.SerialNumber)).UserList.Add(user);
+            _latestVersion = e.Version;
+        }
+
         public void ReplaySchoolEvent(ILabEvent e)
         {
             switch (e.EventType)
@@ -65,6 +74,9 @@ namespace LabLog
                     break;
                 case ComputerAddedEvent.EventTypeString:
                     ApplyComputerAddedEvent(e);
+                    break;
+                case StudentAssignedEvent.EventTypeString:
+                    ApplyStudentAssignedEvent(e);
                     break;
             }
 

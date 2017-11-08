@@ -69,5 +69,17 @@ namespace LabLog.WriteTests.EntityTests
 
         }
 
+        [Fact]
+        public async Task StudentCanBeAssignedToComputer()
+        {
+            await CTest<WriteSchoolContext>
+                .Given(a => a.School())
+                .And(a => a.RoomWithComputer())
+                .When(i => i.AssignAStudent(i.Context.School.Rooms[0].Computers[0].SerialNumber, "username"))
+                .Then(t => t.StudentAssignedEventRaised("username"))
+                .And(t => t.TimeAssignedGreaterThanZero())
+                .ExecuteAsync();
+        }
+
     }
 }

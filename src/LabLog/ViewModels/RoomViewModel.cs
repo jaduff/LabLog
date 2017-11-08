@@ -10,11 +10,17 @@ namespace LabLog.ViewModels
     {
         public SchoolModel School { get; set; }
         public RoomModel Room { get; set; }
+        public List<AssignStudentViewModel> AssignStudentView { get; set; } = new List<AssignStudentViewModel>();
 
         public RoomViewModel(SchoolModel school, RoomModel room)
         {
             School = school;
             Room = room;
+        }
+
+        public RoomViewModel()
+        {
+            
         }
     }
 }

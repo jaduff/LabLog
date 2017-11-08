@@ -23,6 +23,7 @@ namespace LabLog
             modelBuilder.Entity<SchoolModel>().HasKey(c => new { c.Id });
             modelBuilder.Entity<ComputerModel>().HasKey(c => new { c.SerialNumber });
             modelBuilder.Entity<RoomModel>().HasKey(c => new { c.Id });
+            modelBuilder.Entity<ComputerUserModel>().HasKey(( c => new {c.UsernameAssigned, c.TimeAssigned}));
         }
 
     }

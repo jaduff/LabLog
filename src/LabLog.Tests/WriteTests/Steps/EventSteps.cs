@@ -49,6 +49,13 @@ namespace LabLog.WriteTests.Steps
             Assert.Equal(serialNumber, body.SerialNumber);
         }
 
+        public static void TimeAssignedGreaterThanZero(this IThen<WriteSchoolContext> then)
+        {
+            StudentAssignedEvent body = then.Context.ReceivedEvents[2].GetEventBody<StudentAssignedEvent>();
+            DateTime now = DateTime.Now;
+            Assert.Equal(body.TimeAssigned.Date, now.Date);
+        }
+
         public static void RoomAddedEventRaised(this IThen<WriteSchoolContext> then,
             string roomName)
         {
@@ -57,6 +64,14 @@ namespace LabLog.WriteTests.Steps
             Assert.Equal(LabLog.Domain.Events.RoomAddedEvent.EventTypeString, @event.EventType);
             RoomAddedEvent body = @event.GetEventBody<RoomAddedEvent>();
             Assert.Equal(roomName, body.RoomName);
+        }
+
+        public static void StudentAssignedEventRaised(this IThen<WriteSchoolContext> then,
+            string username)
+        {
+            var @event = then.Context.ReceivedEvents[3];
+            Assert.Equal(LabLog.Domain.Events.StudentAssignedEvent.EventTypeString, @event.EventType);
+            Assert.Equal("username", @event.GetEventBody<StudentAssignedEvent>().Username);
         }
 
         public static void SchoolCreatedEventRaised(this IThen<WriteSchoolContext> then, string name)

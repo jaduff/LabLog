@@ -2,11 +2,16 @@ using System;
 
 namespace LabLog
 {
-    class ComputerUserModel
+    public class ComputerUserModel
     {
-        public int ID {get; set;}
-        public DateTime UserTime {get; set;}
-        public string LoggedUser {get; set;}
-        public string DetectedUser {get; set;}
+        public string UsernameAssigned { get; set; }
+        public DateTime TimeAssigned {get; set;}
+        public string DetectedUsername {get; set;}
+
+        public ComputerUserModel(DateTime timeAssigned, string usernameAssigned)
+        {
+            UsernameAssigned = usernameAssigned;
+            TimeAssigned = timeAssigned;
+        }
     }
 }
