@@ -62,7 +62,7 @@ namespace LabLog.Services
 
         public async Task<SchoolModel> GetSchoolAsync (Guid schoolId)
         { 
-            SchoolModel school = await SchoolModel.GetSchoolFromDbAsync(_db, schoolId); //TODO Make this async
+            SchoolModel school = await SchoolModel.GetSchoolFromDbAsync(_db, schoolId);
             await _db.Entry(school).Collection(c => c.Rooms).LoadAsync();
             if (school.Rooms == null) { school.Rooms = new List<RoomModel>(); }
             return (school);

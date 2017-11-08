@@ -145,7 +145,7 @@ namespace LabLog.Controllers
             return View(schoolView);
         }
 
-        [Route("Teacher/{schoolId}/{name}/Room/{roomName}")]
+        [Route("Admin/{schoolId}/{name}/Room/{roomName}")]
         [HttpPost]
         public async Task<IActionResult> AssignStudents(Guid schoolId,
                                                         string roomName,
