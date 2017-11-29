@@ -141,6 +141,21 @@ namespace LabLog.Services
             _school.School(school).AssignStudent(username, serialNumber);
         }
 
+        public async Task<RoomViewModel> GetRoomViewModel(Guid schoolId, string roomName)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            await GetRoomComputersAsync(room);
+
+            RoomViewModel roomViewModel = new RoomViewModel(school, room);
+            foreach (ComputerModel computer in room.Computers)
+            {
+                roomViewModel.AssignStudentView.Add(new AssignStudentViewModel());
+            }
+
+            return roomViewModel;
+        }
+
 
     }
 }

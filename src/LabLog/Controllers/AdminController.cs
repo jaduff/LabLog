@@ -71,15 +71,7 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolId}/{name}/Room/{roomName}")]
         public async Task<IActionResult> Room(Guid schoolId, string roomName)
         {
-            SchoolModel school = await _schoolService.GetSchoolAsync(schoolId);
-            RoomModel room = await _schoolService.GetRoomAsync(school, roomName);
-            await _schoolService.GetRoomComputersAsync(room);
-
-            RoomViewModel roomViewModel = new RoomViewModel(school, room);
-            foreach (ComputerModel computer in room.Computers)
-            {
-                roomViewModel.AssignStudentView.Add(new AssignStudentViewModel());
-            }
+            RoomViewModel roomViewModel = await _schoolService.GetRoomViewModel(schoolId, roomName);
 
             return View(roomViewModel);
         }
