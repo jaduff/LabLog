@@ -67,6 +67,13 @@ namespace LabLog.Controllers
             return View(schoolViewModel);
         }
 
+        [Route("Teacher/{schoolId}/{name}/{roomName}/{position}")]
+        public async Task<IActionResult> ComputerView(Guid schoolId, string roomName, int position)
+        {
+            ComputerViewModel computerView = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            return View(computerView);
+        }
+
 
         public IActionResult Error()
         {

@@ -83,7 +83,8 @@ namespace LabLog.Services
         public async Task<RoomModel> GetRoomAsync(SchoolModel school, string roomName)
         {
             await GetSchoolRoomsAsync(school);
-            return (school.GetRoom(roomName));
+            RoomModel room = school.GetRoom(roomName);
+            return (room);
         }
 
         public async Task<List<ComputerModel>> GetRoomComputersAsync(RoomModel room)
@@ -154,6 +155,15 @@ namespace LabLog.Services
             }
 
             return roomViewModel;
+        }
+
+        public async Task<ComputerViewModel> GetComputerAsync(Guid schoolId, string roomName, int position)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            ComputerViewModel computerViewModel = new ComputerViewModel();
+            computerViewModel.computer = room.Computers.Where(w => (w.Position == position)).SingleOrDefault();
+            return computerViewModel;
         }
 
 

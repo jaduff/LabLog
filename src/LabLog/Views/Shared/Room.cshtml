@@ -6,7 +6,7 @@
         @for (int i=0; i< Model.Room.Computers.Count; i++)
         {
             <li>
-                <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="Computer" asp-route-schoolId="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomname="@Model.Room.Name" asp-route-serialNumber="@Model.Room.Computers[i].SerialNumber" >Computer @Model.Room.Computers[i].Position</a>
+                <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="ComputerView" asp-route-schoolId="@Model.School.Id" asp-route-name="@Model.School.Name" asp-route-roomName="@Model.Room.Name" asp-route-position="@Model.Room.Computers[i].Position" >Computer @Model.Room.Computers[i].Position</a>
                 <input type="text" placeholder="Student Username" asp-for="@Model.AssignStudentView[i].Username">
                 <input type="hidden" asp-for="@Model.AssignStudentView[i].SerialNumber" value="@Model.Room.Computers[i].SerialNumber">
             </li>
