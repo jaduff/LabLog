@@ -84,6 +84,7 @@ namespace LabLog.Services
         {
             await GetSchoolRoomsAsync(school);
             RoomModel room = school.GetRoom(roomName);
+            await _db.Entry(room).Collection(c => c.Computers).LoadAsync();
             return (room);
         }
 
@@ -163,6 +164,7 @@ namespace LabLog.Services
             RoomModel room = await GetRoomAsync(school, roomName);
             ComputerViewModel computerViewModel = new ComputerViewModel();
             computerViewModel.computer = room.Computers.Where(w => (w.Position == position)).SingleOrDefault();
+            await _db.Entry(computerViewModel.computer).Collection(c => c.UserList).LoadAsync();
             return computerViewModel;
         }
 

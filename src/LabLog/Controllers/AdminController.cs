@@ -153,6 +153,13 @@ namespace LabLog.Controllers
             return RedirectToAction("Room", "Admin", new { schoolId = schoolId, name = school.Name, roomName = roomName });
         }
 
+        [Route("Admin/{schoolId}/{name}/{roomName}/{position}")]
+        public async Task<IActionResult> ComputerView(Guid schoolId, string roomName, int position)
+        {
+            ComputerViewModel computerView = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            return View(computerView);
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
