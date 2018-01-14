@@ -10,5 +10,6 @@ namespace LabLog.Models
         public int Position {get; set;}
         public string Name { get; set; }
         public List<ComputerUserModel> UserList { get; set; } = new List<ComputerUserModel>();
+        public List<DamageModel> DamageList {get; set; } = new List<DamageModel>();
     }
 }
