@@ -130,6 +130,29 @@ namespace LabLog.Domain.Entities
             _eventHandler(@event);
         }
 
+        public void RecordDamage(string roomName, string serialNumber, string damageDescription)
+        {
+            if (_eventHandler == null)
+            {
+                return;
+            }
+
+            Computer computer = GetComputerBySerial(serialNumber);
+            var @event = LabEvent.Create(Id, ++Version,
+                    new DamageAddedEvent(roomName, serialNumber, computer.GetLastDamageId() + 1, damageDescription));
+            ApplyDamageAddedEvent(@event);
+            _eventHandler(@event);
+        }
+
+        private void ApplyDamageAddedEvent(ILabEvent e)
+        {
+            var body = e.GetEventBody<DamageAddedEvent>();
+            Computer computer = GetComputerBySerial(body.SerialNumber);
+            Damage damage = new Damage(computer.GetLastDamageId() + 1, body.DamageDescription);
+            computer.DamageList.Add(damage);
+            Version = e.Version;
+        }
+
         private void ApplyComputerAddedEvent(ILabEvent e)
         {
             var body = e.GetEventBody<ComputerAddedEvent>();
@@ -180,6 +203,16 @@ namespace LabLog.Domain.Entities
                     ApplyStudentAssignedEvent(labEvent);
                 break;
             }
+        }
+
+        private Computer GetComputerBySerial(string serialNumber)
+        {
+            foreach (Room room in Rooms)
+            {
+                Computer _computer = room.Computers.Find(f => f.SerialNumber == serialNumber);
+                if (_computer.SerialNumber == serialNumber) { return _computer; }
+            }
+            throw new Exception("No computer found");
         }
     }
 }

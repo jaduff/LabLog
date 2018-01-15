@@ -5,10 +5,10 @@ namespace LabLog.Domain.Events
 {
     public class DamageAddedEvent : IEventBody
     {
-        public DamageAddedEvent(string serialNumber, int damageId, string damageDescription)
+        public DamageAddedEvent(string roomName, string serialNumber, int damageId, string damageDescription)
         {
             SerialNumber = serialNumber;
-            DamageDescription = DamageDescription;
+            DamageDescription = damageDescription;
             DamageId = damageId;
         }
 
