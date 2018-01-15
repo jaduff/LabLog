@@ -68,9 +68,18 @@ namespace LabLog.Controllers
         }
 
         [Route("Teacher/{schoolId}/{name}/{roomName}/{position}")]
+        [HttpPost]
+        public async Task<IActionResult> ComputerView(Guid schoolId, string name, string roomName, int position, ComputerViewModel computerView)
+        {
+            await _schoolService.RecordDamage(schoolId, roomName, position, computerView.newDamage);
+            return RedirectToAction("ComputerView", "Teacher", new { schoolId = schoolId, name = name, roomName = roomName, position = position });
+        }
+
+        [Route("Teacher/{schoolId}/{name}/{roomName}/{position}")]
         public async Task<IActionResult> ComputerView(Guid schoolId, string roomName, int position)
         {
-            ComputerViewModel computerView = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            ComputerViewModel computerView = new ComputerViewModel();
+            computerView.computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);
             return View(computerView);
         }
 

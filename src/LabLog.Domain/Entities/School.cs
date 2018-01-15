@@ -192,16 +192,19 @@ namespace LabLog.Domain.Entities
             {
                 case SchoolCreatedEvent.EventTypeString:
                     ApplySchoolCreatedEvent(labEvent);
-                break;
+                    break;
                 case ComputerAddedEvent.EventTypeString:
                     ApplyComputerAddedEvent(labEvent);
-                break;
+                    break;
                 case RoomAddedEvent.EventTypeString:
                     ApplyRoomAddedEvent(labEvent);
-                break;
+                    break;
                 case StudentAssignedEvent.EventTypeString:
                     ApplyStudentAssignedEvent(labEvent);
-                break;
+                    break;
+                case DamageAddedEvent.EventTypeString:
+                    ApplyDamageAddedEvent(labEvent);
+                    break;
             }
         }
 

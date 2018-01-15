@@ -8,6 +8,7 @@ namespace LabLog.ViewModels
 {
     public class ComputerViewModel
     {
-        public ComputerModel computer;
+        public ComputerModel computer { get; set; }
+        public DamageModel newDamage { get; set; }
     }
 }

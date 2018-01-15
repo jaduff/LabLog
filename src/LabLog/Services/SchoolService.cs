@@ -158,14 +158,23 @@ namespace LabLog.Services
             return roomViewModel;
         }
 
-        public async Task<ComputerViewModel> GetComputerAsync(Guid schoolId, string roomName, int position)
+        public async Task<ComputerModel> GetComputerAsync(Guid schoolId, string roomName, int position)
         {
             SchoolModel school = await GetSchoolAsync(schoolId);
             RoomModel room = await GetRoomAsync(school, roomName);
-            ComputerViewModel computerViewModel = new ComputerViewModel();
-            computerViewModel.computer = room.Computers.Where(w => (w.Position == position)).SingleOrDefault();
-            await _db.Entry(computerViewModel.computer).Collection(c => c.UserList).LoadAsync();
-            return computerViewModel;
+            await GetRoomComputersAsync(room);
+            ComputerModel computer = room.Computers.Where(w => (w.Position == position)).SingleOrDefault();
+            await _db.Entry(computer).Collection(c => c.UserList).LoadAsync();
+            await _db.Entry(computer).Collection(c => c.DamageList).LoadAsync();
+            return computer;
+        }
+
+        public async Task RecordDamage(Guid schoolId, string roomName, int position, DamageModel damage)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            ComputerModel computer = await GetComputerAsync(schoolId, roomName, position);
+            _school.School(school).RecordDamage(roomName, computer.SerialNumber, damage.Description);
         }
 
 
