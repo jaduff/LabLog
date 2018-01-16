@@ -41,6 +41,8 @@ namespace LabLog.Services
         private async Task DeleteReadModelFromDatabaseAsync()
         {
             List<Task> _list = new List<Task>();
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM DamageModel;"));
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerUserModel;"));
             _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerModel;"));
             _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM RoomModel;"));
             _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM Schools;"));

@@ -85,6 +85,13 @@ namespace LabLog.WriteTests.Steps
             Debug.WriteLine("Damage Description: " + @event.GetEventBody<DamageAddedEvent>().DamageId);
         }
 
+        public static void ComputerLastDamageIdIs(this IThen<WriteSchoolContext> then,
+            int damageId)
+        {
+            Assert.Equal(damageId, then.Context.School.Rooms[0].Computers[0].GetLastDamageId());
+        }
+
+
         public static void SchoolCreatedEventRaised(this IThen<WriteSchoolContext> then, string name)
         {
             Assert.Equal(1, then.Context.ReceivedEvents.Count);

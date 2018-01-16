@@ -77,7 +77,8 @@ namespace LabLog
                     computer.DamageList.Add(damage);
                 }
             }
-            
+            _latestVersion = e.Version;
+
         }
 
         public void ReplaySchoolEvent(ILabEvent e)
