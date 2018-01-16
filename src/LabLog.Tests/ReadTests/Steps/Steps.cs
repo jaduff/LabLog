@@ -80,6 +80,16 @@ namespace LabLog.ReadTests.Steps
             given.Context.RetrievedEvents.Add(@event);
         }
 
+        public static void DamageRecordedEvent(this IGiven<ReadSchoolContext> given,
+            string roomName, string serialNumber, int damageId, string damageDescription)
+        {
+            var @event = LabEvent.Create(
+                given.Context.School.Id,
+                1,
+                new DamageAddedEvent(roomName, serialNumber, damageId, damageDescription));
+            given.Context.RetrievedEvents.Add(@event);
+        }
+
         public static void ReplayEvents (this IWhen<ReadSchoolContext> when)
         {
             when.Context.School.Update(when.Context.RetrievedEvents);

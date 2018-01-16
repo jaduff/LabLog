@@ -80,5 +80,10 @@ namespace LabLog.WriteTests.Steps
         {
             Assert.Equal(version, then.Context.School.Version);
         }
+
+        public static void RecordDamage(this IWhen<WriteSchoolContext> when, string roomName, string serialNumber, string damageDescription)
+        {
+            when.Context.School.RecordDamage(roomName, serialNumber, damageDescription);
+        }
     }
 }

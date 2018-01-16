@@ -1,0 +1,36 @@
+﻿@model LabLog.ViewModels.ComputerViewModel
+
+<h2>Computer @Model.computer.Position</h2>
+
+<h3>Info</h3>
+<ul>
+    <li>Serial Number: @Model.computer.SerialNumber</li>
+    <li>Name: @Model.computer.Name</li>
+</ul>
+
+<h3>Damage Recorded</h3>
+<ul>
+    @foreach (var damage in Model.computer.GetUnresolvedDamage())
+    {
+        <li>@damage.DamageID - @damage.Description</li>
+
+    }
+</ul>
+
+<h3>Add Damage Record</h3>
+<form asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="ComputerView" asp-route-schoolId="@this.ViewContext.RouteData.Values["schoolId"]" asp-route-name="@this.ViewContext.RouteData.Values["name"]" asp-route-roomName="@this.ViewContext.RouteData.Values["roomName"]" asp-route-position="@this.ViewContext.RouteData.Values["position"]" method="post">
+    <div class="formgroup">
+        <input asp-for="newDamage.Description" class="form-control" placeholder="Enter the description of the damage." />
+        <button type="submit">Record Damage</button>
+    </div>
+</form>
+
+<h3>User Records</h3>
+<ul>
+    @foreach (var user in Model.computer.UserList)
+    {
+
+    <li>@user.UsernameAssigned - @user.TimeAssigned</li>
+
+    }
+</ul>

@@ -62,6 +62,24 @@ namespace LabLog
             _latestVersion = e.Version;
         }
 
+        public void ApplyDamageRecordedEvent(ILabEvent e)
+        {
+            var body = e.GetEventBody<DamageAddedEvent>();
+            DamageModel damage = new DamageModel();
+            damage.DamageID = body.DamageId;
+            damage.Description = body.DamageDescription;
+            damage.Resolved = false;
+            foreach (RoomModel room in Rooms)
+            {
+                ComputerModel computer = room.Computers.Find(c => (c.SerialNumber == body.SerialNumber));
+                if (computer != null)
+                {
+                    computer.DamageList.Add(damage);
+                }
+            }
+            
+        }
+
         public void ReplaySchoolEvent(ILabEvent e)
         {
             switch (e.EventType)
@@ -77,6 +95,9 @@ namespace LabLog
                     break;
                 case StudentAssignedEvent.EventTypeString:
                     ApplyStudentAssignedEvent(e);
+                    break;
+                case DamageAddedEvent.EventTypeString:
+                    ApplyDamageRecordedEvent(e);
                     break;
             }
 

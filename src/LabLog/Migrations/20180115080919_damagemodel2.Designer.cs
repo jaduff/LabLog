@@ -11,9 +11,10 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    partial class EventModelContextModelSnapshot : ModelSnapshot
+    [Migration("20180115080919_damagemodel2")]
+    partial class damagemodel2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

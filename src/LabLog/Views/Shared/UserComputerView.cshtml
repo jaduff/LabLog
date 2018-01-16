@@ -1,0 +1,11 @@
+﻿@model LabLog.ViewModels.ComputerViewModel
+
+<h3>Recent Users</h3>
+<ul>
+    @foreach (var user in Model.computer.UserList)
+    {
+
+    <li>@user.UsernameAssigned - @user.TimeAssigned</li>
+
+    }
+</ul>

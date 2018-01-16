@@ -4,6 +4,7 @@ using CheetahTesting;
 using LabLog.Domain.Events;
 using Xunit;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace LabLog.WriteTests.Steps
 {
@@ -72,6 +73,16 @@ namespace LabLog.WriteTests.Steps
             var @event = then.Context.ReceivedEvents[3];
             Assert.Equal(LabLog.Domain.Events.StudentAssignedEvent.EventTypeString, @event.EventType);
             Assert.Equal("username", @event.GetEventBody<StudentAssignedEvent>().Username);
+        }
+
+        public static void DamageAddedEventRaised(this IThen<WriteSchoolContext> then,
+            string damageDescription)
+        {
+            var @event = then.Context.ReceivedEvents[3];
+            Assert.Equal(LabLog.Domain.Events.DamageAddedEvent.EventTypeString, @event.EventType);
+            Assert.Equal(damageDescription, @event.GetEventBody<DamageAddedEvent>().DamageDescription);
+            Assert.True(@event.GetEventBody<DamageAddedEvent>().DamageId > 0);
+            Debug.WriteLine("Damage Description: " + @event.GetEventBody<DamageAddedEvent>().DamageId);
         }
 
         public static void SchoolCreatedEventRaised(this IThen<WriteSchoolContext> then, string name)

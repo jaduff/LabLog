@@ -42,6 +42,23 @@ namespace LabLog.ReadTests.EntityTests
                 .ExecuteAsync();
         }
 
+        [Fact]
+        public async Task DamageCanBeRecordedOnComputer()
+        {
+            await CTest<ReadSchoolContext>
+                .Given(a => a.School())
+                .And(a => a.RoomAddedEvent(new Guid("11111111-1111-1111-1111-111111111113"), "Test Room"))
+                .And(a => a.ComputerAddedEvent(new Guid("11111111-1111-1111-1111-111111111113"), "Serial", "Test Computer", 9))
+                .And(a => a.DamageRecordedEvent("roomName", "Serial", 2, "computer damaged"))
+                .When(i => i.ReplayEvents())
+                .Then(t => {
+                    Assert.Equal(1, t.Context.School.Rooms[0].Computers[0].DamageList.Count);
+                    Assert.Equal("computer damaged", t.Context.School.Rooms[0].Computers[0].DamageList[0].Description);
+                    Assert.Equal(2, t.Context.School.Rooms[0].Computers[0].DamageList[0].DamageID);
+                })
+                .ExecuteAsync();
+        }
+
 
     }
 }

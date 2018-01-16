@@ -11,9 +11,10 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    partial class EventModelContextModelSnapshot : ModelSnapshot
+    [Migration("20180112062504_damagemodel")]
+    partial class damagemodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,28 +75,6 @@ namespace LabLog.Migrations
                     b.ToTable("ComputerModel");
                 });
 
-            modelBuilder.Entity("LabLog.Models.DamageModel", b =>
-                {
-                    b.Property<int>("DamageID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ComputerModelSerialNumber");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int>("GLPITicketNum");
-
-                    b.Property<string>("ReportedBy");
-
-                    b.Property<bool>("Resolved");
-
-                    b.HasKey("DamageID");
-
-                    b.HasIndex("ComputerModelSerialNumber");
-
-                    b.ToTable("DamageModel");
-                });
-
             modelBuilder.Entity("LabLog.RoomModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -140,13 +119,6 @@ namespace LabLog.Migrations
                     b.HasOne("LabLog.RoomModel")
                         .WithMany("Computers")
                         .HasForeignKey("RoomModelId");
-                });
-
-            modelBuilder.Entity("LabLog.Models.DamageModel", b =>
-                {
-                    b.HasOne("LabLog.Models.ComputerModel")
-                        .WithMany("DamageList")
-                        .HasForeignKey("ComputerModelSerialNumber");
                 });
 
             modelBuilder.Entity("LabLog.RoomModel", b =>

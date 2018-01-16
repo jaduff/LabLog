@@ -71,15 +71,7 @@ namespace LabLog.Controllers
         [Route("Admin/{schoolId}/{name}/Room/{roomName}")]
         public async Task<IActionResult> Room(Guid schoolId, string roomName)
         {
-            SchoolModel school = await _schoolService.GetSchoolAsync(schoolId);
-            RoomModel room = await _schoolService.GetRoomAsync(school, roomName);
-            await _schoolService.GetRoomComputersAsync(room);
-
-            RoomViewModel roomViewModel = new RoomViewModel(school, room);
-            foreach (ComputerModel computer in room.Computers)
-            {
-                roomViewModel.AssignStudentView.Add(new AssignStudentViewModel());
-            }
+            RoomViewModel roomViewModel = await _schoolService.GetRoomViewModel(schoolId, roomName);
 
             return View(roomViewModel);
         }
@@ -159,6 +151,14 @@ namespace LabLog.Controllers
                 await _schoolService.AssignStudentToComputerAsync(schoolId, roomName, c.SerialNumber, c.Username);
             }
             return RedirectToAction("Room", "Admin", new { schoolId = schoolId, name = school.Name, roomName = roomName });
+        }
+
+        [Route("Admin/{schoolId}/{name}/{roomName}/{position}")]
+        public async Task<IActionResult> ComputerView(Guid schoolId, string roomName, int position)
+        {
+            ComputerViewModel computerView = new ComputerViewModel();
+            computerView.computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            return View(computerView);
         }
 
         public IActionResult Error()

@@ -8,6 +8,11 @@ namespace LabLog
         public DateTime TimeAssigned {get; set;}
         public string DetectedUsername {get; set;}
 
+        public ComputerUserModel()
+        {
+
+        }
+
         public ComputerUserModel(DateTime timeAssigned, string usernameAssigned)
         {
             UsernameAssigned = usernameAssigned;

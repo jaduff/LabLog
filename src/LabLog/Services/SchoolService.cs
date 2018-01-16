@@ -83,7 +83,9 @@ namespace LabLog.Services
         public async Task<RoomModel> GetRoomAsync(SchoolModel school, string roomName)
         {
             await GetSchoolRoomsAsync(school);
-            return (school.GetRoom(roomName));
+            RoomModel room = school.GetRoom(roomName);
+            await _db.Entry(room).Collection(c => c.Computers).LoadAsync();
+            return (room);
         }
 
         public async Task<List<ComputerModel>> GetRoomComputersAsync(RoomModel room)
@@ -139,6 +141,40 @@ namespace LabLog.Services
             RoomModel room = await GetRoomAsync(school, roomName);
             List<ComputerModel> computers = await GetRoomComputersAsync(room);
             _school.School(school).AssignStudent(username, serialNumber);
+        }
+
+        public async Task<RoomViewModel> GetRoomViewModel(Guid schoolId, string roomName)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            await GetRoomComputersAsync(room);
+
+            RoomViewModel roomViewModel = new RoomViewModel(school, room);
+            foreach (ComputerModel computer in room.Computers)
+            {
+                roomViewModel.AssignStudentView.Add(new AssignStudentViewModel());
+            }
+
+            return roomViewModel;
+        }
+
+        public async Task<ComputerModel> GetComputerAsync(Guid schoolId, string roomName, int position)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            await GetRoomComputersAsync(room);
+            ComputerModel computer = room.Computers.Where(w => (w.Position == position)).SingleOrDefault();
+            await _db.Entry(computer).Collection(c => c.UserList).LoadAsync();
+            await _db.Entry(computer).Collection(c => c.DamageList).LoadAsync();
+            return computer;
+        }
+
+        public async Task RecordDamage(Guid schoolId, string roomName, int position, DamageModel damage)
+        {
+            SchoolModel school = await GetSchoolAsync(schoolId);
+            RoomModel room = await GetRoomAsync(school, roomName);
+            ComputerModel computer = await GetComputerAsync(schoolId, roomName, position);
+            _school.School(school).RecordDamage(roomName, computer.SerialNumber, damage.Description);
         }
 
 
