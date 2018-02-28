@@ -12,7 +12,17 @@
 <ul>
     @foreach (var damage in Model.computer.GetUnresolvedDamage())
     {
-        <li>@damage.DamageID - @damage.Description</li>
+    <li>
+        <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()"
+           asp-action="DamageView"
+           asp-route-schoolId="@Model.School.Id"
+           asp-route-name="@Model.School.Name"
+           asp-route-roomName="@Model.Room.Name"
+           asp-route-position="@Model.computer.Position"
+           asp-route-damageId="@damage.DamageId">
+            @damage.DamageId - @damage.Description
+        </a>
+    </li>
 
     }
 </ul>

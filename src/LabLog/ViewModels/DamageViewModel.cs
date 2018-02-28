@@ -6,11 +6,11 @@ using LabLog.Models;
 
 namespace LabLog.ViewModels
 {
-    public class ComputerViewModel
+    public class DamageViewModel
     {
         public ComputerModel computer { get; set; }
-        public DamageModel newDamage { get; set; }
         public SchoolModel School { get; set; }
         public RoomModel Room { get; set; }
+        public DamageModel Damage { get; set; }
     }
 }

@@ -1,0 +1,29 @@
+﻿@model LabLog.ViewModels.DamageViewModel
+
+<h2>Damage ID - @Model.Damage.DamageId</h2>
+
+<h3>Info</h3>
+<ul>
+    <li>Computer Position: @Model.computer.Position</li>
+    <li>Serial Number: @Model.computer.SerialNumber</li>
+    <li>Name: @Model.computer.Name</li>
+</ul>
+
+<h3>Damage Details</h3>
+<ul>
+    <li>Damage ID - @Model.Damage.DamageId</li>
+    <li>Reported By - @Model.Damage.ReportedBy</li>
+    <li>Resolved - @Model.Damage.Resolved</li>
+    <li>Ticket Number - @Model.Damage.GLPITicketNum</li>
+</ul>
+<div><h3>Description</h3>@Model.Damage.Description</div>
+
+<h3>User Records</h3>
+<ul>
+    @foreach (var user in Model.computer.UserList)
+    {
+
+        <li>@user.UsernameAssigned - @user.TimeAssigned</li>
+
+    }
+</ul>

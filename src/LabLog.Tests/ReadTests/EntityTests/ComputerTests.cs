@@ -54,7 +54,7 @@ namespace LabLog.ReadTests.EntityTests
                 .Then(t => {
                     Assert.Equal(1, t.Context.School.Rooms[0].Computers[0].DamageList.Count);
                     Assert.Equal("computer damaged", t.Context.School.Rooms[0].Computers[0].DamageList[0].Description);
-                    Assert.Equal(2, t.Context.School.Rooms[0].Computers[0].DamageList[0].DamageID);
+                    Assert.Equal(2, t.Context.School.Rooms[0].Computers[0].DamageList[0].DamageId);
                 })
                 .ExecuteAsync();
         }
