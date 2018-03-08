@@ -85,5 +85,13 @@ namespace LabLog.WriteTests.Steps
         {
             when.Context.School.RecordDamage(roomName, serialNumber, damageDescription);
         }
+        public static void UpdateDamageTicket(this IWhen<WriteSchoolContext> when,
+            string roomName,
+            string serialNumber,
+            int damageId,
+            string ticket)
+        {
+            when.Context.School.UpdateDamageTicket(roomName, serialNumber, damageId, ticket);
+        }
     }
 }

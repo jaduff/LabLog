@@ -9,6 +9,7 @@ namespace LabLog.Domain.Entities
         public int DamageId { get; }
         public string DamageDescription { get; set;  }
         public bool Resolved { get; set; } = false;
+        public string TicketId { get; set;}
 
         public Damage(int damageId, string damageDescription)
         {

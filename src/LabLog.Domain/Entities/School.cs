@@ -143,6 +143,27 @@ namespace LabLog.Domain.Entities
             ApplyDamageAddedEvent(@event);
             _eventHandler(@event);
         }
+        public void UpdateDamageTicket(string roomName, string serialNumber, int damageId, string ticket)
+        {
+            if (_eventHandler == null)
+            {
+                return;
+            }
+
+            var @event = LabEvent.Create(Id, ++Version,
+                    new UpdateDamageTicketEvent(roomName, serialNumber, damageId, ticket));
+            ApplyUpdateDamageTicketEvent(@event);
+            _eventHandler(@event);
+        }
+
+        public void ApplyUpdateDamageTicketEvent(ILabEvent e)
+        {
+            var body = e.GetEventBody<UpdateDamageTicketEvent>();
+            Computer computer = GetComputerBySerial(body.SerialNumber);
+            Damage damage = computer.DamageList.Find(f => f.DamageId == body.DamageId);
+            damage.TicketId = body.TicketId;
+            Version = e.Version;
+        }
 
         private void ApplyDamageAddedEvent(ILabEvent e)
         {

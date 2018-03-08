@@ -34,5 +34,20 @@ namespace LabLog.WriteTests.EntityTests
                 .ExecuteAsync();
         }
 
+        [Fact]
+        public async Task DamageTicketCanBeModified()
+        {
+            await CTest<WriteSchoolContext>
+                .Given(a => a.School())
+                .And(a => a.RoomWithComputer())
+                .When(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "Computer damaged"))
+                .And(i => i.UpdateDamageTicket(i.Context.School.Rooms[0].RoomName,
+                    i.Context.School.Rooms[0].Computers[0].SerialNumber,
+                    1,
+                    "GLPI-2018"))
+                .Then(t => t.UpdateDamageTicketEventRaised("GLPI-2018"))
+                .ExecuteAsync();
+        }
+
     }
 }
