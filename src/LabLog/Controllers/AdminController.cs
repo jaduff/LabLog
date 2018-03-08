@@ -154,11 +154,32 @@ namespace LabLog.Controllers
         }
 
         [Route("Admin/{schoolId}/{name}/{roomName}/{position}")]
+        [HttpPost]
+        public async Task<IActionResult> ComputerView(Guid schoolId, string name, string roomName, int position, ComputerViewModel computerView)
+        {
+            await _schoolService.RecordDamage(schoolId, roomName, position, computerView.newDamage);
+            return RedirectToAction("ComputerView", "Admin", new { schoolId = schoolId, name = name, roomName = roomName, position = position });
+        }
+
+        [Route("Admin/{schoolId}/{name}/{roomName}/{position}")]
         public async Task<IActionResult> ComputerView(Guid schoolId, string roomName, int position)
         {
             ComputerViewModel computerView = new ComputerViewModel();
             computerView.computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            computerView.School = await _schoolService.GetSchoolAsync(schoolId);
+            computerView.Room = await _schoolService.GetRoomAsync(computerView.School, roomName);
             return View(computerView);
+        }
+
+        [Route("Admin/{schoolId}/{name}/{roomName}/{position}/{damageId}")]
+        public async Task<IActionResult> DamageView(Guid schoolId, string roomName, int position, int damageId)
+        {
+            DamageViewModel damageView = new DamageViewModel();
+            damageView.computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            damageView.School = await _schoolService.GetSchoolAsync(schoolId);
+            damageView.Room = await _schoolService.GetRoomAsync(damageView.School, roomName);
+            damageView.Damage = await _schoolService.GetDamageAsync(damageView.computer, damageId);
+            return View(damageView);
         }
 
         public IActionResult Error()

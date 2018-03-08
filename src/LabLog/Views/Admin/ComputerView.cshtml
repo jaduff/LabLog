@@ -1,8 +1,46 @@
 ﻿@model LabLog.ViewModels.ComputerViewModel
-@{
-    ViewData["Title"] = "Teacher";
-}
 
-<h1>Admin</h1>
+<h2>Computer @Model.computer.Position</h2>
 
-@Html.Partial("/Views/Shared/ComputerView.cshtml", Model)
+<h3>Info</h3>
+<ul>
+    <li>Serial Number: @Model.computer.SerialNumber</li>
+    <li>Name: @Model.computer.Name</li>
+</ul>
+
+<h3>Damage Recorded</h3>
+<ul>
+    @foreach (var damage in Model.computer.GetUnresolvedDamage())
+    {
+    <li>
+        <a asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()"
+           asp-action="DamageView"
+           asp-route-schoolId="@Model.School.Id"
+           asp-route-name="@Model.School.Name"
+           asp-route-roomName="@Model.Room.Name"
+           asp-route-position="@Model.computer.Position"
+           asp-route-damageId="@damage.DamageId">
+            @damage.DamageId - @damage.Description
+        </a>
+    </li>
+
+    }
+</ul>
+
+<h3>Add Damage Record</h3>
+<form asp-controller="@this.ViewContext.RouteData.Values["controller"].ToString()" asp-action="ComputerView" asp-route-schoolId="@this.ViewContext.RouteData.Values["schoolId"]" asp-route-name="@this.ViewContext.RouteData.Values["name"]" asp-route-roomName="@this.ViewContext.RouteData.Values["roomName"]" asp-route-position="@this.ViewContext.RouteData.Values["position"]" method="post">
+    <div class="formgroup">
+        <input asp-for="newDamage.Description" class="form-control" placeholder="Enter the description of the damage." />
+        <button type="submit">Record Damage</button>
+    </div>
+</form>
+
+<h3>User Records</h3>
+<ul>
+    @foreach (var user in Model.computer.UserList)
+    {
+
+        <li>@user.UsernameAssigned - @user.TimeAssigned</li>
+
+    }
+</ul>

@@ -66,7 +66,7 @@ namespace LabLog
         {
             var body = e.GetEventBody<DamageAddedEvent>();
             DamageModel damage = new DamageModel();
-            damage.DamageID = body.DamageId;
+            damage.DamageId = body.DamageId;
             damage.Description = body.DamageDescription;
             damage.Resolved = false;
             foreach (RoomModel room in Rooms)
@@ -77,7 +77,8 @@ namespace LabLog
                     computer.DamageList.Add(damage);
                 }
             }
-            
+            _latestVersion = e.Version;
+
         }
 
         public void ReplaySchoolEvent(ILabEvent e)

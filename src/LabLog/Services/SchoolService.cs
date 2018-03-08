@@ -41,6 +41,8 @@ namespace LabLog.Services
         private async Task DeleteReadModelFromDatabaseAsync()
         {
             List<Task> _list = new List<Task>();
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM DamageModel;"));
+            _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerUserModel;"));
             _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM ComputerModel;"));
             _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM RoomModel;"));
             _list.Add(_db.Database.ExecuteSqlCommandAsync("DELETE FROM Schools;"));
@@ -177,6 +179,12 @@ namespace LabLog.Services
             _school.School(school).RecordDamage(roomName, computer.SerialNumber, damage.Description);
         }
 
+        public async Task<DamageModel> GetDamageAsync (ComputerModel computer, int damageId)
+        {
+            await _db.Entry(computer).Collection(c => c.DamageList).LoadAsync();
+            DamageModel damage = computer.DamageList.Where(w => w.DamageId == damageId).SingleOrDefault();
+            return damage;
+        }
 
     }
 }
