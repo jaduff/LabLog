@@ -172,6 +172,20 @@ namespace LabLog.Controllers
         }
 
         [Route("Admin/{schoolId}/{name}/{roomName}/{position}/{damageId}")]
+        [HttpPost]
+        public async Task<IActionResult> DamageView(Guid schoolId, string name, string roomName, int position, ComputerViewModel computerView, int damageId, DamageViewModel damageView)
+        {
+            ComputerModel computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);
+            DamageModel editDamage = await _schoolService.GetDamageAsync(computer, damageView.Damage.DamageId);
+            editDamage.ReportedBy = damageView.Damage.ReportedBy;
+            editDamage.Description = damageView.Damage.Description;
+            editDamage.Resolved = damageView.Damage.Resolved;
+            editDamage.GLPITicketNum = damageView.Damage.GLPITicketNum;
+            await _schoolService.RecordDamage(schoolId, roomName, position, editDamage);
+            return RedirectToAction("DamageView", "Admin", new { schoolId = schoolId, name = name, roomName = roomName, position = position, damageId = damageId });
+        }
+
+        [Route("Admin/{schoolId}/{name}/{roomName}/{position}/{damageId}")]
         public async Task<IActionResult> DamageView(Guid schoolId, string roomName, int position, int damageId)
         {
             DamageViewModel damageView = new DamageViewModel();

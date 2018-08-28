@@ -1,5 +1,20 @@
 ﻿@model LabLog.ViewModels.DamageViewModel
 
+<script type="text/javascript">
+    function enableEditing()
+    {
+        var form = document.getElementById("editdamage");
+        var elements = document.getElementsByClassName("form-control");
+        for (i=0; i<elements.length; i++)
+        {
+            if (elements[i].disabled == true)
+            {
+                elements[i].disabled = false;
+            }
+        }
+    }
+</script>
+
 <h2>Damage ID - @Model.Damage.DamageId</h2>
 
 <h3>Info</h3>
@@ -8,15 +23,21 @@
     <li>Serial Number: @Model.computer.SerialNumber</li>
     <li>Name: @Model.computer.Name</li>
 </ul>
-
+@using (Html.BeginForm())
+{
+<!-- converting damage details to disabled form, with button to enable via javascript -->
 <h3>Damage Details</h3>
 <ul>
-    <li>Damage ID - @Model.Damage.DamageId</li>
-    <li>Reported By - @Model.Damage.ReportedBy</li>
-    <li>Resolved - @Model.Damage.Resolved</li>
-    <li>Ticket Number - @Model.Damage.GLPITicketNum</li>
+    <li>Damage ID - <input asp-for="Damage.DamageId" type="text" class="form-control" disabled></li>
+    <li>Reported By - <input asp-for="Damage.ReportedBy" type="text" disabled  class="form-control"></li>
+    <li>Resolved - <input asp-for="Damage.Resolved" type="checkbox" disabled  class="form-control"></li>
+    <li>Ticket Number - <input asp-for="Damage.GLPITicketNum" type="text" disabled  class="form-control"></li>
 </ul>
-<div><h3>Description</h3>@Model.Damage.Description</div>
+<div><h3>Description</h3><textarea asp-for="Damage.Description" type="text" disabled  class="form-control">@Model.Damage.Description</textarea></div>
+<input type="submit" type="submit" value='submit'> <!-- submit button to edit data -->
+}
+<button onclick="enableEditing()">Edit</button>
+
 
 <h3>User Records</h3>
 <ul>
