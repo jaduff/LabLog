@@ -173,7 +173,7 @@ namespace LabLog.Controllers
 
         [Route("Admin/{schoolId}/{name}/{roomName}/{position}/{damageId}")]
         [HttpPost]
-        public async Task<IActionResult> DamageView(Guid schoolId, string name, string roomName, int position, ComputerViewModel computerView, int damageId, DamageViewModel damageView)
+        public async Task<IActionResult> DamageView(Guid schoolId, string name, string roomName, int position, ComputerViewModel computerView, Guid damageId, DamageViewModel damageView)
         {
             ComputerModel computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);
             DamageModel editDamage = await _schoolService.GetDamageAsync(computer, damageView.Damage.DamageId);

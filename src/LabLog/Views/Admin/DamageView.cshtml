@@ -28,12 +28,13 @@
 <!-- converting damage details to disabled form, with button to enable via javascript -->
 <h3>Damage Details</h3>
 <ul>
-    <li>Damage ID - <input asp-for="Damage.DamageId" type="text" class="form-control" disabled></li>
+    <li>Damage ID - @Model.Damage.DamageId</li>
     <li>Reported By - <input asp-for="Damage.ReportedBy" type="text" disabled  class="form-control"></li>
     <li>Resolved - <input asp-for="Damage.Resolved" type="checkbox" disabled  class="form-control"></li>
     <li>Ticket Number - <input asp-for="Damage.GLPITicketNum" type="text" disabled  class="form-control"></li>
 </ul>
 <div><h3>Description</h3><textarea asp-for="Damage.Description" type="text" disabled  class="form-control">@Model.Damage.Description</textarea></div>
+<input type="hidden" asp-for="Damage.DamageId">
 <input type="submit" type="submit" value='submit'> <!-- submit button to edit data -->
 }
 <button onclick="enableEditing()">Edit</button>
