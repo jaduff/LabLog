@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LabLog.Migrations
 {
-    public partial class initialCreate : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,10 +76,62 @@ namespace LabLog.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ComputerUserModel",
+                columns: table => new
+                {
+                    UsernameAssigned = table.Column<string>(type: "TEXT", nullable: false),
+                    TimeAssigned = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ComputerModelSerialNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    DetectedUsername = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComputerUserModel", x => new { x.UsernameAssigned, x.TimeAssigned });
+                    table.ForeignKey(
+                        name: "FK_ComputerUserModel_ComputerModel_ComputerModelSerialNumber",
+                        column: x => x.ComputerModelSerialNumber,
+                        principalTable: "ComputerModel",
+                        principalColumn: "SerialNumber",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DamageModel",
+                columns: table => new
+                {
+                    DamageId = table.Column<Guid>(type: "BLOB", nullable: false),
+                    ComputerModelSerialNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    GLPITicketNum = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReportedBy = table.Column<string>(type: "TEXT", nullable: true),
+                    Resolved = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DamageModel", x => x.DamageId);
+                    table.ForeignKey(
+                        name: "FK_DamageModel_ComputerModel_ComputerModelSerialNumber",
+                        column: x => x.ComputerModelSerialNumber,
+                        principalTable: "ComputerModel",
+                        principalColumn: "SerialNumber",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ComputerModel_RoomModelId",
                 table: "ComputerModel",
                 column: "RoomModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComputerUserModel_ComputerModelSerialNumber",
+                table: "ComputerUserModel",
+                column: "ComputerModelSerialNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DamageModel_ComputerModelSerialNumber",
+                table: "DamageModel",
+                column: "ComputerModelSerialNumber");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomModel_SchoolModelId",
@@ -90,10 +142,16 @@ namespace LabLog.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ComputerModel");
+                name: "ComputerUserModel");
+
+            migrationBuilder.DropTable(
+                name: "DamageModel");
 
             migrationBuilder.DropTable(
                 name: "LabEvents");
+
+            migrationBuilder.DropTable(
+                name: "ComputerModel");
 
             migrationBuilder.DropTable(
                 name: "RoomModel");

@@ -81,7 +81,7 @@ namespace LabLog.ReadTests.Steps
         }
 
         public static void DamageRecordedEvent(this IGiven<ReadSchoolContext> given,
-            string roomName, string serialNumber, int damageId, string damageDescription)
+            string roomName, string serialNumber, Guid damageId, string damageDescription)
         {
             var @event = LabEvent.Create(
                 given.Context.School.Id,

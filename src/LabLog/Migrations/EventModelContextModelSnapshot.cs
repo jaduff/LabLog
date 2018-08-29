@@ -76,7 +76,7 @@ namespace LabLog.Migrations
 
             modelBuilder.Entity("LabLog.Models.DamageModel", b =>
                 {
-                    b.Property<int>("DamageID")
+                    b.Property<Guid>("DamageId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ComputerModelSerialNumber");
@@ -89,7 +89,7 @@ namespace LabLog.Migrations
 
                     b.Property<bool>("Resolved");
 
-                    b.HasKey("DamageID");
+                    b.HasKey("DamageId");
 
                     b.HasIndex("ComputerModelSerialNumber");
 

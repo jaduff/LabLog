@@ -74,7 +74,7 @@ namespace LabLog.WriteTests.EntityTests
         {
             await CTest<WriteSchoolContext>
                 .Given(a => a.School())
-                .And(a => a.RoomWithComputer())
+                .And(a => a.RoomWithComputer("serial1", "computer1", 1))
                 .When(i => i.AssignAStudent(i.Context.School.Rooms[0].Computers[0].SerialNumber, "username"))
                 .Then(t => t.StudentAssignedEventRaised("username"))
                 .And(t => t.TimeAssignedGreaterThanZero())

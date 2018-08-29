@@ -186,7 +186,7 @@ namespace LabLog.Controllers
         }
 
         [Route("Admin/{schoolId}/{name}/{roomName}/{position}/{damageId}")]
-        public async Task<IActionResult> DamageView(Guid schoolId, string roomName, int position, int damageId)
+        public async Task<IActionResult> DamageView(Guid schoolId, string roomName, int position, Guid damageId)
         {
             DamageViewModel damageView = new DamageViewModel();
             damageView.computer = await _schoolService.GetComputerAsync(schoolId, roomName, position);

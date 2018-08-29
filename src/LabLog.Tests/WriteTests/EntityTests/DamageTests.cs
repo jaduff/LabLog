@@ -14,7 +14,7 @@ namespace LabLog.WriteTests.EntityTests
         {
             await CTest<WriteSchoolContext>
                 .Given(a => a.School())
-                .And(a => a.RoomWithComputer())
+                .And(a => a.RoomWithComputer("serial1", "computer1", 5))
                 .When(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "Computer damaged"))
                 .Then(t => t.DamageAddedEventRaised("Computer damaged"))
                 .And(t => t.ComputerLastDamageIdIs(1))
@@ -26,9 +26,24 @@ namespace LabLog.WriteTests.EntityTests
         {
             await CTest<WriteSchoolContext>
                 .Given(a => a.School())
-                .And(a => a.RoomWithComputer())
+                .And(a => a.RoomWithComputer("serial1", "computer 1", 5))
                 .When(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "Computer damaged"))
                 .And(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "keys missing"))
+                .Then(t => t.DamageAddedEventRaised("Computer damaged"))
+                .And(t => t.ComputerLastDamageIdIs(2))
+                .ExecuteAsync();
+        }
+
+        [Fact]
+        public async Task DamageDoesNotConflictBetweenComputers()
+        {
+            await CTest<WriteSchoolContext>
+                .Given(a => a.School())
+                .And(a => a.RoomWithComputer("serial1", "computer 1", 5))
+                .When(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "Computer damaged"))
+                .And(i => i.AddAComputer(i.Context.School.Rooms[0].RoomId,"serial2", "computer2", 1))
+                .And(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "keys missing"))
+                .And(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[1].SerialNumber, "keys missing"))
                 .Then(t => t.DamageAddedEventRaised("Computer damaged"))
                 .And(t => t.ComputerLastDamageIdIs(2))
                 .ExecuteAsync();
@@ -39,7 +54,7 @@ namespace LabLog.WriteTests.EntityTests
         {
             await CTest<WriteSchoolContext>
                 .Given(a => a.School())
-                .And(a => a.RoomWithComputer())
+                .And(a => a.RoomWithComputer("serial1", "computer 1", 5))
                 .When(i => i.RecordDamage(i.Context.School.Rooms[0].RoomName, i.Context.School.Rooms[0].Computers[0].SerialNumber, "Computer damaged"))
                 .And(i => i.UpdateDamageTicket(i.Context.School.Rooms[0].RoomName,
                     i.Context.School.Rooms[0].Computers[0].SerialNumber,

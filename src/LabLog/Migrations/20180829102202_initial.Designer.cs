@@ -11,8 +11,8 @@ using System;
 namespace LabLog.Migrations
 {
     [DbContext(typeof(EventModelContext))]
-    [Migration("20180115080919_damagemodel2")]
-    partial class damagemodel2
+    [Migration("20180829102202_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,7 +77,7 @@ namespace LabLog.Migrations
 
             modelBuilder.Entity("LabLog.Models.DamageModel", b =>
                 {
-                    b.Property<int>("DamageID")
+                    b.Property<Guid>("DamageId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ComputerModelSerialNumber");
@@ -90,7 +90,7 @@ namespace LabLog.Migrations
 
                     b.Property<bool>("Resolved");
 
-                    b.HasKey("DamageID");
+                    b.HasKey("DamageId");
 
                     b.HasIndex("ComputerModelSerialNumber");
 

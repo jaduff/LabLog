@@ -179,7 +179,7 @@ namespace LabLog.Services
             _school.School(school).RecordDamage(roomName, computer.SerialNumber, damage.Description);
         }
 
-        public async Task<DamageModel> GetDamageAsync (ComputerModel computer, int damageId)
+        public async Task<DamageModel> GetDamageAsync (ComputerModel computer, Guid damageId)
         {
             await _db.Entry(computer).Collection(c => c.DamageList).LoadAsync();
             DamageModel damage = computer.DamageList.Where(w => w.DamageId == damageId).SingleOrDefault();

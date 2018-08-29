@@ -20,11 +20,11 @@ namespace LabLog.WriteTests.Steps
             given.Context.School.AddRoom(roomName);
         }
 
-        public static void RoomWithComputer(this IGiven<WriteSchoolContext> given)
+        public static void RoomWithComputer(this IGiven<WriteSchoolContext> given, string serialNumber, string computerName, int position)
         {
             given.Context.School.AddRoom("Test room");
             Guid roomId = given.Context.School.Rooms[0].RoomId;
-            Computer computer = new Computer("serialNumber", "computerName", 5);
+            Computer computer = new Computer(serialNumber, computerName, position);
             given.Context.School.AddComputer(roomId, computer);
         }
 

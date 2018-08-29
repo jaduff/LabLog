@@ -5,7 +5,7 @@ namespace LabLog.Domain.Events
 {
     public class DamageAddedEvent : IEventBody
     {
-        public DamageAddedEvent(string roomName, string serialNumber, int damageId, string damageDescription)
+        public DamageAddedEvent(string roomName, string serialNumber, Guid damageId, string damageDescription)
         {
             SerialNumber = serialNumber;
             DamageDescription = damageDescription;
@@ -19,7 +19,7 @@ namespace LabLog.Domain.Events
         }
         public string EventType => EventTypeString;
         public string DamageDescription {get; set;}
-        public int DamageId {get; set;}
+        public Guid DamageId {get; set;}
         public string SerialNumber {get; set;}
         public const string EventTypeString ="DamageAdded";
         public DateTime TimeAssigned {get;} = DateTime.Now;

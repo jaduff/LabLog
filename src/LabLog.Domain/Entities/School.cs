@@ -139,7 +139,8 @@ namespace LabLog.Domain.Entities
 
             Computer computer = GetComputerBySerial(serialNumber);
             var @event = LabEvent.Create(Id, ++Version,
-                    new DamageAddedEvent(roomName, serialNumber, computer.GetLastDamageId() + 1, damageDescription));
+                    new DamageAddedEvent(roomName, serialNumber, new Guid(),
+                     damageDescription));
             ApplyDamageAddedEvent(@event);
             _eventHandler(@event);
         }
